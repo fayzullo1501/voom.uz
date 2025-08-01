@@ -1,0 +1,81 @@
+.admin-layout {
+  display: flex;
+  height: 100vh;
+  font-family: 'Product Sans', sans-serif;
+  overflow: hidden;
+}
+
+.admin-sidebar {
+  width: 240px;
+  background-color: #f8f9fa;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* ☝ меню наверх */
+  border-right: 1px solid #e0e0e0;
+}
+
+.admin-logo img {
+  width: 120px;
+  cursor: pointer;
+  margin-bottom: 40px;
+}
+
+.admin-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.admin-nav a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 16px; /* ⬆ увеличен размер */
+  color: #333;
+  text-decoration: none;
+  padding: 10px 12px;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+.admin-nav a:hover {
+  background-color: #f1f1f1; /* 🔵 светлый фон при наведении */
+  color: #474747;
+}
+
+.admin-nav a.active-link {
+  background-color: #f1f1f1;
+  color: #474747;
+}
+
+.admin-logout {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: none;
+  border: none;
+  color: #dc3545;
+  font-size: 15px;
+  cursor: pointer;
+  padding: 10px 12px;
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+
+.admin-logout:hover {
+  background-color: #ffe6e6;
+}
+
+.nav-icon {
+  width: 18px;
+  height: 18px;
+}
+
+.admin-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 40px;
+  background-color: #fff;
+}

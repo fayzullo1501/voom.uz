@@ -1,0 +1,72 @@
+{
+  "nav": {
+  "home": "Главная",
+  "about": "О компании",
+  "news": "Новости",
+  "contact": "Контакты"
+  },
+  "buttons": {
+    "create": "Создать маршрут",
+    "login": "Войти"
+  },
+  "hero": {
+    "title": "Поездки с попутчиками в тысячи<br />населённых пунктов по низким ценам",
+    "trip": "Поездка",
+    "delivery": "Доставка",
+    "from": "Откуда",
+    "to": "Куда",
+    "package": "Что доставить?",
+    "weight": "Вес (кг)",
+    "passenger": "пассажир",
+    "passengers": "Пассажиров",
+    "next": "Далее",
+    "search": "Поиск"
+  },
+  "auth": {
+    "login": "Вход",
+    "register": "Регистрация",
+    "firstName": "Имя",
+    "lastName": "Фамилия",
+    "email": "Email или номер телефона",
+    "password": "Пароль",
+    "confirmPassword": "Подтвердите пароль",
+    "google": "Войти через Google"
+  },
+  "auth": {
+    "register": "Регистрация",
+    "login": "Войти",
+    "continue": "Продолжить",
+    "google": "Продолжить через Google",
+    "facebook": "Продолжить через Facebook",
+    "verifyEmail": "Подтверждение почты",
+    "setPassword": "Создание пароля",
+    "haveAccount": "Уже есть аккаунт?",
+    "noAccount": "Нет аккаунта?",
+    "password": "Пароль",
+    "confirmPassword": "Повторите пароль",
+    "emailCode": "Код из почты",
+    "disclaimer": "Используя VOOM, вы принимаете Условия и Политику конфиденциальности.",
+    "loading": "Загрузка...",
+    "invalidEmail": "Введите корректный Gmail",
+    "sendCodeError": "Ошибка отправки кода",
+    "invalidCode": "Введите корректный 6-значный код",
+    "codeVerifyError": "Ошибка подтверждения кода",
+    "serverError": "Ошибка сервера",
+    "passwordTooShort": "Пароль должен быть не менее 6 символов",
+    "passwordsDontMatch": "Пароли не совпадают",
+    "setPasswordError": "Ошибка при установке пароля",
+    "emailLabel": "Gmail",
+    "passwordLabel": "Пароль",
+    "noAccount": "Нет аккаунта?",
+    "registerLink": "Зарегистрироваться",
+    "forgotPassword": "Забыли пароль?",
+    "enterEmailPassword": "Введите Gmail и пароль",
+    "loginError": "Ошибка входа",
+    "forgotTitle": "Восстановление пароля",
+    "invalidGmail": ""
+
+  }
+
+
+
+}

@@ -1,0 +1,54 @@
+.create-route-page {
+  max-width: 600px;
+  margin: 40px auto;
+  font-family: 'Product Sans', sans-serif;
+  color: #002f34;
+  padding: 0 16px;
+}
+
+.create-route-page h2 {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.route-field {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 16px;
+  font-size: 16px;
+  cursor: pointer;
+  background: #fff;
+  transition: background 0.2s;
+}
+
+.route-field:hover {
+  background-color: #f6f6f6;
+}
+
+.route-field img {
+  width: 22px;
+  height: 22px;
+}
+
+.create-route-btn {
+  width: 100%;
+  background: linear-gradient(to right, #9b00e8, #ff0050);
+  color: white;
+  font-weight: 600;
+  font-size: 16px;
+  border: none;
+  padding: 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.create-route-btn:hover {
+  opacity: 0.95;
+}

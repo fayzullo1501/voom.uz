@@ -1,0 +1,176 @@
+@font-face {
+  font-family: 'Product Sans';
+  src: url('../assets/fonts/ProductSans-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+  font-family: 'Product Sans', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #fff;
+}
+
+.header {
+  padding: 20px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #fff;
+}
+
+.logo-img {
+  height: 28px;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.nav {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.nav a {
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+  transition: 0.2s;
+}
+
+.nav a:hover {
+  color: #e60073;
+}
+
+/* Правая часть */
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+/* Кнопка "Создать маршрут" без рамки */
+.create-route-button {
+  background: none;
+  border: none;
+  outline: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Product Sans', sans-serif;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 0;
+  color: #000;
+}
+
+/* Кнопка "Вход / регистрация" с рамкой */
+.header-right button:last-child {
+  padding: 8px 16px;
+  border: 1.5px solid #000;
+  border-radius: 6px;
+  background: transparent;
+  font-family: 'Product Sans', sans-serif;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.header-right button:last-child:hover {
+  background-color: #f5f5f5;
+}
+
+.btn-icon {
+  height: 16px;
+  margin-right: 6px;
+  vertical-align: middle;
+}
+
+/* Языковой селектор */
+.lang-container {
+  position: relative;
+  cursor: pointer;
+  user-select: none;
+}
+
+.lang-current {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+.lang-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 8px;
+  background: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  z-index: 1000;
+  min-width: 140px;
+}
+
+.lang-dropdown div {
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: 0.2s;
+}
+
+.lang-dropdown div:hover {
+  background-color: #f2f2f2;
+}
+
+.lang-flag {
+  height: 18px;
+  width: 24px;
+  border-radius: 2px;
+}
+
+.auth-block {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.auth-block:hover {
+  background-color: #f5f5f5;
+}
+
+.auth-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: #000;
+}
+
+.auth-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  object-fit: cover;
+  background-color: #ddd;
+}
+
+.nav span {
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.nav span:hover {
+  color: #e60073;
+}

@@ -1,0 +1,72 @@
+.upload-passport {
+  max-width: 480px;
+  margin: 60px auto;
+  text-align: center;
+  font-family: 'Product Sans', sans-serif;
+  color: #002f34;
+}
+
+.passport-preview {
+  width: 100%;
+  max-width: 500px;
+}
+
+.upload-instruction {
+  font-size: 25px;
+  font-weight: 600;
+  margin-bottom: 24px;
+}
+
+.upload-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+input[type='file'] {
+  display: none;
+}
+
+.button-row {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  padding: 10px 18px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 15px;
+  transition: all 0.2s ease;
+}
+
+/* кнопка "выбрать файл" — без фона, чёрный текст и бордер */
+.choose-btn {
+  background: none;
+  color: #000;
+  border: 2px solid #000;
+}
+
+.choose-btn:hover {
+  background-color: #f6f6f6;
+}
+
+/* кнопка отправить — градиент */
+.submit-btn {
+  background: linear-gradient(to right, #9b00e8, #ff0050);
+  color: white;
+  border: none;
+}
+
+.submit-btn:hover {
+  opacity: 0.9;
+}
+
+.error-msg {
+  color: red;
+  font-size: 14px;
+  margin-top: -4px;
+}

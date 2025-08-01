@@ -1,0 +1,102 @@
+.edit-profile-page {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 32px 20px;
+  font-family: 'Product Sans', sans-serif;
+  position: relative;
+}
+
+.close-btn {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.edit-profile-title {
+  font-size: 36px;
+  font-weight: bold;
+  margin-bottom: 32px;
+  text-align: center;
+  color: #002f34;
+}
+
+/* Стиль блока поля */
+.profile-readonly-field {
+  margin-bottom: 28px;
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-readonly-field label {
+  font-size: 15px;
+  color: #666;
+  margin-bottom: 6px;
+}
+
+/* Видимое значение */
+.profile-readonly-field .value {
+  font-size: 16px;
+  font-weight: 500;
+  color: #000;
+  cursor: pointer;
+  border-bottom: 1px solid #ccc;
+  padding: 6px 0;
+  transition: border-color 0.2s;
+}
+
+.profile-readonly-field .value:hover {
+  border-color: #ff0050;
+}
+
+.profile-readonly-field .value.inactive {
+  cursor: default;
+  color: #999;
+}
+
+/* placeholder */
+.placeholder {
+  color: #aaa;
+  font-style: normal;
+}
+
+/* Инпуты при редактировании */
+.profile-readonly-field input,
+.profile-readonly-field textarea {
+  font-family: 'Product Sans', sans-serif;
+  font-size: 16px;
+  padding: 6px 0;
+  border: none;
+  border-bottom: 1px solid #ccc;
+  outline: none;
+  background-color: transparent;
+  color: #000;
+}
+
+.profile-readonly-field input:focus,
+.profile-readonly-field textarea:focus {
+  border-bottom: 1px solid #9b00e8;
+}
+
+/* Кнопка сохранить */
+.save-btn {
+  background-color: #00a83d;
+  color: white;
+  font-size: 16px;
+  font-weight: 500;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 20px;
+  width: 100%;
+  transition: background-color 0.2s;
+}
+
+.save-btn:hover {
+  background-color: #009933;
+}
+
+

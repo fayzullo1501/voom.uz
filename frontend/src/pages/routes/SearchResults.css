@@ -1,0 +1,111 @@
+.search-results-page {
+  display: flex;
+  padding: 20px;
+  gap: 20px;
+  font-family: 'Product Sans', sans-serif;
+  background-color: #f9f9f9;
+  min-height: 100vh;
+}
+
+/* Левая панель — фильтры */
+.filters {
+  width: 220px;
+  background: #fff;
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+}
+
+.filters h4 {
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.filters ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.filters li {
+  padding: 8px 12px;
+  margin-bottom: 6px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.filters li:hover {
+  background: #f0f0f0;
+}
+
+.filters li.active {
+  background: #d0ebff;
+  font-weight: bold;
+}
+
+/* Правая панель — список маршрутов */
+.results-list {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Карточка маршрута */
+.route-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fff;
+  padding: 16px;
+  border-radius: 16px;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.08);
+  transition: transform 0.1s;
+  cursor: pointer;
+}
+
+.route-card:hover {
+  transform: translateY(-2px);
+}
+
+.route-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.driver-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.route-middle {
+  flex: 1;
+  padding: 0 20px;
+}
+
+.route-middle p {
+  margin: 4px 0;
+}
+
+.route-middle .comment {
+  font-style: italic;
+  color: #555;
+}
+
+.route-right {
+  text-align: right;
+}
+
+.route-right p {
+  margin: 4px 0;
+  font-weight: 500;
+}

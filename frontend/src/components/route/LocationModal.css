@@ -1,0 +1,110 @@
+.location-popup-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.5);
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.location-popup {
+  background: white;
+  border-radius: 16px;
+  padding: 0;
+  width: 95%;
+  max-width: 500px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+  display: flex;
+  flex-direction: column;
+}
+
+.location-popup-header {
+  padding: 14px 18px;
+  font-size: 16px;
+  font-weight: 600;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+}
+
+.close-btn {
+  font-size: 20px;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.location-popup-map {
+  width: 100%;
+  height: 320px;
+  position: relative;
+}
+
+.location-popup-geo-btn {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  background: white;
+  border: 2px solid #007bff;
+  border-radius: 50%;
+  width: 38px;
+  height: 38px;
+  cursor: pointer;
+  font-size: 18px;
+  text-align: center;
+  z-index: 2;
+}
+
+.location-popup input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  margin: 16px 18px 0;
+  border-radius: 6px;
+}
+
+.location-popup-save-btn {
+  background: linear-gradient(to right, #9b00e8, #ff0050);
+  color: white;
+  margin: 16px 18px 20px;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.location-search-row {
+  display: flex;
+  padding: 14px 18px 10px;
+  gap: 10px;
+}
+
+.search-input {
+  flex: 1;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+}
+
+.search-btn {
+  background: linear-gradient(to right, #9b00e8, #ff0050);
+  border: none;
+  color: white;
+  font-weight: 500;
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.location-popup-footer {
+  padding: 0 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}

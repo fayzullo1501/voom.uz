@@ -1,0 +1,40 @@
+.profile-account {
+  padding: 40px 20px;
+  max-width: 600px;
+  margin: 0 auto;
+  font-family: 'Product Sans', sans-serif;
+  color: #002f34;
+}
+
+.account-content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin-top: 24px;
+}
+
+.account-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 16px;
+}
+
+.label {
+  font-weight: 500;
+  color: #666;
+}
+
+/* Кнопка выхода в том же стиле, что и кнопки на странице /menu */
+.logout-btn {
+  background: none;
+  color: #ff0050;
+  border: none;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 24px;
+}

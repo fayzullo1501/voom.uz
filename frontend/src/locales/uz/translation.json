@@ -1,0 +1,58 @@
+{
+  "nav": {
+  "home": "Asosiy",
+  "about": "Kompaniya haqida",
+  "news": "Yangiliklar",
+  "contact": "Aloqa"
+  },
+  "buttons": {
+    "create": "Yoʻnalish yaratish",
+    "login": "Kirish"
+  },
+  "hero": {
+    "title": "Yuzlab shaharlarga hamrohlik safarlari<br />qulay narxlarda",
+    "trip": "Safar",
+    "delivery": "Yetkazib berish",
+    "from": "Qayerdan",
+    "to": "Qayerga",
+    "package": "Nima yetkaziladi?",
+    "weight": "Vazn (kg)",
+    "passenger": "yo'lovchi",
+    "passengers": "Yo'lovchilar",
+    "search": "Qidirish"
+  },
+  "auth": {
+    "register": "Ro‘yxatdan o‘tish",
+    "login": "Kirish",
+    "continue": "Davom etish",
+    "google": "Google orqali davom etish",
+    "facebook": "Facebook orqali davom etish",
+    "verifyEmail": "Email tasdiqlash",
+    "setPassword": "Parol yaratish",
+    "haveAccount": "Allaqachon hisobingiz bormi?",
+    "noAccount": "Hisobingiz yo‘qmi?",
+    "password": "Parol",
+    "confirmPassword": "Parolni qayta kiriting",
+    "emailCode": "Emaildan kelgan kod",
+    "disclaimer": "VOOM'dan foydalanib, siz Shartlar va Maxfiylik siyosatini qabul qilasiz.",
+    "loading": "Yuklanmoqda...",
+    "invalidEmail": "Gmail manzilini to‘g‘ri kiriting",
+    "sendCodeError": "Kod yuborishda xatolik yuz berdi",
+    "invalidCode": "6 xonali to‘g‘ri kod kiriting",
+    "codeVerifyError": "Kod tasdiqlanmadi",
+    "serverError": "Server xatosi",
+    "passwordTooShort": "Parol kamida 6 ta belgidan iborat bo‘lishi kerak",
+    "passwordsDontMatch": "Parollar mos emas",
+    "setPasswordError": "Parolni o‘rnatishda xatolik",
+    "emailLabel": "Gmail",
+    "passwordLabel": "Parol",
+    "noAccount": "Akkaunt mavjud emasmi?",
+    "registerLink": "Roʻyxatdan oʻtish",
+    "forgotPassword": "Parollingiz estan chiqtimi?",
+    "enterEmailPassword": "Gmail va Parollingizni kiriting",
+    "loginError": "Xatolik"
+
+  }
+
+
+}

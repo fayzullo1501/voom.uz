@@ -1,0 +1,372 @@
+.hero-wrapper {
+  padding: 0 20px 20px;
+  height: calc(100vh - 80px);
+  box-sizing: border-box;
+}
+
+.hero {
+  background-image: url('../assets/hero-bg.jpg');
+  background-size: cover;
+  background-position: center;
+  border-radius: 30px;
+  color: white;
+  font-family: 'Product Sans', sans-serif;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 20px;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.hero-content {
+  width: 100%;
+}
+
+.hero-text {
+  margin-bottom: 20px;
+}
+
+.hero h1 {
+  font-size: 36px;
+  font-weight: bold;
+  line-height: 1.3;
+}
+
+.search-box {
+  display: flex;
+  gap: 20px;
+  align-items: stretch;
+  background: white;
+  border-radius: 30px;
+  overflow: visible;
+  max-width: 100%;
+  padding: 20px;
+  flex-wrap: wrap;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.search-fields {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.tabs {
+  display: flex;
+  gap: 20px;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.tab {
+  color: #aaa;
+  cursor: pointer;
+}
+
+.tab.active {
+  color: black;
+  font-weight: bold;
+}
+
+.inputs {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.input-field {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  background: white;
+  border-radius: 0;
+  padding: 12px;
+  box-sizing: border-box;
+  transition: background 0.2s ease;
+  border-left: 1px solid #ddd;
+}
+
+.input-field:first-child {
+  border-left: none;
+}
+
+.input-field:last-child {
+  border-right: none;
+}
+
+.input-field:hover {
+  background: #f2f2f2;
+  border-radius: 7px;
+}
+
+.input-field input {
+  border: none;
+  font-family: 'Product Sans', sans-serif;
+  font-size: 14px;
+  width: 100%;
+  background: none;
+  outline: none;
+}
+
+.input-field img {
+  width: 20px;
+  height: 20px;
+}
+
+.search-button {
+  background: linear-gradient(to right, #9b00e8, #ff0050);
+  color: white;
+  padding: 40px;
+  border: none;
+  border-radius: 30px;
+  font-weight: 200;
+  font-size: 18px;
+  cursor: pointer;
+  white-space: nowrap;
+  height: 100%;
+  align-self: stretch;
+}
+
+/* Calendar styles */
+.calendar-popup {
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  margin-bottom: 10px;
+  background: white;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+  width: 300px;
+}
+
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #003348;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 10px;
+  font-family: 'Product Sans', sans-serif;
+}
+
+.calendar-day-name {
+  font-weight: 600;
+  text-align: center;
+}
+
+.calendar-day {
+  text-align: center;
+  padding: 8px;
+  border-radius: 50%;
+  cursor: pointer;
+  color: #444;
+  transition: background 0.2s ease;
+}
+
+.calendar-day:hover {
+  background: #eee;
+}
+
+.calendar-day.today {
+  background: #ff0050;
+  color: white;
+  font-weight: bold;
+}
+
+.passenger-popup {
+  position: absolute;
+  top: -130px;
+  right: 0;
+  background: white;
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  z-index: 10;
+  width: 240px;
+  font-family: 'Product Sans', sans-serif;
+}
+
+.passenger-popup span {
+  font-weight: bold;
+  color: #003348;
+  font-size: 16px;
+}
+
+.counter {
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.counter button {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid #ccc;
+  background: white;
+  font-size: 20px;
+  color: #888;
+  cursor: pointer;
+}
+
+.counter button.plus {
+  color: #ff0050;
+  border-color: #ff0050;
+}
+
+.counter span {
+  font-size: 20px;
+  font-weight: bold;
+  color: #003348;
+}
+
+.calendar-day.disabled {
+  color: #ccc;
+  pointer-events: none;
+}
+
+.calendar-day.selected {
+  background: linear-gradient(to right, #9b00e8, #ff0050);
+  color: white;
+}
+
+
+.calendar-nav-btn {
+  font-size: 15px;
+  font-weight: bold;
+  padding: 4px 10px;
+  border-radius: 50%;
+  background: #f0f0f0;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  user-select: none;
+}
+
+.calendar-nav-btn:hover {
+  background: #e0e0e0;
+}
+
+.location-modal-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.5);
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.location-modal {
+  background: white;
+  border-radius: 16px;
+  padding: 20px;
+  width: 95%;
+  max-width: 500px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+  position: relative;
+}
+
+.location-input-wrapper {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.location-input {
+  flex: 1;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+.location-search-btn {
+  background: linear-gradient(to right, #9b00e8, #ff0050);
+  border: none;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-weight: bold;
+  cursor: pointer;
+  color: #fff;
+}
+
+.custom-map {
+  width: 100%;
+  height: 300px;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 10px;
+  position: relative;
+}
+
+.geo-fab {
+  position: absolute;
+  bottom: 85px;
+  right: 20px;
+  background: white;
+  border: none;
+  border-radius: 50%;
+  width: 42px;
+  height: 42px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.geo-fab img {
+  width: 22px;
+  height: 22px;
+}
+
+.location-display {
+  font-size: 14px;
+  margin-bottom: 10px;
+  color: #555;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.location-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.location-buttons .cancel,
+.location-buttons .save {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 10px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.location-buttons .cancel {
+  background: #ddd;
+}
+
+.location-buttons .save {
+  background: linear-gradient(to right, #9b00e8, #ff0050);
+  color: white;
+}

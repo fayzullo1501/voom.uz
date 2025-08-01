@@ -1,0 +1,154 @@
+.auth-page {
+  height: 100vh;
+  background: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px 30px;
+  font-family: 'Product Sans', sans-serif;
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.auth-logo-top {
+  position: absolute;
+  top: 20px;
+  left: 30px;
+}
+
+.auth-logo-top img {
+  width: 100px;
+}
+
+.auth-title {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  text-align: center;
+  color: #000;
+}
+
+.auth-btn,
+.auth-input {
+  width: 100%;
+  max-width: 350px;
+  padding: 12px;
+  margin-bottom: 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.auth-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid #ccc;
+  background: white;
+  color: #000;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.auth-btn img {
+  width: 20px;
+  height: 20px;
+}
+
+.divider {
+  width: 100%;
+  max-width: 350px;
+  height: 1px;
+  background-color: #ddd;
+  margin: 24px 0 12px;
+}
+
+.auth-label {
+  font-size: 13px;
+  color: #333;
+  margin: 6px 0 4px;
+  text-align: left;
+  width: 100%;
+  max-width: 350px;
+}
+
+.auth-input {
+  border: 1px solid #ccc;
+  background-color: #f7f8f3;
+  color: #000;
+}
+
+.auth-input::placeholder {
+  color: #aaa;
+}
+
+.submit-btn {
+  width: 100%;
+  max-width: 350px;
+  padding: 14px;
+  background-color: white;
+  color: black;
+  border: 1px solid #d0d0d0;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  margin-top: 16px;
+  cursor: pointer;
+}
+
+.auth-links {
+  color: #91908E;
+  font-size: 13px;
+  text-transform: uppercase;
+  line-height: 1.8;
+  margin-top: 16px;
+  text-align: center;
+}
+
+.auth-links a {
+  color: #91908E;
+  text-decoration: underline;
+  font-weight: 500;
+}
+
+.auth-disclaimer {
+  font-size: 11px;
+  color: #888;
+  margin-top: auto;
+  margin-bottom: 30px;
+  padding: 0 16px;
+  max-width: 500px;
+  text-align: center;
+  line-height: 1.5;
+  word-break: break-word;
+}
+
+.auth-input-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 350px;
+}
+
+.input-icon {
+  position: absolute;
+  right: 12px;
+  top: 37%;
+  transform: translateY(-48%); /* чуть выше */
+  width: 18px;
+  height: 18px;
+  color: #999;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.input-icon:hover {
+  color: #333;
+}
+

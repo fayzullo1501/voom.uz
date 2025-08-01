@@ -1,0 +1,29 @@
+.profile-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin-bottom: 30px;
+}
+
+.tab {
+  background: none;
+  border: none;
+  font-size: 16px;
+  font-family: 'Product Sans', sans-serif;
+  color: #999;
+  font-weight: 500;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  padding: 8px 4px;
+  transition: 0.2s;
+}
+
+.tab:hover {
+  color: #000;
+}
+
+.tab.active {
+  color: #000;
+  font-weight: 600;
+  border-bottom: 2px solid #000;
+}

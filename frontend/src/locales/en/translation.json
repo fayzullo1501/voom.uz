@@ -1,0 +1,49 @@
+{
+  "nav": {
+  "home": "Home",
+  "about": "About",
+  "news": "News",
+  "contact": "Contact"
+  },
+  "buttons": {
+    "create": "Create Route",
+    "login": "Login"
+  },
+  "hero": {
+    "title": "Ridesharing to hundreds of<br />destinations at low prices",
+    "trip": "Trip",
+    "delivery": "Delivery",
+    "from": "From",
+    "to": "To",
+    "package": "What to deliver?",
+    "weight": "Weight (kg)",
+    "passenger": "passenger",
+    "passengers": "Passengers",
+    "search": "Search"
+  },
+  "auth": {
+    "register": "Register",
+    "login": "Login",
+    "continue": "Continue",
+    "google": "Continue with Google",
+    "facebook": "Continue with Facebook",
+    "verifyEmail": "Verify Email",
+    "setPassword": "Set Password",
+    "haveAccount": "Already have an account?",
+    "noAccount": "Don't have an account?",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "emailCode": "Code from email",
+    "disclaimer": "By using VOOM, you agree to the Terms and Privacy Policy.",
+    "loading": "Loading...",
+    "invalidEmail": "Enter a valid Gmail address",
+    "sendCodeError": "Error sending verification code",
+    "invalidCode": "Enter a valid 6-digit code",
+    "codeVerifyError": "Code verification failed",
+    "serverError": "Server error",
+    "passwordTooShort": "Password must be at least 6 characters",
+    "passwordsDontMatch": "Passwords do not match",
+    "setPasswordError": "Error setting password"
+  }
+
+}
