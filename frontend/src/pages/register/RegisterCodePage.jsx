@@ -33,7 +33,7 @@ const RegisterCodePage = () => {
     try {
       setLoading(true);
 
-      const res = await fetch('http://localhost:5100/api/auth/verify-code', {
+      const res = await fetch(`${process.env.REACT_APP_API_BASE}/auth/verify-code`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, code })
