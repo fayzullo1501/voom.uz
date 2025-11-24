@@ -1,0 +1,22 @@
+{
+  "header": {
+    "logoAlt": "Voom — сервис междугородних поездок",
+    "nav": {
+      "home": "Главная",
+      "about": "О компании",
+      "news": "Новости",
+      "contacts": "Контакты"
+    },
+    "language": {
+      "ru": "Русский",
+      "uz": "O‘zbekcha",
+      "en": "English"
+    },
+    "actions": {
+      "createRoute": "Создать маршрут"
+    },
+    "profile": {
+      "namePlaceholder": "Fayzullo"
+    }
+  }
+}

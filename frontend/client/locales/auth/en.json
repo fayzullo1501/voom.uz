@@ -1,0 +1,18 @@
+{
+  "title": "Login to your account",
+  "loginGoogle": "Continue with Google",
+  "loginFacebook": "Continue with Facebook",
+  "emailOrPhone": "Phone or E-mail",
+  "password": "Password",
+  "loginBtn": "Login",
+  "forgotPassword": "Forgot password?",
+  "noAccount": "Don’t have an account?",
+  "createAccount": "Create account",
+  "termsFooter": "By using the Voom platform, you accept the Terms and Privacy Policy.",
+
+  "registerTitle": "Create an account",
+  "email": "E-mail",
+  "registerBtn": "Sign up",
+  "alreadyAccount": "Already have an account?",
+  "loginLink": "Login"
+}

@@ -1,0 +1,39 @@
+{
+  "hero": {
+    "titleLine1": "Shaharlararo qulay sayohatlar,",
+    "titleLine2": "narxni esa o‘zingiz tanlaysiz",
+    "subtitle1": "Tasdiqlangan haydovchilardan yuzlab yo‘nalishlar.",
+    "subtitle2": "O‘zingizga mos tarifni tanlang va yo‘lga xotirjam chiq­ing.",
+    "tabs": {
+      "trip": "Safar",
+      "delivery": "Yetkazib berish"
+    },
+    "placeholders": {
+      "from": "Qayerdan",
+      "to": "Qayerga",
+      "when": "Qachon",
+      "passengers": "Yo‘lovchilar"
+    },
+    "search": "Qidirish"
+  },
+
+
+  "why": {
+    "titleBefore": "Nega",
+    "titleAfter": "ni tanlashadi?",
+    "cards": {
+      "1": {
+        "title": "Moslashuvchan narxlar",
+        "text": "Haydovchilar narxni o‘zlari belgilaydi, siz esa narx, avtomobil yoki reyting bo‘yicha eng yaxshisini tanlaysiz."
+      },
+      "2": {
+        "title": "Ishonchli haydovchilar",
+        "text": "Har bir haydovchi tekshiruvdan o‘tadi, sharhlarga ega va shaxsiy profilini tasdiqlagan."
+      },
+      "3": {
+        "title": "Aniq olib ketish va tushirish",
+        "text": "Haydovchi siz bilan kelishilgan joydan olib ketadi va aynan aytilgan manzilda tushirib qo‘yadi."
+      }
+    }
+  }
+}

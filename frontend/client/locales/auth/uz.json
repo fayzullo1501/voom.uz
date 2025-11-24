@@ -1,0 +1,18 @@
+{
+  "title": "Shaxsiy kabinetga kirish",
+  "loginGoogle": "Google orqali davom etish",
+  "loginFacebook": "Facebook orqali davom etish",
+  "emailOrPhone": "Telefon yoki E-mail",
+  "password": "Parol",
+  "loginBtn": "Kirish",
+  "forgotPassword": "Parolni unutdingizmi?",
+  "noAccount": "Akkaunt yo‘qmi?",
+  "createAccount": "Ro‘yxatdan o‘tish",
+  "termsFooter": "Voom platformasidan foydalangan holda Siz Shartlar va Maxfiylik siyosatini qabul qilasiz.",
+
+  "registerTitle": "Akkaunt yaratish",
+  "email": "E-mail",
+  "registerBtn": "Ro‘yxatdan o‘tish",
+  "alreadyAccount": "Akkauntingiz bormi?",
+  "loginLink": "Kirish"
+}

@@ -1,0 +1,22 @@
+{
+  "header": {
+    "logoAlt": "Voom — intercity ride service",
+    "nav": {
+      "home": "Home",
+      "about": "About",
+      "news": "News",
+      "contacts": "Contacts"
+    },
+    "language": {
+      "ru": "Russian",
+      "uz": "Uzbek",
+      "en": "English"
+    },
+    "actions": {
+      "createRoute": "Create route"
+    },
+    "profile": {
+      "namePlaceholder": "Fayzullo"
+    }
+  }
+}

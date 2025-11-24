@@ -1,0 +1,39 @@
+{
+  "hero": {
+    "titleLine1": "Comfortable intercity trips,",
+    "titleLine2": "at the price you choose",
+    "subtitle1": "Hundreds of routes from verified drivers.",
+    "subtitle2": "Pick your fare and travel with confidence.",
+    "tabs": {
+      "trip": "Trip",
+      "delivery": "Delivery"
+    },
+    "placeholders": {
+      "from": "From",
+      "to": "To",
+      "when": "When",
+      "passengers": "Passengers"
+    },
+    "search": "Search"
+  },
+
+
+  "why": {
+    "titleBefore": "Why people choose",
+    "titleAfter": "?",
+    "cards": {
+      "1": {
+        "title": "Flexible pricing",
+        "text": "Drivers set their own trip price, and you choose the best option based on price, car model, or rating."
+      },
+      "2": {
+        "title": "Reliable drivers",
+        "text": "Every driver is verified, has reviews, a rating, and a confirmed personal profile."
+      },
+      "3": {
+        "title": "Exact pickup and drop-off",
+        "text": "The driver will pick you up at the agreed location and drop you off exactly where you arranged."
+      }
+    }
+  }
+}

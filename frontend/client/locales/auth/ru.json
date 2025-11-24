@@ -1,0 +1,18 @@
+{
+  "title": "Вход в личный кабинет",
+  "loginGoogle": "Продолжить через Google",
+  "loginFacebook": "Продолжить через Facebook",
+  "emailOrPhone": "Телефон или E-mail",
+  "password": "Пароль",
+  "loginBtn": "Войти",
+  "forgotPassword": "Забыли пароль?",
+  "noAccount": "Нет аккаунта?",
+  "createAccount": "Создать аккаунт",
+  "termsFooter": "Используя платформу voom, вы принимаете Условия и Политику конфиденциальности.",
+
+  "registerTitle": "Создание аккаунта",
+  "email": "E-mail",
+  "registerBtn": "Регистрация",
+  "alreadyAccount": "Уже есть аккаунт?",
+  "loginLink": "Войти"
+}
