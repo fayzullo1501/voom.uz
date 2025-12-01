@@ -1,0 +1,21 @@
+{
+  "title": "Yo'nalish yaratish",
+
+  "from": "Qayerdan",
+  "to": "Qayerga",
+  "dateTime": "Sana va vaqt",
+  "seats": "O‘rinlar",
+  "price": "Narx",
+  "comment": "Izoh",
+
+  "agreeText": "Tasdiqlash orqali siz yo'nalish uchun to'liq javobgarlikni o'zingiz zimmasiga olasiz. voom platformasi haydovchi yoki yo'lovchilarning harakatlari uchun javobgar emas.",
+
+  "createBtn": "Yo'nalishni yaratish",
+
+  "important": "Muhim!",
+  "importantText": "voom haydovchilarga nazorat organlari bilan muammolardan qochish uchun o‘zini o‘zi band qilgan sifatida ro‘yhatdan o‘tishni tavsiya qiladi. Ro‘yxatdan o‘tish bir necha daqiqa davom etadi va <link>my.gov.uz</link> orqali mavjud",
+  "importantAfterLink": "Maslahat uchun — 1242.",
+
+  "bannerTitle": "Yo'nalishlarni tez va oson boshqaring!",
+  "bannerText": "QR-kodni skaner qiling va barcha imkoniyatlardan telefon orqali foydalaning."
+}

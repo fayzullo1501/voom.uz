@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+
 
 const DateTimeModal = ({ isOpen, initialValue, onSave, onClose }) => {
   if (!isOpen) return null;
@@ -18,6 +19,24 @@ const DateTimeModal = ({ isOpen, initialValue, onSave, onClose }) => {
   );
 
   const [selectedTime, setSelectedTime] = useState(initTime || "00:00");
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    if (!initialValue) {
+      // если нет значения — ставим текущую дату и 00:00
+      setSelectedDate(new Date());
+      setSelectedTime("00:00");
+      return;
+    }
+
+    // пример initialValue: "2025-02-15 в 14:30"
+    const [dateStr, timeStr] = initialValue.split(" в ");
+
+    setSelectedDate(new Date(dateStr));
+    setSelectedTime(timeStr || "00:00");
+
+  }, [isOpen, initialValue]);
 
   /* === MONTH CALCULATIONS === */
   const year = selectedDate.getFullYear();

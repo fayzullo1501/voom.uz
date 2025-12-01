@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { X, ArrowLeftRight } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import { Trans } from "react-i18next";
+
 
 import logo from "../../assets/logo.svg";
 import bgImg from "../../assets/crroutebg.jpg";
@@ -12,86 +15,89 @@ import SeatsModal from "../../components/createRoute/SeatsModal";
 import PriceModal from "../../components/createRoute/PriceModal";
 import CommentModal from "../../components/createRoute/CommentModal";
 
-
-/**
- * Текстовое поле с "плавающим" placeholder-ом
- * - текст 16px по центру, пока пусто
- * - при фокусе / наличии значения уезжает наверх как label
- */
+// -----------------------------
+// FLOATING TEXT FIELD
+// -----------------------------
 const FloatingInput = ({ value, onChange, label }) => {
-  const [focused, setFocused] = useState(false);
-  const hasValue = value && value.length > 0;
-  const floated = focused || hasValue;
-
   return (
-    <div className="relative w-full h-[52px]">
-      <div className="absolute inset-0 bg-gray-100 rounded-xl px-4 flex items-center">
-        <input
-          type="text"
-          value={value}
-          onChange={onChange}
-          onFocus={() => setFocused(true)}
-          onBlur={() => setFocused(false)}
-          className={`w-full bg-transparent outline-none text-[16px] ${
-            floated ? "pt-3" : ""
-          }`}
-        />
-      </div>
+    <div className="relative w-full">
+      <input
+        type="text"
+        value={value}
+        onChange={onChange}
+        className="
+          peer
+          w-full h-[52px] px-4 pt-3 bg-gray-100 
+          rounded-xl text-[16px]
+          focus:outline-none
+        "
+      />
 
-      <span
-        className={`pointer-events-none absolute left-4 text-gray-400 transition-all duration-150 ${
-          floated
-            ? "top-1 text-[11px] translate-y-0"
-            : "top-1/2 -translate-y-1/2 text-[16px]"
-        }`}
+      <label
+        className={`
+          absolute left-4 text-gray-400 pointer-events-none
+          transition-all duration-200
+          ${value ? "text-[11px] top-1" : "text-[16px] top-1/2 -translate-y-1/2"}
+          peer-focus:text-[11px] peer-focus:top-1
+        `}
       >
         {label}
-      </span>
+      </label>
     </div>
   );
 };
 
-/**
- * Кликабельное поле (для даты / мест) с таким же плавающим placeholder-ом
- */
+// -----------------------------
+// CLICKABLE FLOATING BUTTON FIELD
+// -----------------------------
 const FloatingButtonField = ({ value, label, onClick }) => {
-  const [activated, setActivated] = useState(false);
   const hasValue = value && value.length > 0;
-  const floated = activated || hasValue;
 
   return (
     <button
       type="button"
-      onClick={() => {
-        setActivated(true);
-        onClick && onClick();
-      }}
-      className="relative w-full h-[52px] bg-gray-100 rounded-xl px-4 text-left"
+      onClick={onClick}
+      className="
+        relative w-full h-[52px] bg-gray-100
+        rounded-xl px-4 text-left 
+        focus:outline-none
+      "
     >
-      <span
-        className={`pointer-events-none absolute left-4 text-gray-400 transition-all duration-150 ${
-          floated
-            ? "top-1 text-[11px] translate-y-0"
-            : "top-1/2 -translate-y-1/2 text-[16px]"
-        }`}
+      <div className="peer w-full h-full pt-3"></div>
+
+      <label
+        className={`
+          absolute left-4 text-gray-400 pointer-events-none
+          transition-all duration-200
+          ${hasValue ? "text-[11px] top-1" : "text-[16px] top-1/2 -translate-y-1/2"}
+          peer-focus:text-[11px] peer-focus:top-1
+        `}
       >
         {label}
-      </span>
+      </label>
 
-      <div
-        className={`w-full text-[16px] text-gray-900 ${
-          floated ? "pt-3" : ""
-        }`}
-      >
-        {hasValue ? value : ""}
-      </div>
+      {hasValue && (
+        <span
+          className="
+            absolute left-4 top-1/2 -translate-y-1/2 
+            text-[16px] text-gray-900 pt-3 
+            max-w-[85%] truncate text-ellipsis whitespace-nowrap
+          "
+        >
+          {value}
+        </span>
+      )}
     </button>
   );
 };
 
+// -----------------------------
+// MAIN PAGE
+// -----------------------------
 const CreateRoute = () => {
   const navigate = useNavigate();
   const { lang } = useParams();
+  const { t } = useTranslation("createRoute");
 
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
@@ -99,23 +105,36 @@ const CreateRoute = () => {
   const [dateTime, setDateTime] = useState("");
   const [dateModalOpen, setDateModalOpen] = useState(false);
 
-  const [seats, setSeats] = useState(""); // формата "1|2|2"
+  const [seats, setSeats] = useState("");
+  const cleanNumber = (val) => val.replace(/\D/g, "");
+  const prepareSeatsForModal = (str) => {
+    if (!str) return "";
+    return str
+      .split("|")
+      .map((part) => cleanNumber(part.trim()))
+      .filter(Boolean)
+      .join(" | ");
+  };
+
   const [seatsModalOpen, setSeatsModalOpen] = useState(false);
 
   const [price, setPrice] = useState("");
   const [priceModalOpen, setPriceModalOpen] = useState(false);
+
   const [comment, setComment] = useState("");
   const [commentModalOpen, setCommentModalOpen] = useState(false);
+
   const [agree, setAgree] = useState(false);
 
   return (
     <div className="min-h-screen flex flex-col bg-white text-gray-900">
+
       {/* HEADER */}
       <header className="bg-white">
         <div className="container-wide flex items-center justify-between py-8">
           <img
             src={logo}
-            alt="VOOM"
+            alt="voom"
             className="h-6 cursor-pointer"
             onClick={() => navigate(`/${lang}`)}
           />
@@ -126,24 +145,27 @@ const CreateRoute = () => {
         </div>
       </header>
 
-      {/* MAIN: центрируем ВЕСЬ контент (левая форма + правый баннер) по вертикали */}
+      {/* MAIN */}
       <main
         className="flex items-center"
         style={{ minHeight: "calc(100vh - 96px)" }}
-        >
+      >
         <div className="container-wide w-full">
           <div className="flex flex-col lg:flex-row justify-between w-full gap-6">
+
             {/* LEFT BLOCK */}
             <div className="w-full lg:w-1/2 max-w-[600px] self-center">
-              <h1 className="text-3xl font-bold mb-8">Создать маршрут</h1>
+
+              <h1 className="text-3xl font-bold mb-8">{t("title")}</h1>
 
               <div className="flex flex-col gap-5">
-                {/* ------------ MOBILE VERSION ------------ */}
+
+                {/* MOBILE */}
                 <div className="flex flex-col gap-5 lg:hidden">
-                  {/* Откуда + переключатель */}
+
                   <div className="flex gap-3 items-center">
                     <FloatingInput
-                      label="Откуда"
+                      label={t("from")}
                       value={from}
                       onChange={(e) => setFrom(e.target.value)}
                     />
@@ -156,51 +178,44 @@ const CreateRoute = () => {
                     </button>
                   </div>
 
-                  {/* Куда */}
                   <FloatingInput
-                    label="Куда"
+                    label={t("to")}
                     value={to}
                     onChange={(e) => setTo(e.target.value)}
                   />
 
-                  {/* Дата и время */}
                   <FloatingButtonField
-                    label="Дата и время"
+                    label={t("dateTime")}
                     value={dateTime}
                     onClick={() => setDateModalOpen(true)}
                   />
 
-                  {/* Места */}
                   <FloatingButtonField
-                    label="Места"
+                    label={t("seats")}
                     value={seats}
                     onClick={() => setSeatsModalOpen(true)}
                   />
 
-                  {/* Цена */}
                   <FloatingButtonField
-                    label="Цена"
+                    label={t("price")}
                     value={price}
                     onClick={() => setPriceModalOpen(true)}
                   />
 
-
-                  {/* Комментарий */}
                   <FloatingButtonField
-                    label="Комментарий"
+                    label={t("comment")}
                     value={comment}
                     onClick={() => setCommentModalOpen(true)}
                   />
 
-
                 </div>
 
-                {/* ------------ DESKTOP VERSION ------------ */}
+                {/* DESKTOP */}
                 <div className="hidden lg:flex flex-col gap-5">
-                  {/* Row 1 */}
+
                   <div className="flex gap-3 items-center w-full">
                     <FloatingInput
-                      label="Откуда"
+                      label={t("from")}
                       value={from}
                       onChange={(e) => setFrom(e.target.value)}
                     />
@@ -213,46 +228,43 @@ const CreateRoute = () => {
                     </button>
 
                     <FloatingInput
-                      label="Куда"
+                      label={t("to")}
                       value={to}
                       onChange={(e) => setTo(e.target.value)}
                     />
                   </div>
 
-                  {/* Row 2 */}
                   <div className="flex gap-3">
                     <FloatingButtonField
-                      label="Дата и время"
+                      label={t("dateTime")}
                       value={dateTime}
                       onClick={() => setDateModalOpen(true)}
                     />
 
                     <FloatingButtonField
-                      label="Места"
+                      label={t("seats")}
                       value={seats}
                       onClick={() => setSeatsModalOpen(true)}
                     />
                   </div>
 
-                  {/* Row 3 */}
                   <div className="flex gap-3">
                     <FloatingButtonField
-                      label="Цена"
+                      label={t("price")}
                       value={price}
                       onClick={() => setPriceModalOpen(true)}
                     />
 
-
                     <FloatingButtonField
-                      label="Комментарий"
+                      label={t("comment")}
                       value={comment}
                       onClick={() => setCommentModalOpen(true)}
                     />
-
                   </div>
+
                 </div>
 
-                {/* CHECKBOX */}
+                {/* AGREEMENT */}
                 <label className="flex items-start gap-3 text-sm cursor-pointer">
                   <input
                     type="checkbox"
@@ -261,9 +273,7 @@ const CreateRoute = () => {
                     onChange={(e) => setAgree(e.target.checked)}
                   />
                   <span className="text-gray-700 leading-snug">
-                    Подтверждая, вы соглашаетесь, что полностью несёте ответственность
-                    за маршрут. Платформа VOOM не является перевозчиком и не несёт
-                    ответственности за действия водителей и пассажиров.
+                    {t("agreeText")}
                   </span>
                 </label>
 
@@ -277,24 +287,30 @@ const CreateRoute = () => {
                     ${!agree && "opacity-50 cursor-not-allowed"}
                   `}
                 >
-                  Создать маршрут
+                  {t("createBtn")}
                 </button>
 
                 {/* WARNING */}
-                <p className="text-sm text-gray-700 leading-snug mt-1">
-                  <b className="text-red-600">Важно!</b>{" "}
-                  voom рекомендует водителям зарегистрироваться как самозанятыми,
-                  чтобы избежать вопросов контролирующих органов. Регистрация занимает
-                  пару минут и доступна через сервис{" "}
-                  <a
-                    href="https://oldmy.gov.uz/ru/service/491"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="underline"
-                  >
-                    my.gov.uz
-                  </a>. Консультация — по номеру <b>1242</b>.
-                </p>
+                <div className="text-sm text-gray-700 leading-snug mt-1">
+                  <b className="text-red-600">{t("important")}</b>{" "}
+
+                  <Trans
+                    t={t}
+                    i18nKey="importantText"
+                    components={{
+                      link: (
+                        <a
+                          href="https://oldmy.gov.uz/ru/service/491"
+                          target="_blank"
+                          rel="noreferrer"
+                          className="underline text-blue-600"
+                        />
+                      )
+                    }}
+                  />
+
+                  . {t("importantAfterLink")}
+                </div>
               </div>
             </div>
 
@@ -303,11 +319,10 @@ const CreateRoute = () => {
               <div
                 className="relative rounded-[32px] overflow-hidden shadow-lg w-full"
                 style={{
-                    maxWidth: "720px",
-                    height: "100%",
-                    maxHeight: "calc(100vh - 120px)",
+                  maxWidth: "720px",
+                  height: "100%",
+                  maxHeight: "calc(100vh - 120px)"
                 }}
-
               >
                 <img src={bgImg} alt="banner" className="w-full h-full object-cover" />
 
@@ -315,47 +330,48 @@ const CreateRoute = () => {
                   <img src={qrImg} alt="qr" className="w-[70px] h-[70px]" />
                   <div>
                     <p className="font-semibold text-[15px] leading-tight">
-                      Создавайте и управляйте маршрутами быстро!
+                      {t("bannerTitle")}
                     </p>
                     <p className="text-gray-600 text-sm mt-1 leading-snug">
-                      Сканируйте QR-код и пользуйтесь всеми функциями прямо с телефона.
+                      {t("bannerText")}
                     </p>
                   </div>
                 </div>
               </div>
             </div>
+
           </div>
         </div>
       </main>
 
-      {/* Модалка даты */}
+      {/* MODALS */}
       <DateTimeModal
         isOpen={dateModalOpen}
+        initialValue={dateTime}
         onClose={() => setDateModalOpen(false)}
         onSave={(value) => setDateTime(value)}
       />
 
-      {/* Модалка мест */}
       <SeatsModal
         isOpen={seatsModalOpen}
-        initialValue={seats}
+        initialValue={prepareSeatsForModal(seats)}
         onClose={() => setSeatsModalOpen(false)}
-        onSave={(value) => setSeats(value)}
+        onSave={({ front, back }) => {
+          const f = front > 0 ? `${front} ${front === 1 ? "место" : "места"}` : "";
+          const b = back > 0 ? `${back} ${back === 1 ? "место" : "места"}` : "";
+          const formatted = [f, b].filter(Boolean).join(" | ");
+          setSeats(formatted);
+        }}
       />
 
       <PriceModal
         isOpen={priceModalOpen}
+        initialValue={price}
         onClose={() => setPriceModalOpen(false)}
         onSave={(value) => {
-          // value = { front, back, extra }
-          // формируем красивую строку типа:
-          // "100 000 / 80 000 / 80 000"
-          const formatted = [
-            value.front,
-            value.back,
-            value.extra,
-          ].filter(Boolean).join(" | ");
-
+          const front = value.frontPrice ? `${value.frontPrice} сум` : "";
+          const back = value.backPrice ? `${value.backPrice} сум` : "";
+          const formatted = [front, back].filter(Boolean).join(" | ");
           setPrice(formatted);
         }}
       />
@@ -367,9 +383,7 @@ const CreateRoute = () => {
         onSave={(value) => setComment(value)}
       />
 
-
     </div>
-    
   );
 };
 

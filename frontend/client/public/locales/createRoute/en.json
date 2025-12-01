@@ -1,0 +1,21 @@
+{
+  "title": "Create a route",
+
+  "from": "From",
+  "to": "To",
+  "dateTime": "Date & time",
+  "seats": "Seats",
+  "price": "Price",
+  "comment": "Comment",
+
+  "agreeText": "By confirming, you agree that you are fully responsible for the route. The voom platform is not a carrier and is not responsible for the actions of drivers or passengers.",
+
+  "createBtn": "Create route",
+
+  "important": "Important!",
+  "importantText": "voom recommends drivers to register as self-employed to avoid issues with regulatory authorities. Registration takes a few minutes and is available via <link>my.gov.uz</link>",
+  "importantAfterLink": "Support — 1242.",
+
+  "bannerTitle": "Create and manage routes quickly!",
+  "bannerText": "Scan the QR code and use all features directly from your phone."
+}

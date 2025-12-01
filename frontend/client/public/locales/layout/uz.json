@@ -1,6 +1,6 @@
 {
   "header": {
-    "logoAlt": "Voom — shaharlararo safarlar xizmati",
+    "logoAlt": "voom — shaharlararo safarlar xizmati",
     "nav": {
       "home": "Bosh sahifa",
       "about": "Kompaniya haqida",
@@ -13,7 +13,7 @@
       "en": "Inglizcha"
     },
     "actions": {
-      "createRoute": "Marshrut yaratish"
+      "createRoute": "Yo'nalish yaratish"
     },
     "profile": {
       "namePlaceholder": "Fayzullo"
