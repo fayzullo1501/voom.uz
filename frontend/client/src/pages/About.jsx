@@ -18,7 +18,7 @@ const About = () => {
       <div className="w-full pb-20">
 
         {/* Banner */}
-        <div className="w-full px-4 xl:px-20 mt-4">
+        <div className="container-wide mt-4">
           <div className="w-full h-[260px] md:h-[340px] lg:h-[420px] rounded-3xl overflow-hidden">
             <img
               src={bannerImg}
@@ -29,14 +29,14 @@ const About = () => {
         </div>
 
         {/* Content */}
-        <div className="w-full px-4 xl:px-20 mt-20 grid grid-cols-1 md:grid-cols-2 gap-14">
+        <div className="container-wide mt-20 grid grid-cols-1 md:grid-cols-2 gap-14">
 
           {/* LEFT SIDE */}
           <div className="flex flex-col gap-8 items-start text-left w-full">
 
             {/* Title */}
             <h1 className="text-[34px] md:text-[44px] font-bold text-gray-900 leading-[1.15]">
-              voom.uz - карпулинг сервис
+              voom.uz — карпулинг сервис
             </h1>
 
             {/* Subtitle + Button */}
@@ -49,13 +49,13 @@ const About = () => {
                 </p>
 
                 <p className="mt-1 text-sm tracking-wider text-gray-400 uppercase">
-                  Последние маршруты
+                  последние маршруты
                 </p>
               </div>
 
               {/* Arrow Button */}
-              <a
-                href="#"
+              <Link
+                to="/routes"
                 className="flex items-center justify-center w-[70px] h-[70px]
                            border border-black rounded-xl hover:bg-black hover:text-white
                            transition-all"
@@ -75,7 +75,7 @@ const About = () => {
                     d="M7 17L17 7m0 0H9m8 0v8"
                   />
                 </svg>
-              </a>
+              </Link>
 
             </div>
           </div>
@@ -84,31 +84,43 @@ const About = () => {
           <div className="flex flex-col gap-6 text-[17px] leading-relaxed text-gray-800">
 
             <p className="font-semibold text-gray-900">
-              voom помогает пассажирам, водителям и организациям улучшать мобильность и делать поездки удобнее, безопаснее и доступнее.
+              voom помогает пассажирам, водителям и организациям улучшать мобильность
+              и делать поездки удобнее, безопаснее и доступнее.
             </p>
 
             <p>
-              Платформа voom создана компанией FAYKHANUR Enterprises Group LLC для развития транспортных инноваций в Узбекистане. voom объединяет решения для междугородних поездок, курьерской доставки и городского такси.
+              Платформа voom создана компанией FAYKHANUR Enterprises Group LLC для развития
+              транспортных инноваций в Узбекистане. voom объединяет решения для междугородних
+              поездок, курьерской доставки и городского такси.
             </p>
 
             <ul className="list-disc ml-6 space-y-2">
               <li>
                 voom intercity:
-                <a href="https://voom.uz" className="underline ml-2">www.voom.uz</a>
+                <a href="https://voom.uz" className="underline ml-2" target="_blank">
+                  www.voom.uz
+                </a>
               </li>
               <li>
                 voom courier:
-                <a href="https://courier.voom.uz" className="underline ml-2">courier.voom.uz</a>
+                <a href="https://courier.voom.uz" className="underline ml-2" target="_blank">
+                  courier.voom.uz
+                </a>
               </li>
               <li>
                 voom taxi:
-                <a href="https://taxi.voom.uz" className="underline ml-2">taxi.voom.uz</a>
+                <a href="https://taxi.voom.uz" className="underline ml-2" target="_blank">
+                  taxi.voom.uz
+                </a>
               </li>
             </ul>
 
             <p>
-              Команда voom разрабатывает современные цифровые сервисы, улучшает качество перевозок и помогает пользователям экономить время и ресурсы. Мы стремимся сделать повседневные и дальние поездки комфортнее для каждого.
+              Команда voom разрабатывает современные цифровые сервисы, улучшает качество перевозок
+              и помогает пользователям экономить время и ресурсы. Мы стремимся сделать повседневные
+              и дальние поездки комфортнее для каждого.
             </p>
+
           </div>
 
         </div>
