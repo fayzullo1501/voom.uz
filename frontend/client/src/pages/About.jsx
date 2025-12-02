@@ -36,7 +36,7 @@ const About = () => {
 
             {/* Title */}
             <h1 className="text-[34px] md:text-[44px] font-bold text-gray-900 leading-[1.15]">
-              voom.uz — карпулинг сервис
+              {t("title")}
             </h1>
 
             {/* Subtitle + Button */}
@@ -45,11 +45,11 @@ const About = () => {
               {/* Text block */}
               <div className="flex flex-col items-end text-right">
                 <p className="text-[22px] text-gray-900 leading-relaxed">
-                  Создаём удобную мобильность
+                  {t("subtitle")}
                 </p>
 
                 <p className="mt-1 text-sm tracking-wider text-gray-400 uppercase">
-                  последние маршруты
+                  {t("buttonLabel")}
                 </p>
               </div>
 
@@ -84,42 +84,33 @@ const About = () => {
           <div className="flex flex-col gap-6 text-[17px] leading-relaxed text-gray-800">
 
             <p className="font-semibold text-gray-900">
-              voom помогает пассажирам, водителям и организациям улучшать мобильность
-              и делать поездки удобнее, безопаснее и доступнее.
+              {t("p1")}
             </p>
 
-            <p>
-              Платформа voom создана компанией FAYKHANUR Enterprises Group LLC для развития
-              транспортных инноваций в Узбекистане. voom объединяет решения для междугородних
-              поездок, курьерской доставки и городского такси.
-            </p>
+            <p>{t("p2")}</p>
 
             <ul className="list-disc ml-6 space-y-2">
               <li>
-                voom intercity:
+                {t("intercity")}
                 <a href="https://voom.uz" className="underline ml-2" target="_blank">
                   www.voom.uz
                 </a>
               </li>
               <li>
-                voom courier:
+                {t("courier")}
                 <a href="https://courier.voom.uz" className="underline ml-2" target="_blank">
                   courier.voom.uz
                 </a>
               </li>
               <li>
-                voom taxi:
+                {t("taxi")}
                 <a href="https://taxi.voom.uz" className="underline ml-2" target="_blank">
                   taxi.voom.uz
                 </a>
               </li>
             </ul>
 
-            <p>
-              Команда voom разрабатывает современные цифровые сервисы, улучшает качество перевозок
-              и помогает пользователям экономить время и ресурсы. Мы стремимся сделать повседневные
-              и дальние поездки комфортнее для каждого.
-            </p>
+            <p>{t("p3")}</p>
 
           </div>
 

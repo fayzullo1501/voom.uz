@@ -37,7 +37,12 @@ const Header = () => {
   const handleLangChange = (code) => {
     i18n.changeLanguage(code);
     setLangOpen(false);
-    navigate(`/${code}`);
+
+    const pathParts = window.location.pathname.split("/");
+    pathParts[1] = code; // заменяем язык в URL
+
+    const newPath = pathParts.join("/");
+    navigate(newPath);
   };
 
   const navLinks = [

@@ -35,5 +35,77 @@
         "text": "Haydovchi siz bilan kelishilgan joydan olib ketadi va aynan aytilgan manzilda tushirib qo‘yadi."
       }
     }
+  },
+
+
+  "how": {
+    "titleBefore": "Platforma qanday ishlaydi",
+    "titleBrand": "",
+    "titleAfter": "?",
+    "steps": [
+      {
+        "title": "Qidiruv maʼlumotlarini kiriting",
+        "desc": "Jo‘nash va borish shaharlarini hamda safar sanasini belgilang."
+      },
+      {
+        "title": "Marshrut yoki haydovchini tanlang",
+        "desc": "Haydovchilar takliflarini ko‘rib chiqing va mos keladigan variantni tanlang."
+      },
+      {
+        "title": "Joyni bron qiling",
+        "desc": "Bronni tasdiqlang va haydovchidan javobni kuting."
+      },
+      {
+        "title": "Haydovchi sizga qo‘ng‘iroq qiladi. Yo‘lingiz bexatar bo‘lsin!",
+        "desc": "Tasdiqlangandan so‘ng haydovchi safar tafsilotlarini aniqlashtirish uchun siz bilan bog‘lanadi."
+      }
+    ]
+  },
+
+
+  "download": {
+    "title": "Bizning bepul <br /> ilovamizni yuklab oling",
+    "subtitle": "Bu buyurtma berishni yanada qulay qiladi va haydovchilarning takliflari haqida bildirishnomalar olasiz.",
+    "appstoreAlt": "App Store orqali yuklab oling",
+    "googleplayAlt": "Google Play orqali yuklab oling",
+    "qrAlt": "VOOM ilovasini yuklab olish uchun QR-kod"
+  },
+
+  
+  "newsSection": {
+    "title": "Yangiliklar",
+    "items": [
+      {
+        "title": "Manera yangi korporativ platformani ishga tushirdi",
+        "desc": "Agentlik biznes uchun CRM, analitika va jarayonlarni avtomatlashtirish integratsiyasi bilan yechim taqdim etdi. Shaxsiy kabinetlar va moslashuvchan dizayn mijozlar uchun allaqachon mavjud.",
+        "date": "2025-yil 5-sentabr"
+      },
+      {
+        "title": "Manera yangi korporativ platformani ishga tushirdi",
+        "desc": "Agentlik biznes uchun CRM, analitika va jarayonlarni avtomatlashtirish integratsiyasi bilan yechim taqdim etdi. Shaxsiy kabinetlar va moslashuvchan dizayn mijozlar uchun allaqachon mavjud.",
+        "date": "2025-yil 5-sentabr"
+      },
+      {
+        "title": "Manera yangi korporativ platformani ishga tushirdi",
+        "desc": "Agentlik biznes uchun CRM, analitika va jarayonlarni avtomatlashtirish integratsiyasi bilan yechim taqdim etdi. Shaxsiy kabinetlar va moslashuvchan dizayn mijozlar uchun allaqachon mavjud.",
+        "date": "2025-yil 5-sentabr"
+      }
+    ]
+  },
+
+  "request": {
+    "titleLine1": "Mos yo‘nalishni",
+    "titleLine2": "topa olmadingizmi?",
+    "subtitle": "Ariza qoldiring va haydovchi tez orada siz bilan bog‘lanadi.",
+    "name": "Ism",
+    "phone": "Telefon",
+    "from": "Qayerdan",
+    "to": "Qayerga",
+    "date": "Sana",
+    "submit": "Yuborish",
+    "agreeText": "Ariza yuborish orqali siz shaxsiy ma’lumotlaringizni qayta ishlashga rozilik bildirasiz",
+    "privacyPolicy": "maxfiylik siyosati",
+    "alertAgree": "Maʼlumotlarni qayta ishlashga rozilikni tasdiqlang.",
+    "alertSuccess": "Ariza yuborildi! Haydovchi tez orada siz bilan bog‘lanadi."
   }
 }

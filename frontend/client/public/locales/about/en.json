@@ -1,9 +1,14 @@
 {
-  "title": "About VOOM",
-  "subtitle": "An innovative platform for convenient, safe and cost-efficient intercity travel.",
-  "button": "Latest routes",
+  "title": "voom.uz — carpooling service",
+  "subtitle": "Creating convenient mobility",
+  "buttonLabel": "latest routes",
 
-  "text1": "VOOM is a modern carpooling platform that connects passengers and drivers, making intercity trips more affordable, safe and comfortable.",
-  "text2": "Our service helps reduce transportation costs, decrease road congestion, and improve mobility opportunities across Uzbekistan.",
-  "text3": "VOOM is an innovative project developed by FAYKHANUR Enterprises Group LLC — a group focused on next-generation digital products and smart services."
+  "p1": "voom helps passengers, drivers and organizations improve mobility and make trips safer, easier and more affordable.",
+  "p2": "The voom platform was created by FAYKHANUR Enterprises Group LLC to develop transportation innovation in Uzbekistan. voom unites intercity carpooling, courier delivery and urban taxi services.",
+
+  "intercity": "voom intercity:",
+  "courier": "voom courier:",
+  "taxi": "voom taxi:",
+
+  "p3": "The voom team develops modern digital services, improves the quality of transportation and helps users save time and resources. We strive to make everyday and long-distance trips more comfortable for everyone."
 }

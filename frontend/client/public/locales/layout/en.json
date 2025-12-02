@@ -18,5 +18,53 @@
     "profile": {
       "namePlaceholder": "Fayzullo"
     }
+  },
+
+
+  "footer": {
+    "contacts": {
+      "number": "+998 99 996-16-96",
+      "support": "Support service",
+      "email": "info@voom.uz",
+      "instagram": "Instagram",
+      "youtube": "YouTube",
+      "telegram": "Telegram"
+    },
+
+    "info": {
+      "title": "Information",
+      "terms": "User Agreement",
+      "privacy": "Privacy Policy",
+      "faq": "FAQ"
+    },
+
+    "platform": {
+      "title": "About the platform",
+      "what": "What is voom?",
+      "how": "How it works",
+      "news": "News & updates",
+      "contacts": "Contacts"
+    },
+
+    "features": {
+      "title": "Features",
+      "passengers": "For passengers",
+      "drivers": "For drivers",
+      "safety": "Trip safety",
+      "support": "Support service"
+    },
+
+    "company": {
+      "line1": "LLC “FAYKHANUR”, TIN 311015623",
+      "line2": "Republic of Uzbekistan, Tashkent city,",
+      "line3": "Yakkasaray district, Babur street, 67/4",
+      "line4": "Registration number 5220787"
+    },
+
+    "bottom": {
+      "brandLink": "voom.uz",
+      "brandSuffix": "service — carpooling.",
+      "rights": "© FAYKHANUR Enterprises Group LLC, 2025"
+    }
   }
 }

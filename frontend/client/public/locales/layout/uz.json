@@ -18,5 +18,53 @@
     "profile": {
       "namePlaceholder": "Fayzullo"
     }
+  },
+
+
+  "footer": {
+    "contacts": {
+      "number": "+998 99 996-16-96",
+      "support": "Qo'ng'iroq markazi",
+      "email": "info@voom.uz",
+      "instagram": "Instagram",
+      "youtube": "YouTube",
+      "telegram": "Telegram"
+    },
+
+    "info": {
+      "title": "Ma'lumot",
+      "terms": "Foydalanuvchi kelishuvi",
+      "privacy": "Maxfiylik siyosati",
+      "faq": "Ko‘p beriladigan savollar"
+    },
+
+    "platform": {
+      "title": "Platforma haqida",
+      "what": "Voom nima?",
+      "how": "Qanday ishlaydi",
+      "news": "Yangiliklar va yangilanishlar",
+      "contacts": "Aloqa"
+    },
+
+    "features": {
+      "title": "Imkoniyatlar",
+      "passengers": "Yo‘lovchilar uchun",
+      "drivers": "Haydovchilar uchun",
+      "safety": "Sayohat xavfsizligi",
+      "support": "Yordam xizmati"
+    },
+
+    "company": {
+      "line1": "FAYKHANUR MCHJ, STIR 311015623",
+      "line2": "O‘zbekiston Respublikasi, Toshkent shahri,",
+      "line3": "Yakkasaroy tumani, Bobur ko‘chasi, 67/4-uy",
+      "line4": "Ro‘yxat raqami 5220787"
+    },
+
+    "bottom": {
+      "brandLink": "voom.uz",
+      "brandSuffix": "xizmat — karpuling.",
+      "rights": "© FAYKHANUR Enterprises Group LLC, 2025"
+    }
   }
 }

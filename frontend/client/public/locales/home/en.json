@@ -35,5 +35,77 @@
         "text": "The driver will pick you up at the agreed location and drop you off exactly where you arranged."
       }
     }
+  },
+
+
+  "how": {
+    "titleBefore": "How does the",
+    "titleBrand": "voom",
+    "titleAfter": "platform work?",
+    "steps": [
+      {
+        "title": "Enter search details",
+        "desc": "Specify departure and destination cities, as well as your travel date."
+      },
+      {
+        "title": "Choose a suitable route or driver",
+        "desc": "Browse available offers and pick the option that best fits your time and budget."
+      },
+      {
+        "title": "Book your seat",
+        "desc": "Confirm the booking and wait for the driver's approval."
+      },
+      {
+        "title": "The driver will contact you. Have a safe trip!",
+        "desc": "After approval, the driver will reach out to clarify trip details."
+      }
+    ]
+  },
+
+
+  "download": {
+    "title": "Download our free app",
+    "subtitle": "This makes booking easier and allows you to receive notifications about driver offers.",
+    "appstoreAlt": "Download on the App Store",
+    "googleplayAlt": "Get it on Google Play",
+    "qrAlt": "QR code for downloading VOOM"
+  },
+
+
+  "newsSection": {
+    "title": "News",
+    "items": [
+      {
+        "title": "Manera launches a new corporate platform",
+        "desc": "The agency introduced a business solution with CRM integration, analytics, and workflow automation. Personal dashboards and flexible design are already available to clients.",
+        "date": "September 5, 2025"
+      },
+      {
+        "title": "Manera launches a new corporate platform",
+        "desc": "The agency introduced a business solution with CRM integration, analytics, and workflow automation. Personal dashboards and flexible design are already available to clients.",
+        "date": "September 5, 2025"
+      },
+      {
+        "title": "Manera launches a new corporate platform",
+        "desc": "The agency introduced a business solution with CRM integration, analytics, and workflow automation. Personal dashboards and flexible design are already available to clients.",
+        "date": "September 5, 2025"
+      }
+    ]
+  },
+
+  "request": {
+    "titleLine1": "Didn't find",
+    "titleLine2": "a suitable route?",
+    "subtitle": "Leave a request and a driver will contact you shortly.",
+    "name": "Name",
+    "phone": "Phone",
+    "from": "From",
+    "to": "To",
+    "date": "Date",
+    "submit": "Submit",
+    "agreeText": "By submitting the request, you consent to the processing of your personal data in accordance with our",
+    "privacyPolicy": "privacy policy",
+    "alertAgree": "Please confirm your consent to data processing.",
+    "alertSuccess": "Your request has been submitted! A driver will contact you soon."
   }
 }

@@ -1,9 +1,14 @@
 {
-  "title": "VOOM platformasi haqida",
-  "subtitle": "Shaharlararo qulay, xavfsiz va tejamkor sayohatlar uchun yaratilgan innovatsion platforma.",
-  "button": "Yangi yo‘nalishlar",
+  "title": "voom.uz — karpuling xizmati",
+  "subtitle": "Qulay mobilitet yaratamiz",
+  "buttonLabel": "so‘nggi yo‘nalishlar",
 
-  "text1": "VOOM — bu haydovchilar va yo‘lovchilarni birlashtiradigan zamonaviy servis bo‘lib, shaharlararo safarlarni arzonroq, xavfsizroq va qulayroq qilishga xizmat qiladi.",
-  "text2": "Platformamiz transport xarajatlarini kamaytirishga, yo‘llardagi yuklamani pasaytirishga va O‘zbekiston aholisi uchun mobillik imkoniyatlarini kengaytirishga yordam beradi.",
-  "text3": "VOOM — FAYKHANUR Enterprises Group LLC tomonidan ishlab chiqilgan innovatsion loyiha bo‘lib, yangi avlod raqamli mahsulotlari va aqlli xizmatlarni taqdim etishga qaratilgan."
+  "p1": "voom yo‘lovchilarga, haydovchilarga va tashkilotlarga qulay, xavfsiz va arzon sayohat imkoniyatlarini taqdim etadi.",
+  "p2": "voom platformasi FAYKHANUR Enterprises Group LLC tomonidan O‘zbekistonda transport innovatsiyalarini rivojlantirish maqsadida yaratilgan. voom shaharlararo safarlar, kuryerlik yetkazib berish va shahar ichidagi taksi xizmatlarini birlashtiradi.",
+
+  "intercity": "voom intercity:",
+  "courier": "voom courier:",
+  "taxi": "voom taxi:",
+
+  "p3": "voom jamoasi zamonaviy raqamli servislarni ishlab chiqadi, transport sifatini yaxshilaydi va foydalanuvchilarning vaqtini tejashga yordam beradi. Biz kundalik va uzoq masofali safarlarni yanada qulay qilishga intilamiz."
 }
