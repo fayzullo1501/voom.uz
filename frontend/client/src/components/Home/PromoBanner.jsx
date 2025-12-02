@@ -1,5 +1,5 @@
 import React from "react";
-import defaultBg from "../../assets/hero-bg.jpg"; // фон по умолчанию
+import defaultBg from "../../assets/about.jpg"; // фон по умолчанию
 
 function PromoBanner({
   tag = "О платформе", // можно "Реклама" или другое

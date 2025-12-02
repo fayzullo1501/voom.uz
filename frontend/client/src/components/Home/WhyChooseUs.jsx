@@ -1,6 +1,9 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import carBg from "../../assets/hero-bg.jpg"; // временное изображение
+import carBg from "../../assets/hero-bg.jpg"; 
+import why1 from "../../assets/why1.jpg";
+import why2 from "../../assets/why2.jpg";
+import why3 from "../../assets/why3.jpg";
 
 const WhyChooseUs = () => {
   const { t } = useTranslation("home");
@@ -11,19 +14,19 @@ const WhyChooseUs = () => {
       id: 1,
       title: t("why.cards.1.title"),
       description: t("why.cards.1.text"),
-      image: carBg
+      image: why1
     },
     {
       id: 2,
       title: t("why.cards.2.title"),
       description: t("why.cards.2.text"),
-      image: carBg
+      image: why2
     },
     {
       id: 3,
       title: t("why.cards.3.title"),
       description: t("why.cards.3.text"),
-      image: carBg
+      image: why3
     }
   ];
 
