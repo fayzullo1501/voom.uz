@@ -1,0 +1,23 @@
+{
+  "title": "Biz bilan bog‘laning",
+
+  "emailLabel": "Email",
+  "email": "info@voom.uz",
+
+  "phoneLabel": "Telefon raqami",
+  "phone": "+998 (90) 123-45-67",
+
+  "addressLabel": "Manzil",
+  "addressLine1": "O‘zbekiston Respublikasi, Toshkent shahri,",
+  "addressLine2": "Yakkasaroy tumani, Bobur ko‘chasi,",
+  "addressLine3": "67/4-uy",
+
+  "socialLabel": "Biz ijtimoiy tarmoqlarda",
+
+  "form": {
+    "name": "Ism",
+    "phone": "Telefon raqami",
+    "message": "Xabar",
+    "submit": "Yuborish"
+  }
+}

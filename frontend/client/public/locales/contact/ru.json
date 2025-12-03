@@ -1,0 +1,23 @@
+{
+  "title": "Свяжитесь с нами",
+
+  "emailLabel": "Email",
+  "email": "info@voom.uz",
+
+  "phoneLabel": "Телефон номер",
+  "phone": "+998 (90) 123-45-67",
+
+  "addressLabel": "Адрес",
+  "addressLine1": "Республика Узбекистан, г. Ташкент,",
+  "addressLine2": "Яккасарайский район, ул. Бабур,",
+  "addressLine3": "дом 67/4",
+
+  "socialLabel": "Мы в соц. сетях",
+
+  "form": {
+    "name": "Имя",
+    "phone": "Телефон номер",
+    "message": "Сообщение",
+    "submit": "Отправить"
+  }
+}

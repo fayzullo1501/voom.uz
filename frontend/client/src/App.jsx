@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import Home from "./pages/Home";
 import About from "./pages/About";
 import News from "./pages/News";
+import Contact from "./pages/Contact";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import CreateRoute from "./pages/createRoute/CreateRoute";
@@ -40,6 +41,7 @@ function App() {
           <Route path="/:lang" element={<LangWrapper Component={Home} />} />
           <Route path="/:lang/about" element={<LangWrapper Component={About} />} />
           <Route path="/:lang/news" element={<LangWrapper Component={News} />} />
+          <Route path="/:lang/contacts" element={<LangWrapper Component={Contact} />} />
 
           {/* Логин */}
           <Route path="/:lang/login" element={<LangWrapper Component={Login} />} />

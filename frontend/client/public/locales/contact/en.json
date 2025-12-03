@@ -1,0 +1,23 @@
+{
+  "title": "Contact us",
+
+  "emailLabel": "Email",
+  "email": "info@voom.uz",
+
+  "phoneLabel": "Phone number",
+  "phone": "+998 (90) 123-45-67",
+
+  "addressLabel": "Address",
+  "addressLine1": "Republic of Uzbekistan, Tashkent city,",
+  "addressLine2": "Yakkasaray district, Babur street,",
+  "addressLine3": "house 67/4",
+
+  "socialLabel": "We are on social networks",
+
+  "form": {
+    "name": "Name",
+    "phone": "Phone number",
+    "message": "Message",
+    "submit": "Send"
+  }
+}
