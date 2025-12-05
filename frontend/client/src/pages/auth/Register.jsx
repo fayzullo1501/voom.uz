@@ -54,7 +54,7 @@ const Register = () => {
           <img
             src={logo}
             alt="VOOM"
-            className="h-6 cursor-pointer"
+            className="h-10 cursor-pointer"
             onClick={() => navigate(`/${lang}`)}
           />
 

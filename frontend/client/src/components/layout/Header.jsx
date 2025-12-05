@@ -62,7 +62,7 @@ const Header = () => {
           <img
             src={logo}
             alt={t("header.logoAlt")}
-            className="h-6 cursor-pointer"
+            className="h-10 cursor-pointer"
             onClick={() => navigate(`/${currentLang}`)}
           />
 
@@ -181,7 +181,7 @@ const Header = () => {
           <img
             src={logo}
             alt={t("header.logoAlt")}
-            className="h-7 cursor-pointer"
+            className="h-10 cursor-pointer"
             onClick={() => {
               navigate(`/${currentLang}`);
               setMenuOpen(false);
