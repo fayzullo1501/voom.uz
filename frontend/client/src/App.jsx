@@ -9,6 +9,9 @@ import Contact from "./pages/Contact";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import CreateRoute from "./pages/createRoute/CreateRoute";
+import ProfileMenu from "./pages/profile/ProfileMenu";
+import ProfileAccount from "./pages/profile/ProfileAccount";
+
 
 // Обертка, которая подхватывает язык из URL
 function LangWrapper({ Component }) {
@@ -51,6 +54,11 @@ function App() {
 
           {/* Создание маршрута */}
           <Route path="/:lang/create-route" element={<LangWrapper Component={CreateRoute} />} />
+          {/* Профиль - О себе */}
+          <Route path="/:lang/profile/menu" element={<LangWrapper Component={ProfileMenu} />} />
+          {/* Профиль - Учётная запись */}
+          <Route path="/:lang/profile/account" element={<LangWrapper Component={ProfileAccount} />} />
+
 
           {/* 404 → /ru */}
           <Route path="*" element={<Navigate to="/ru" replace />} />

@@ -135,7 +135,7 @@ const CreateRoute = () => {
           <img
             src={logo}
             alt="voom"
-            className="h-6 cursor-pointer"
+            className="h-10 cursor-pointer"
             onClick={() => navigate(`/${lang}`)}
           />
           <X

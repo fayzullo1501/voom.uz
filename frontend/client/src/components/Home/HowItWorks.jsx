@@ -1,6 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import howImg from "../../assets/hero-bg.jpg";
+import howImg from "../../assets/howitwork-bg.jpg";
 
 function HowItWorks() {
   const { t } = useTranslation("home");

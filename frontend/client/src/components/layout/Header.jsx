@@ -144,7 +144,10 @@ const Header = () => {
           </button>
 
           {/* Аккаунт */}
-          <div className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 px-2 py-1 rounded-lg">
+          <div
+            className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 px-2 py-1 rounded-lg"
+            onClick={() => navigate(`/${currentLang}/profile/menu`)}
+          >
             <span className="text-[15px] font-medium">
               {t("header.profile.namePlaceholder")}
             </span>
@@ -259,6 +262,7 @@ const Header = () => {
           {/* Кнопка + профиль */}
           <div className="flex flex-col gap-4 w-full pt-2">
 
+            {/* Кнопка: Создать маршрут */}
             <button
               className="flex items-center gap-2 text-[16px] font-medium text-gray-900 hover:text-gray-700 transition"
               onClick={() => {
@@ -270,7 +274,14 @@ const Header = () => {
               {t("header.actions.createRoute")}
             </button>
 
-            <div className="flex items-center gap-3">
+            {/* Аккаунт */}
+            <div
+              className="flex items-center gap-3 cursor-pointer hover:bg-gray-50 px-2 py-2 rounded-lg transition"
+              onClick={() => {
+                navigate(`/${currentLang}/profile/menu`);
+                setMenuOpen(false);
+              }}
+            >
               <img
                 src={avatarPlaceholder}
                 alt="profile"
