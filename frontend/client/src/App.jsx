@@ -11,6 +11,10 @@ import Register from "./pages/auth/Register";
 import CreateRoute from "./pages/createRoute/CreateRoute";
 import ProfileMenu from "./pages/profile/ProfileMenu";
 import ProfileAccount from "./pages/profile/ProfileAccount";
+import EditProfileInfo from "./components/profile/EditProfileInfo";
+import ProfilePhoto from "./components/profile/ProfilePhoto";
+
+
 
 
 // Обертка, которая подхватывает язык из URL
@@ -58,6 +62,12 @@ function App() {
           <Route path="/:lang/profile/menu" element={<LangWrapper Component={ProfileMenu} />} />
           {/* Профиль - Учётная запись */}
           <Route path="/:lang/profile/account" element={<LangWrapper Component={ProfileAccount} />} />
+          {/* Профиль — Редактировать информацию о себе */}
+          <Route path="/:lang/profile/edit" element={<LangWrapper Component={EditProfileInfo} />} />
+          {/* Профиль — Фото профиля */}
+          <Route path="/:lang/profile/photo" element={<LangWrapper Component={ProfilePhoto} />}/>
+
+
 
 
           {/* 404 → /ru */}
