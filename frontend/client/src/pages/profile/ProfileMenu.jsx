@@ -7,7 +7,7 @@ import ProfileTopBar from "./ProfileTopBar";
 import avatarPlaceholder from "../../assets/avatar-placeholder.svg";
 import userVerifiedIcon from "../../assets/userverified.svg";
 
-/* ===== Универсальная зелёная галочка ===== */
+/* ===== Универсальная зелёная галочка (ТОЛЬКО подтверждения) ===== */
 const CheckIcon = () => (
   <div className="w-8 h-8 rounded-full bg-[#32BB78] flex items-center justify-center shrink-0">
     <svg width="16" height="12" viewBox="0 0 16 12" fill="none">
@@ -51,11 +51,7 @@ const ProfileMenu = () => {
                 <span className="text-[36px] font-semibold leading-tight">
                   Fayzullo
                 </span>
-                <img
-                  src={userVerifiedIcon}
-                  alt="Verified"
-                  className="w-7 h-7"
-                />
+                <img src={userVerifiedIcon} alt="Verified" className="w-7 h-7" />
               </div>
 
               <span className="mt-1 text-sm text-[#32BB78]">
@@ -83,11 +79,14 @@ const ProfileMenu = () => {
               Подтвердите свой профиль
             </h3>
 
-            <div onClick={() => navigate(`/${lang}/profile/photo`)} className="flex items-center gap-3 py-3 px-2 rounded-lg hover:bg-gray-100 cursor-pointer transition" >
-                <CheckIcon />
-                <span className="text-[16px] font-medium">
-                    Фото профиля подтверждено
-                </span>
+            <div
+              onClick={() => navigate(`/${lang}/profile/photo`)}
+              className="flex items-center gap-3 py-3 px-2 rounded-lg hover:bg-gray-100 cursor-pointer transition"
+            >
+              <CheckIcon />
+              <span className="text-[16px] font-medium">
+                Фото профиля подтверждено
+              </span>
             </div>
 
             <div className="flex items-center gap-3 py-3 px-2 rounded-lg hover:bg-gray-100 cursor-pointer transition">
@@ -123,22 +122,46 @@ const ProfileMenu = () => {
               Маршруты и брони
             </h3>
 
+            {/* Мои бронирования */}
             <div className="flex items-center gap-3 py-3 px-2 rounded-lg hover:bg-gray-100 cursor-pointer transition">
-              <CheckIcon />
+              <div className="w-8 h-8 rounded-full bg-[#32BB78] flex items-center justify-center shrink-0">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                  <rect x="3" y="5" width="18" height="16" rx="2" stroke="white" strokeWidth="2"/>
+                  <path d="M3 10H21" stroke="white" strokeWidth="2"/>
+                  <path d="M8 3V7M16 3V7" stroke="white" strokeWidth="2" strokeLinecap="round"/>
+                </svg>
+              </div>
               <span className="text-[16px] font-medium">
                 Мои бронирования
               </span>
             </div>
 
+            {/* Мои маршруты */}
             <div className="flex items-center gap-3 py-3 px-2 rounded-lg hover:bg-gray-100 cursor-pointer transition">
-              <CheckIcon />
+              <div className="w-8 h-8 rounded-full bg-[#32BB78] flex items-center justify-center shrink-0">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                  <circle cx="6" cy="6" r="2" fill="white"/>
+                  <circle cx="18" cy="18" r="2" fill="white"/>
+                  <path d="M6 8C6 14 18 10 18 16" stroke="white" strokeWidth="2" strokeLinecap="round"/>
+                </svg>
+              </div>
               <span className="text-[16px] font-medium">
                 Мои маршруты
               </span>
             </div>
 
+            {/* Служба поддержки */}
             <div className="flex items-center gap-3 py-3 px-2 rounded-lg hover:bg-gray-100 cursor-pointer transition">
-              <CheckIcon />
+              <div className="w-8 h-8 rounded-full bg-[#32BB78] flex items-center justify-center shrink-0">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                  <path
+                    d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v8Z"
+                    stroke="white"
+                    strokeWidth="2"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </div>
               <span className="text-[16px] font-medium">
                 Служба поддержки
               </span>
