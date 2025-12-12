@@ -14,41 +14,58 @@ const ProfileAccount = () => {
           <ProfileTopBar />
 
           {/* Контент */}
-          <div className="mt-10 flex flex-col gap-6">
+          <div className="mt-8">
 
             {/* ===== БАЛАНС ===== */}
-            <div
-              className="
-                flex justify-between items-center text-[16px]
-                py-3 px-3 rounded-lg cursor-pointer transition 
-                hover:bg-gray-100
-              "
-            >
-              <span className="text-gray-600 font-medium">Баланс</span>
+            <div className="flex items-center gap-3 py-3 px-2 rounded-lg cursor-pointer transition hover:bg-gray-100">
+              <div className="w-8 h-8 rounded-full bg-[#32BB78] flex items-center justify-center shrink-0">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                  <rect x="2" y="6" width="20" height="12" rx="2" stroke="white" strokeWidth="2" />
+                  <path d="M16 12H18" stroke="white" strokeWidth="2" strokeLinecap="round" />
+                </svg>
+              </div>
+              <span className="flex-1 text-[16px] font-medium">Баланс</span>
               <span className="text-black font-semibold">—</span>
             </div>
 
+            {/* Разделитель */}
+            <div className="my-3 border-t border-gray-300" />
+
             {/* ===== EMAIL ===== */}
-            <div className="flex justify-between items-center text-[16px] py-3 px-3">
-              <span className="text-gray-600 font-medium">Email</span>
+            <div className="flex items-center gap-3 py-3 px-2 rounded-lg">
+              <div className="w-8 h-8 rounded-full bg-[#32BB78] flex items-center justify-center shrink-0">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                  <rect x="3" y="5" width="18" height="14" rx="2" stroke="white" strokeWidth="2" />
+                  <path d="M3 7L12 13L21 7" stroke="white" strokeWidth="2" strokeLinejoin="round" />
+                </svg>
+              </div>
+              <span className="flex-1 text-[16px] font-medium">Email</span>
               <span className="text-black">—</span>
             </div>
 
             {/* ===== СТАТУС ВОДИТЕЛЯ ===== */}
-            <div className="flex justify-between items-center text-[16px] py-3 px-3">
-              <span className="text-gray-600 font-medium">Статус водителя</span>
+            <div className="flex items-center gap-3 py-3 px-2 rounded-lg">
+              <div className="w-8 h-8 rounded-full bg-[#32BB78] flex items-center justify-center shrink-0">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                  <circle cx="12" cy="7" r="3" stroke="white" strokeWidth="2" />
+                  <path d="M5 21C5 16.5 19 16.5 19 21" stroke="white" strokeWidth="2" strokeLinecap="round" />
+                </svg>
+              </div>
+              <span className="flex-1 text-[16px] font-medium">Статус водителя</span>
               <span className="text-black">Нет</span>
             </div>
 
-            {/* ===== КНОПКА ВЫХОДА ===== */}
-            <button
-              className="
-                text-red-500 text-[16px] font-medium 
-                hover:text-red-600 transition mt-4
-              "
-            >
-              Выйти
-            </button>
+            {/* ===== ВЫХОД ===== */}
+            <div className="flex items-center gap-3 py-3 px-2 mt-2 cursor-pointer">
+              <div className="w-8 h-8 flex items-center justify-center shrink-0">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" stroke="#EF4444" strokeWidth="2" strokeLinecap="round" />
+                  <path d="M16 17L21 12L16 7" stroke="#EF4444" strokeWidth="2" strokeLinecap="round" />
+                  <path d="M21 12H9" stroke="#EF4444" strokeWidth="2" strokeLinecap="round" />
+                </svg>
+              </div>
+              <span className="text-[16px] font-medium text-red-500">Выйти</span>
+            </div>
 
           </div>
 
