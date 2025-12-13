@@ -13,6 +13,9 @@ import ProfileMenu from "./pages/profile/ProfileMenu";
 import ProfileAccount from "./pages/profile/ProfileAccount";
 import EditProfileInfo from "./components/profile/EditProfileInfo";
 import ProfilePhoto from "./components/profile/ProfilePhoto";
+import PhoneVerification from "./components/profile/PhoneVerification";
+import PassportVerification from "./components/profile/PassportVerification";
+import EmailVerification from "./components/profile/EmailVerification";
 
 
 
@@ -66,6 +69,13 @@ function App() {
           <Route path="/:lang/profile/edit" element={<LangWrapper Component={EditProfileInfo} />} />
           {/* Профиль — Фото профиля */}
           <Route path="/:lang/profile/photo" element={<LangWrapper Component={ProfilePhoto} />}/>
+          {/* Профиль — Подтвреждение тел. номера */}
+          <Route path="/:lang/profile/phone-verification" element={<LangWrapper Component={PhoneVerification} />} />
+          {/* Профиль — Проверка пасорта */}
+          <Route path="/:lang/profile/passport-verification" element={<LangWrapper Component={PassportVerification} />} />
+          {/* Профиль — Подтвреждение email адреса */}
+          <Route path="/:lang/profile/email-verification" element={<LangWrapper Component={EmailVerification} />} />
+
 
 
 

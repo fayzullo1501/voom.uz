@@ -89,21 +89,21 @@ const ProfileMenu = () => {
               </span>
             </div>
 
-            <div className="flex items-center gap-3 py-3 px-2 rounded-lg hover:bg-gray-100 cursor-pointer transition">
+            <div onClick={() => navigate(`/${lang}/profile/passport-verification`)} className="flex items-center gap-3 py-3 px-2 rounded-lg hover:bg-gray-100 cursor-pointer transition">
               <CheckIcon />
               <span className="text-[16px] font-medium">
                 Паспорт подтверждён
               </span>
             </div>
 
-            <div className="flex items-center gap-3 py-3 px-2 rounded-lg hover:bg-gray-100 cursor-pointer transition">
+            <div onClick={() => navigate(`/${lang}/profile/email-verification`)} className="flex items-center gap-3 py-3 px-2 rounded-lg hover:bg-gray-100 cursor-pointer transition">
               <CheckIcon />
               <span className="text-[16px] font-medium">
                 fayzee.uz@gmail.com
               </span>
             </div>
 
-            <div className="flex items-center gap-3 py-3 px-2 rounded-lg hover:bg-gray-100 cursor-pointer transition">
+            <div onClick={() => navigate(`/${lang}/profile/phone-verification`)} className="flex items-center gap-3 py-3 px-2 rounded-lg hover:bg-gray-100 cursor-pointer transition">
               <CheckIcon />
               <span className="text-[16px] font-medium">
                 +998 99 996 16 96
