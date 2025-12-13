@@ -35,10 +35,9 @@ const Login = () => {
             onClick={() => navigate(`/${lang}`)}
           />
 
-          <X
-            className="w-6 h-6 text-gray-700 hover:text-black cursor-pointer transition"
-            onClick={() => navigate(`/${lang}`)}
-          />
+          <button onClick={() => navigate(`/${lang}`)} className=" p-2 rounded-full hover:bg-gray-100 transition flex items-center justify-center ">
+            <X className="w-6 h-6 text-gray-700 hover:text-black transition" />
+          </button>
 
         </div>
       </header>

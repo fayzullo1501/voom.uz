@@ -11,14 +11,13 @@ const EmailVerification = () => {
     <div className="min-h-screen bg-white px-6 pt-6 pb-10 flex flex-col">
 
       {/* ===== Header (X) ===== */}
-      <div className="flex justify-end">
-        <button
-          onClick={() => navigate(-1)}
-          className="p-2 rounded-full hover:bg-gray-100 transition"
-        >
-          <X size={24} />
-        </button>
-      </div>
+      <header>
+        <div className="container-wide flex items-center justify-end">
+           <button onClick={() => navigate(-1)} className=" p-3 rounded-full hover:bg-gray-100 transition flex items-center justify-center ">
+            <X className="w-6 h-6 text-gray-700 hover:text-black transition" />
+          </button>
+        </div>
+      </header>
 
       {/* ===== Title ===== */}
       <h1 className="text-[28px] sm:text-[32px] font-semibold text-center mt-6">
