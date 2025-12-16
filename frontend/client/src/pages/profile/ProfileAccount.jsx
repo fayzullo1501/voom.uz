@@ -1,13 +1,16 @@
 import React from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import Header from "../../components/layout/Header";
 import ProfileTopBar from "./ProfileTopBar";
 
 const ProfileAccount = () => {
+  const navigate = useNavigate();
+  const { lang } = useParams();
   return (
     <>
       <Header />
 
-      <div className="flex justify-center mt-6 mb-20 px-4">
+      <div onClick={() => navigate(`/${lang}/profile/balance`)} className="flex justify-center mt-6 mb-20 px-4">
         <div className="w-full max-w-[550px]">
 
           {/* Табы */}
