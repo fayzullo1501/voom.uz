@@ -10,7 +10,7 @@ const ProfileAccount = () => {
     <>
       <Header />
 
-      <div onClick={() => navigate(`/${lang}/profile/balance`)} className="flex justify-center mt-6 mb-20 px-4">
+      <div className="flex justify-center mt-6 mb-20 px-4">
         <div className="w-full max-w-[550px]">
 
           {/* Табы */}
@@ -20,7 +20,7 @@ const ProfileAccount = () => {
           <div className="mt-8">
 
             {/* ===== БАЛАНС ===== */}
-            <div className="flex items-center gap-3 py-3 px-2 rounded-lg cursor-pointer transition hover:bg-gray-100">
+            <div onClick={() => navigate(`/${lang}/profile/balance`)}  className="flex items-center gap-3 py-3 px-2 rounded-lg cursor-pointer transition hover:bg-gray-100">
               <div className="w-8 h-8 rounded-full bg-[#32BB78] flex items-center justify-center shrink-0">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
                   <rect x="2" y="6" width="20" height="12" rx="2" stroke="white" strokeWidth="2" />
@@ -28,7 +28,7 @@ const ProfileAccount = () => {
                 </svg>
               </div>
               <span className="flex-1 text-[16px] font-medium">Баланс</span>
-              <span className="text-black font-semibold">—</span>
+              <span className="text-black font-semibold">125,000 UZS</span>
             </div>
 
             {/* Разделитель */}
@@ -43,7 +43,7 @@ const ProfileAccount = () => {
                 </svg>
               </div>
               <span className="flex-1 text-[16px] font-medium">Email</span>
-              <span className="text-black">—</span>
+              <span className="text-black">fayzee.uz@gmail.com</span>
             </div>
 
             {/* ===== СТАТУС ВОДИТЕЛЯ ===== */}
@@ -55,7 +55,7 @@ const ProfileAccount = () => {
                 </svg>
               </div>
               <span className="flex-1 text-[16px] font-medium">Статус водителя</span>
-              <span className="text-black">Нет</span>
+              <span className="text-black">Да</span>
             </div>
 
             {/* ===== ВЫХОД ===== */}
