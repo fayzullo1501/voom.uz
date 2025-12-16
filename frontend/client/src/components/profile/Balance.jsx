@@ -67,7 +67,7 @@ const Balance = () => {
         </div>
 
         {/* ===== Actions ===== */}
-        <div className="flex gap-20">
+        <div className="flex gap-15">
 
           {/* Пополнить */}
           <div className="flex flex-col items-center gap-2 cursor-pointer">
