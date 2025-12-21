@@ -17,6 +17,7 @@ import PhoneVerification from "./components/profile/PhoneVerification";
 import PassportVerification from "./components/profile/PassportVerification";
 import EmailVerification from "./components/profile/EmailVerification";
 import Balance from "./components/profile/Balance";
+import BalanceTopUp from "./components/profile/BalanceTopUp";
 
 
 
@@ -76,7 +77,10 @@ function App() {
           <Route path="/:lang/profile/passport-verification" element={<LangWrapper Component={PassportVerification} />} />
           {/* Профиль — Подтвреждение email адреса */}
           <Route path="/:lang/profile/email-verification" element={<LangWrapper Component={EmailVerification} />} />
+          {/* Профиль — Баланс  */}
           <Route path="/:lang/profile/balance" element={<LangWrapper Component={Balance} />} />
+          {/* Профиль — Пополнение баланса */}
+          <Route path="/:lang/profile/balance/top-up" element={<LangWrapper Component={BalanceTopUp} />} />
 
 
 

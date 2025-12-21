@@ -28,7 +28,7 @@ const ProfileAccount = () => {
                 </svg>
               </div>
               <span className="flex-1 text-[16px] font-medium">Баланс</span>
-              <span className="text-black font-semibold">125,000 UZS</span>
+              <span className="text-black font-medium">125,000 UZS</span>
             </div>
 
             {/* Разделитель */}
