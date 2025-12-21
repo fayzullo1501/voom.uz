@@ -86,7 +86,7 @@ const Balance = () => {
           </div>
 
           {/* История */}
-          <div className="flex flex-col items-center gap-2 cursor-pointer">
+          <div onClick={() => navigate("/ru/profile/balance/history")} className="flex flex-col items-center gap-2 cursor-pointer">
             <div className="w-14 h-14 rounded-full bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition">
               <RotateCcw size={22} />
             </div>

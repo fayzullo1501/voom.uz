@@ -1,47 +1,61 @@
 import React, { useState } from "react";
-import { ChevronLeft, X } from "lucide-react";
+import { X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { ChevronLeft } from "lucide-react";
+
 
 import clickIcon from "../../assets/click.svg";
 import paymeIcon from "../../assets/payme.svg";
 import uzumIcon from "../../assets/uzum.svg";
 
+const formatUZS = (value) => {
+  if (!value) return "";
+  return value.replace(/\B(?=(\d{3})+(?!\d))/g, " ") + " UZS";
+};
+
 const BalanceTopUp = () => {
   const navigate = useNavigate();
-
-  const formatUZS = (value) => {
-    if (!value) return "";
-    return value.replace(/\B(?=(\d{3})+(?!\d))/g, " ") + " сум";
-  };
-
 
   const [method, setMethod] = useState("click");
   const [amount, setAmount] = useState("");
 
   return (
-    <div className="min-h-screen bg-white flex items-center justify-center px-6">
-      <div className="w-full max-w-[450px]">
-        {/* ===== Title row ===== */}
-        <div className="flex items-center justify-center mb-8">
-          <div className="flex justify-end">
-            <button
-              onClick={() => navigate(-1)}
-              className="p-2 rounded-lg hover:bg-gray-100 transition"
-              aria-label="Назад"
-            >
-              <ChevronLeft size={24} className="text-gray-800" />
-            </button>
-          </div>
+    <div className="min-h-screen bg-white px-6 pb-10 flex flex-col">
+      {/* ===== Header (как на Balance) ===== */}
+      <header>
+        <div className="container-wide flex items-center justify-end py-8">
+          <button
+            className="p-2 rounded-full transition invisible"
+            aria-hidden="true"
+            tabIndex={-1}
+          >
+            <X size={24} />
+          </button>
 
-          <h1 className="flex-1 text-center text-[28px] sm:text-[32px] font-semibold">
+        </div>
+      </header>
+
+      {/* ===== Title ===== */}
+      <div className="flex justify-center mb-10">
+        <div className="relative w-full max-w-[440px] flex items-center justify-center">
+          <button
+            onClick={() => navigate(-1)}
+            className="absolute left-0 p-2 rounded-lg hover:bg-gray-100 transition"
+            aria-label="Назад"
+          >
+            <ChevronLeft size={24} className="text-gray-800" />
+          </button>
+
+          <h1 className="text-[28px] sm:text-[32px] font-semibold text-center">
             Пополнение
           </h1>
-
-          <div className="w-10" />
         </div>
+      </div>
 
-        {/* ===== Content ===== */}
-        <div className="w-full max-w-[440px] mx-auto flex flex-col gap-8">
+
+      {/* ===== Content ===== */}
+      <div className="flex flex-col items-center">
+        <div className="w-full max-w-[440px] flex flex-col gap-8">
           {/* Детали платежа */}
           <div>
             <p className="text-sm text-gray-700 mb-3">Детали платежа</p>
@@ -59,12 +73,18 @@ const BalanceTopUp = () => {
                     key={item.id}
                     type="button"
                     onClick={() => setMethod(item.id)}
-                    className={`w-[140px] h-[86px] rounded-2xl border flex items-center justify-center bg-white transition ${selected ? "border-black" : "border-gray-200 hover:bg-gray-50"}`}
+                    className={`w-[140px] h-[86px] rounded-2xl border flex items-center justify-center bg-white transition ${
+                      selected
+                        ? "border-black"
+                        : "border-gray-200 hover:bg-gray-50"
+                    }`}
                   >
                     <img
                       src={item.icon}
                       alt={item.alt}
-                      className={`h-10 transition ${selected ? "opacity-100" : "opacity-35"}`}
+                      className={`h-10 transition ${
+                        selected ? "opacity-100" : "opacity-35"
+                      }`}
                     />
                   </button>
                 );
@@ -76,10 +96,9 @@ const BalanceTopUp = () => {
           <div className="relative">
             <input
               value={formatUZS(amount)}
-              onChange={(e) => {
-                const raw = e.target.value.replace(/[^\d]/g, "");
-                setAmount(raw);
-              }}
+              onChange={(e) =>
+                setAmount(e.target.value.replace(/[^\d]/g, ""))
+              }
               inputMode="numeric"
               placeholder=" "
               className="peer w-full h-[56px] px-4 pr-11 pt-4 border border-gray-200 rounded-xl text-[15px] focus:outline-none focus:ring-2 focus:ring-gray-300"

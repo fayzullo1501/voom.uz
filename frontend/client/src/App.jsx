@@ -18,6 +18,7 @@ import PassportVerification from "./components/profile/PassportVerification";
 import EmailVerification from "./components/profile/EmailVerification";
 import Balance from "./components/profile/Balance";
 import BalanceTopUp from "./components/profile/BalanceTopUp";
+import TransactionHistory from "./components/profile/TransactionHistory";
 
 
 
@@ -81,6 +82,8 @@ function App() {
           <Route path="/:lang/profile/balance" element={<LangWrapper Component={Balance} />} />
           {/* Профиль — Пополнение баланса */}
           <Route path="/:lang/profile/balance/top-up" element={<LangWrapper Component={BalanceTopUp} />} />
+          {/* Профиль — История операций */}
+          <Route path="/:lang/profile/balance/history" element={<LangWrapper Component={TransactionHistory} />} />
 
 
 
