@@ -116,7 +116,7 @@ const MyBookings = () => {
                     </div>
 
                     <span className="text-xl font-medium hidden md:block">→</span>
-                    <span className="text-sm text-gray-400 md:hidden">↓</span>
+                    <span className="text-xl text-gray-400 md:hidden">↓</span>
 
                     <div>
                       <div className="text-[18px] sm:text-[20px] font-semibold">{b.to}</div>

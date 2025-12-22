@@ -163,7 +163,7 @@ const ProfileMenu = () => {
                 </svg>
               </div>
               <span className="text-[16px] font-medium">
-                Служба поддержки
+                Сообщения
               </span>
             </div>
           </div>
