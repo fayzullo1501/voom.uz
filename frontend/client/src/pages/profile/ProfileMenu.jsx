@@ -123,7 +123,7 @@ const ProfileMenu = () => {
             </h3>
 
             {/* Мои бронирования */}
-            <div className="flex items-center gap-3 py-3 px-2 rounded-lg hover:bg-gray-100 cursor-pointer transition">
+            <div onClick={() => navigate(`/${lang}/profile/bookings`)} className="flex items-center gap-3 py-3 px-2 rounded-lg hover:bg-gray-100 cursor-pointer transition">
               <div className="w-8 h-8 rounded-full bg-[#32BB78] flex items-center justify-center shrink-0">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
                   <rect x="3" y="5" width="18" height="16" rx="2" stroke="white" strokeWidth="2"/>
@@ -137,7 +137,7 @@ const ProfileMenu = () => {
             </div>
 
             {/* Мои маршруты */}
-            <div className="flex items-center gap-3 py-3 px-2 rounded-lg hover:bg-gray-100 cursor-pointer transition">
+            <div onClick={() => navigate(`/${lang}/profile/bookings`)} className="flex items-center gap-3 py-3 px-2 rounded-lg hover:bg-gray-100 cursor-pointer transition">
               <div className="w-8 h-8 rounded-full bg-[#32BB78] flex items-center justify-center shrink-0">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
                   <circle cx="6" cy="6" r="2" fill="white"/>
