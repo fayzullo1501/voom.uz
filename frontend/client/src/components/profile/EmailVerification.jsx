@@ -20,12 +20,12 @@ const EmailVerification = () => {
       </header>
 
       {/* ===== Title ===== */}
-      <h1 className="text-[28px] sm:text-[32px] font-semibold text-center mt-6">
+      <h1 className="text-[28px] sm:text-[32px] font-semibold text-center mt-6 mb-10">
         Подтверждение email адреса
       </h1>
 
       {/* ===== Content ===== */}
-      <div className="flex-1 flex flex-col items-center justify-center text-center">
+      <div className="flex-1 flex flex-col items-center text-center">
 
         {/* Email block */}
         <div

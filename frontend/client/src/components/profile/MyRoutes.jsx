@@ -3,11 +3,8 @@ import { X, Filter } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import walletIcon from "../../assets/icons/wallet.svg";
 import userIcon from "../../assets/icons/user.svg";
-import carAvatar from "../../assets/carbookingtest.jpg";
-import driverAvatar from "../../assets/driverbookingtest.jpg";
 
-
-const MyBookings = () => {
+const MyRoutes = () => {
   const navigate = useNavigate();
   const [tab, setTab] = useState("active");
 
@@ -54,7 +51,7 @@ const MyBookings = () => {
 
       {/* ===== Title ===== */}
       <h1 className="text-[24px] sm:text-[32px] font-semibold text-center mb-6 sm:mb-8">
-        Мои бронирования
+        Мои маршруты
       </h1>
 
       {/* ===== Tabs ===== */}
@@ -145,22 +142,6 @@ const MyBookings = () => {
                     </div>
                   </div>
 
-                  {/* ===== Divider ===== */}
-                  <div className="hidden md:block w-px h-16 bg-gray-200" />
-                  <div className="md:hidden h-px bg-gray-200 my-2" />
-                  
-                  <div className="flex flex-col gap-3">
-                      <div className="flex items-center gap-3">
-                        <img src={carAvatar} alt="Авто" className="w-10 h-10 rounded-full object-cover" />
-                        <span className="text-sm font-medium text-gray-800">Chevrolet Malibu</span>
-                      </div>
-
-                      <div className="flex items-center gap-3">
-                        <img src={driverAvatar} alt="Водитель" className="w-10 h-10 rounded-full object-cover" />
-                        <span className="text-sm text-gray-700">Abror Jallot</span>
-                      </div>
-                    </div>
-
                 </div>
               </div>
             ))}
@@ -172,4 +153,4 @@ const MyBookings = () => {
   );
 };
 
-export default MyBookings;
+export default MyRoutes;

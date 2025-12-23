@@ -8,15 +8,11 @@ const SeatsModal = ({ isOpen, onSave, onClose, initialValue }) => {
   const [front, setFront] = useState(0);
   const [back, setBack] = useState(0);
 
-  const [tipFront, setTipFront] = useState(false);
-  const [tipBack, setTipBack] = useState(false);
-
   useEffect(() => {
     if (!initialValue) return;
 
     // ожидаем строку формата "1 | 2"
     const parts = initialValue.split("|").map((x) => Number(x.trim()));
-
     setFront(parts[0] || 0);
     setBack(parts[1] || 0);
   }, [initialValue, isOpen]);
@@ -25,35 +21,39 @@ const SeatsModal = ({ isOpen, onSave, onClose, initialValue }) => {
   const dec = (val, set) => set(Math.max(val - 1, 0));
 
   const handleSave = () => {
-    onSave({
-      front,
-      back,
-    });
+    onSave({ front, back });
     onClose();
   };
 
-      // Tooltip
-      const Info = ({ open, toggle, text }) => (
-        <div className="relative flex items-center">
-          <button
-            onClick={toggle}
-            className="w-[18px] h-[18px] rounded-full bg-gray-200 text-gray-700 
-            flex items-center justify-center text-[11px] font-semibold"
-          >
-            i
-          </button>
-    
-          {open && (
-            <div
-              className="absolute left-6 top-1 w-[200px]
-                bg-[#FFF4C4] text-black text-[12px]
-                p-3 rounded-lg shadow z-50"
-            >
-              {text}
-            </div>
-          )}
-        </div>
-      );    
+  // ===== Tooltip (hover) =====
+  const Info = ({ text }) => (
+    <div className="relative group flex items-center">
+      <div
+        className="
+          w-[18px] h-[18px] rounded-full bg-gray-200 text-gray-700
+          flex items-center justify-center text-[11px] font-semibold
+          cursor-default
+        "
+      >
+        i
+      </div>
+
+      <div
+        className="
+          absolute left-6 top-1
+          w-[200px]
+          bg-black text-white text-[12px]
+          p-3 rounded-lg shadow
+          opacity-0 pointer-events-none
+          transition-opacity duration-200
+          group-hover:opacity-100
+          z-50
+        "
+      >
+        {text}
+      </div>
+    </div>
+  );
 
   return (
     <div
@@ -65,10 +65,11 @@ const SeatsModal = ({ isOpen, onSave, onClose, initialValue }) => {
         className="
           bg-white rounded-[22px] shadow-xl
           w-[90%] max-w-[780px]
-          flex flex-col gap-6 p-6 animate-[fadeIn_.2s_ease]
+          flex flex-col gap-6 p-6
+          animate-[fadeIn_.2s_ease]
         "
       >
-        {/* HEADER */}
+        {/* ===== HEADER ===== */}
         <div className="flex items-center justify-between mb-2">
           <h2 className="text-[20px] font-semibold">Добавьте места</h2>
           <button onClick={onClose}>
@@ -76,10 +77,10 @@ const SeatsModal = ({ isOpen, onSave, onClose, initialValue }) => {
           </button>
         </div>
 
-        {/* MAIN */}
-        <div className="flex flex-col lg:flex-row gap-6">
+        {/* ===== MAIN ===== */}
+        <div className="flex flex-col lg:flex-row gap-6 overflow-visible">
 
-          {/* LEFT COLUMN */}
+          {/* ===== LEFT COLUMN ===== */}
           <div className="w-full lg:w-[32%] flex flex-col justify-between">
 
             <div className="flex flex-col gap-6">
@@ -88,11 +89,7 @@ const SeatsModal = ({ isOpen, onSave, onClose, initialValue }) => {
               <div className="flex flex-col gap-2">
                 <div className="flex items-center gap-2 mb-1">
                   <p className="font-medium text-[15px]">Переднее место</p>
-                  <Info
-                    open={tipFront}
-                    toggle={() => setTipFront(!tipFront)}
-                    text="Максимум 1 место спереди."
-                  />
+                  <Info text="Максимум 1 место спереди." />
                 </div>
 
                 <div className="flex items-center gap-4">
@@ -120,11 +117,7 @@ const SeatsModal = ({ isOpen, onSave, onClose, initialValue }) => {
               <div className="flex flex-col gap-2">
                 <div className="flex items-center gap-2 mb-1">
                   <p className="font-medium text-[15px]">Заднее место</p>
-                  <Info
-                    open={tipBack}
-                    toggle={() => setTipBack(!tipBack)}
-                    text="Максимум 6 места сзади."
-                  />
+                  <Info text="Максимум 6 места сзади." />
                 </div>
 
                 <div className="flex items-center gap-4">
@@ -149,7 +142,7 @@ const SeatsModal = ({ isOpen, onSave, onClose, initialValue }) => {
               </div>
             </div>
 
-            {/* SAVE BUTTON */}
+            {/* ===== SAVE BUTTON ===== */}
             <button
               onClick={handleSave}
               className="
@@ -162,15 +155,15 @@ const SeatsModal = ({ isOpen, onSave, onClose, initialValue }) => {
             </button>
           </div>
 
-          {/* RIGHT BANNER */}
+          {/* ===== RIGHT BANNER ===== */}
           <div className="w-full lg:w-[68%] flex justify-center items-end">
             <img
               src={seatsImg}
+              alt="Seats"
               className="rounded-2xl w-full object-cover"
               style={{ height: "330px" }}
             />
           </div>
-
         </div>
 
         <style>{`

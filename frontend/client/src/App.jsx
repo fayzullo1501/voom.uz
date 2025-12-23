@@ -20,6 +20,7 @@ import Balance from "./components/profile/Balance";
 import BalanceTopUp from "./components/profile/BalanceTopUp";
 import TransactionHistory from "./components/profile/TransactionHistory";
 import MyBookings from "./components/profile/MyBookings";
+import MyRoutes from "./components/profile/MyRoutes";
 import ChatMessenger from "./components/profile/ChatMessenger";
 
 
@@ -89,6 +90,8 @@ function App() {
           <Route path="/:lang/profile/balance/history" element={<LangWrapper Component={TransactionHistory} />} />
           {/* Профиль — Мои бронирования */}
           <Route path="/:lang/profile/bookings" element={<LangWrapper Component={MyBookings} />} />
+          {/* Профиль — Мои Маршруты */}
+          <Route path="/:lang/profile/routes" element={<LangWrapper Component={MyRoutes} />} />
           {/* Профиль — Чат */}
           <Route path="/:lang/profile/chat" element={<LangWrapper Component={ChatMessenger} />} />
 
