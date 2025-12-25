@@ -177,7 +177,13 @@ const ProfileMenu = () => {
           <div className="mt-8 mb-10">
             <h3 className="font-bold text-[20px] mb-5">Машины</h3>
 
-            <div className="flex items-center gap-3 py-3 px-2 rounded-lg hover:bg-gray-100 cursor-pointer transition">
+            <div onClick={() => navigate(`/${lang}/profile/transport`)} className="py-3 px-2 rounded-lg hover:bg-gray-100 cursor-pointer transition">
+              <div className="text-[18px] font-semibold leading-tight">Chevrolet Malibu 2</div>
+              <div className="text-[15px] text-gray-500 mt-1">Черный</div>
+            </div>
+
+
+            {/* <div onClick={() => navigate(`/${lang}/profile/transport`)} className="flex items-center gap-3 py-3 px-2 rounded-lg hover:bg-gray-100 cursor-pointer transition">
               <div className="w-8 h-8 rounded-full border border-gray-500 flex items-center justify-center shrink-0">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
                   <path
@@ -191,7 +197,7 @@ const ProfileMenu = () => {
               <span className="text-[16px] font-medium">
                 Добавить машину
               </span>
-            </div>
+            </div> */}
           </div>
 
         </div>

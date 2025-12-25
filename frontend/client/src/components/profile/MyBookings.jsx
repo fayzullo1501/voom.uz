@@ -157,7 +157,7 @@ const MyBookings = () => {
 
                       <div className="flex items-center gap-3">
                         <img src={driverAvatar} alt="Водитель" className="w-10 h-10 rounded-full object-cover" />
-                        <span className="text-sm text-gray-700">Abror Jallot</span>
+                        <span className="text-sm text-gray-700">Fayzullo Abdulazizov</span>
                       </div>
                     </div>
 

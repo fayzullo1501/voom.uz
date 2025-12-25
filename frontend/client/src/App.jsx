@@ -22,6 +22,7 @@ import TransactionHistory from "./components/profile/TransactionHistory";
 import MyBookings from "./components/profile/MyBookings";
 import MyRoutes from "./components/profile/MyRoutes";
 import ChatMessenger from "./components/profile/ChatMessenger";
+import MyTransport from "./components/profile/MyTransport.jsx";
 
 
 
@@ -94,6 +95,8 @@ function App() {
           <Route path="/:lang/profile/routes" element={<LangWrapper Component={MyRoutes} />} />
           {/* Профиль — Чат */}
           <Route path="/:lang/profile/chat" element={<LangWrapper Component={ChatMessenger} />} />
+          {/* Профиль — Транспорт*/}
+          <Route path="/:lang/profile/transport" element={<LangWrapper Component={MyTransport} />} />
 
 
 
