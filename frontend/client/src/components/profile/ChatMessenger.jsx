@@ -1,170 +1,106 @@
 import React, { useState } from "react";
-import { X, Search, Send } from "lucide-react";
+import { X, Search, Plus, Smile, Paperclip, Send } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import avatar from "../../assets/avatar-placeholder.svg";
+import privateIcon from "../../assets/user.svg";
+import groupIcon from "../../assets/users.svg";
 
-const ProfileChat = () => {
+const ChatMessenger = () => {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState("private");
-  const [message, setMessage] = useState("");
+  const [tab, setTab] = useState("private");
 
   return (
-    <div className="min-h-screen bg-white px-6 flex flex-col">
+    <div className="min-h-screen bg-white px-4 sm:px-6 pt-6 pb-6 flex flex-col">
+      <header>
+        <div className="container-wide flex items-center justify-end">
+          <button onClick={() => navigate(-1)} className="p-3 rounded-full hover:bg-gray-100 transition flex items-center justify-center">
+            <X className="w-6 h-6 text-gray-700 hover:text-black transition" />
+          </button>
+        </div>
+      </header>
 
-      {/* ===== Top bar ===== */}
-      <div className="container-wide flex items-center justify-between py-6">
-        <h1 className="text-[24px] sm:text-[28px] font-semibold">
-          Чат мессенджер
-        </h1>
+      <h1 className="text-[28px] sm:text-[36px] font-semibold text-center mt-4 mb-6">Чат мессенджер</h1>
 
-        <button
-          onClick={() => navigate(-1)}
-          className="p-2 rounded-full hover:bg-gray-100 transition"
-          aria-label="Закрыть"
-        >
-          <X size={24} className="text-gray-700" />
-        </button>
-      </div>
-
-      {/* ===== Chat wrapper (KEY FIX) ===== */}
-      <div className="flex-1 flex justify-center pb-6">
-        <div className="w-full max-w-[1400px] border border-gray-200 rounded-2xl overflow-hidden flex bg-white">
-
-          {/* ================= LEFT SIDEBAR ================= */}
-          <aside className="w-[340px] border-r border-gray-200 flex flex-col">
-
-            {/* Search */}
-            <div className="px-4 pt-4">
-              <div className="relative">
-                <Search
-                  size={16}
-                  className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-                />
-                <input
-                  type="text"
-                  placeholder="Поиск"
-                  className="w-full h-9 pl-9 pr-3 rounded-lg bg-gray-100 text-sm focus:outline-none"
-                />
-              </div>
+      <div className="flex flex-1 border border-gray-200 rounded-2xl overflow-hidden flex-col lg:flex-row">
+        {/* LEFT */}
+        <div className="w-full lg:w-[300px] border-b lg:border-b-0 lg:border-r border-gray-200 flex flex-col">
+          <div className="p-4 flex items-center gap-2">
+            <div className="flex items-center gap-2 bg-gray-100 h-[40px] px-3 rounded-lg flex-1">
+              <Search className="w-4 h-4 text-gray-400" />
+              <input placeholder="Поиск" className="bg-transparent outline-none text-[14px] w-full" />
             </div>
+            <button className="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center">
+              <Plus className="w-5 h-5 text-gray-500" />
+            </button>
+          </div>
 
-            {/* Tabs */}
-            <div className="flex gap-2 px-4 mt-4">
-              <button
-                onClick={() => setActiveTab("private")}
-                className={`flex-1 py-2 rounded-lg text-sm transition ${
-                  activeTab === "private"
-                    ? "bg-gray-900 text-white"
-                    : "bg-gray-100 text-gray-600"
-                }`}
-              >
+          <div className="px-4 mb-3">
+            <div className="bg-gray-100 rounded-lg p-[2px] flex gap-[2px] h-[40px]">
+              <button onClick={() => setTab("private")} className={`flex-1 h-full rounded-md flex items-center justify-center gap-2 text-[15px] font-semibold transition ${tab === "private" ? "bg-white text-black" : "text-gray-400"}`}>
+                <img src={privateIcon} alt="" className={`w-5 h-5 ${tab === "private" ? "" : "opacity-40"}`} />
                 Личные
               </button>
-              <button
-                onClick={() => setActiveTab("group")}
-                className={`flex-1 py-2 rounded-lg text-sm transition ${
-                  activeTab === "group"
-                    ? "bg-gray-900 text-white"
-                    : "bg-gray-100 text-gray-600"
-                }`}
-              >
+              <button onClick={() => setTab("group")} className={`flex-1 h-full rounded-md flex items-center justify-center gap-2 text-[15px] font-semibold transition ${tab === "group" ? "bg-white text-black" : "text-gray-400"}`}>
+                <img src={groupIcon} alt="" className={`w-5 h-5 ${tab === "group" ? "" : "opacity-40"}`} />
                 Группы
               </button>
             </div>
+          </div>
 
-            {/* Chat list */}
-            <div className="flex-1 overflow-y-auto px-2 mt-4">
-              <div className="px-3 py-3 rounded-xl bg-gray-100 cursor-pointer">
-                <div className="flex justify-between items-center">
-                  <div>
-                    <div className="font-medium text-sm">БСА</div>
-                    <div className="text-xs text-gray-500 mt-0.5">
-                      UKA qale ketayapti hayot
-                    </div>
-                  </div>
-                  <div className="text-xs text-gray-400">11:52</div>
-                </div>
+          <div className="px-2">
+            <div className="px-3 py-3 flex items-center gap-3 rounded-xl hover:bg-gray-100 cursor-pointer transition">
+              <div className="relative">
+                <img src={avatar} alt="" className="w-10 h-10 rounded-full" />
+                <span className="absolute bottom-0 right-0 w-3 h-3 bg-[#32BB78] border-2 border-white rounded-full" />
               </div>
+              <div className="flex-1">
+                <div className="text-[14px] font-medium">Fayzullo Abdulazizov</div>
+                <div className="text-[12px] text-gray-400">Че там...</div>
+              </div>
+              <div className="text-[12px] text-gray-400">11:52</div>
             </div>
-          </aside>
+          </div>
+        </div>
 
-          {/* ================= CHAT AREA ================= */}
-          <section className="flex-1 flex flex-col">
-
-            {/* Chat header */}
-            <div className="border-b border-gray-200 px-6 py-4">
-              <div className="font-semibold">БСА</div>
-              <div className="text-xs text-gray-500 mt-0.5">
-                5 участников
-              </div>
+        {/* RIGHT */}
+        <div className="flex-1 flex flex-col">
+          <div className="px-4 sm:px-6 py-4 border-b border-gray-200 flex items-center gap-3">
+            <div className="relative">
+              <img src={avatar} alt="" className="w-10 h-10 rounded-full" />
+              <span className="absolute bottom-0 right-0 w-3 h-3 bg-[#32BB78] border-2 border-white rounded-full" />
             </div>
+            <span className="text-[16px] font-semibold">Fayzullo Abdulazizov</span>
+          </div>
 
-            {/* Messages */}
-            <div className="flex-1 overflow-y-auto px-6 py-6 space-y-6">
-
-              {/* Date */}
-              <div className="flex justify-center">
-                <span className="text-xs text-gray-400 bg-gray-100 px-3 py-1 rounded-full">
-                  27.10.2025
-                </span>
-              </div>
-
-              {/* Incoming */}
-              <div className="max-w-[460px]">
-                <div className="text-xs text-gray-500 mb-1">
-                  Dilshod Xudayberdiyev
-                </div>
-                <div className="bg-gray-100 rounded-2xl px-4 py-2 text-sm inline-block">
-                  Va alaykum assalom
-                </div>
-                <div className="text-[11px] text-gray-400 mt-1">
-                  12:03
-                </div>
-              </div>
-
-              {/* Incoming */}
-              <div className="max-w-[460px]">
-                <div className="text-xs text-gray-500 mb-1">
-                  Abbosxon Xodjayev
-                </div>
-                <div className="bg-gray-100 rounded-2xl px-4 py-2 text-sm inline-block">
-                  Hammaga hurmatli hamkasblar
-                </div>
-                <div className="text-[11px] text-gray-400 mt-1">
-                  14:59
-                </div>
-              </div>
-
-              {/* Outgoing */}
-              <div className="flex justify-end">
-                <div className="max-w-[460px] text-right">
-                  <div className="bg-[#6C63FF] text-white rounded-2xl px-4 py-2 text-sm inline-block">
-                    Xa, hozircha kelishib olamiz 🙂
-                  </div>
-                  <div className="text-[11px] text-gray-400 mt-1">
-                    16:01
-                  </div>
-                </div>
-              </div>
+          <div className="flex-1 px-4 sm:px-6 py-4 overflow-y-auto flex flex-col gap-4">
+            <div className="flex items-end gap-2">
+              <img src={avatar} alt="" className="w-8 h-8 rounded-full" />
+              <div className="bg-gray-100 rounded-[18px] rounded-bl-[6px] px-4 py-2 text-[14px] max-w-[320px]">Привет</div>
+              <span className="text-[12px] text-gray-400">17:35</span>
             </div>
 
-            {/* Input */}
-            <div className="border-t border-gray-200 px-6 py-4 flex items-center gap-3">
-              <input
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                placeholder="Введите свое сообщение..."
-                className="flex-1 h-11 px-4 rounded-xl border border-gray-200 text-sm focus:outline-none"
-              />
-              <button className="w-11 h-11 rounded-xl bg-gray-900 flex items-center justify-center hover:bg-gray-800 transition">
-                <Send size={18} className="text-white" />
-              </button>
+            <div className="flex items-end gap-2 justify-end">
+              <span className="text-[12px] text-gray-400">17:35</span>
+              <div className="bg-[#32BB78] text-white rounded-[18px] rounded-br-[6px] px-4 py-2 text-[14px] max-w-[320px]">Че там? все ок?</div>
             </div>
+          </div>
 
-          </section>
+          <div className="px-4 py-3 border-t border-gray-200 flex items-center gap-3">
+            <input type="text" placeholder="Введите свое сообщение..." className="flex-1 h-[44px] px-4 rounded-xl border border-gray-200 text-[14px] outline-none" />
+            <button className="w-10 h-10 flex items-center justify-center text-gray-400">
+              <Smile className="w-5 h-5" />
+            </button>
+            <button className="w-10 h-10 flex items-center justify-center text-gray-400">
+              <Paperclip className="w-5 h-5" />
+            </button>
+            <button className="w-11 h-11 rounded-xl bg-[#32BB78] flex items-center justify-center">
+              <Send className="w-5 h-5 text-white" />
+            </button>
+          </div>
         </div>
       </div>
     </div>
   );
 };
 
-export default ProfileChat;
+export default ChatMessenger;
