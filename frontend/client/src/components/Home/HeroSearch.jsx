@@ -1,12 +1,14 @@
 // HeroSearch.jsx (ФИНАЛ)
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import { ArrowLeftRight } from "lucide-react";
 import DatePickerModal from "./DatePickerModal";
 import PassengersModal from "./PassengersModal";
 
 const HeroSearch = () => {
-  const { t } = useTranslation("home");
+  const { t, i18n } = useTranslation("home");
+  const navigate = useNavigate();
 
   const [activeTab, setActiveTab] = useState("trip");
   const [from, setFrom] = useState("");
@@ -65,18 +67,14 @@ const HeroSearch = () => {
 
         <div className="relative flex-1 min-w-[150px]">
           <input readOnly onClick={() => { setPassengersOpen(!passengersOpen); setCalendarOpen(false); }} value={passengers} className="peer w-full h-[56px] px-4 pt-4 bg-gray-100 rounded-lg text-[15px] cursor-pointer focus:outline-none" />
-          <label className={`absolute left-4 transition-all duration-200 top-1 text-[11px] text-gray-500`}>
+          <label className="absolute left-4 top-1 text-[11px] text-gray-500">
             {t("hero.placeholders.passengers")}
           </label>
 
-          <PassengersModal
-            isOpen={passengersOpen}
-            value={passengers}
-            onChange={setPassengers}
-          />
+          <PassengersModal isOpen={passengersOpen} value={passengers} onChange={setPassengers} />
         </div>
 
-        <button className="bg-[#32BB78] text-white rounded-lg px-8 h-[56px] hover:bg-[#29a86b] transition min-w-[120px]">
+        <button onClick={() => navigate(`/${i18n.language}/routes`)} className="bg-[#32BB78] text-white text-[18px] rounded-lg px-8 h-[56px] hover:bg-[#29a86b] transition min-w-[120px]">
           {t("hero.search")}
         </button>
       </div>

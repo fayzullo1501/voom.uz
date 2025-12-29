@@ -23,6 +23,7 @@ import MyBookings from "./components/profile/MyBookings";
 import MyRoutes from "./components/profile/MyRoutes";
 import ChatMessenger from "./components/profile/ChatMessenger";
 import MyTransport from "./components/profile/MyTransport.jsx";
+import RoutesResults from "./pages/routes/RoutesResults";
 
 
 
@@ -97,6 +98,8 @@ function App() {
           <Route path="/:lang/profile/chat" element={<LangWrapper Component={ChatMessenger} />} />
           {/* Профиль — Транспорт*/}
           <Route path="/:lang/profile/transport" element={<LangWrapper Component={MyTransport} />} />
+          {/* Главная — Маршруты-результаты*/}
+          <Route path="/:lang/routes" element={<LangWrapper Component={RoutesResults} />} />
 
 
 
