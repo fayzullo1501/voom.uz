@@ -2,12 +2,12 @@
 import React, { useState } from "react";
 import Header from "../../components/layout/Header";
 import RoutesSearch from "../../components/routes/RoutesSearch";
+import RoutesFilters from "../../components/routes/RoutesFilters";
 import carImg1 from "../../assets/mycar1.jpg";
 import carImg2 from "../../assets/mycar2.jpg";
 import avatar from "../../assets/driverbookingtest.jpg";
-import userVerified from "../../assets/userverified.svg";
 import chevroletLogo from "../../assets/chevrolet.png";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, X } from "lucide-react";
 
 const images = [carImg1, carImg2];
 
@@ -16,6 +16,8 @@ const RoutesResults = () => {
   const [sort, setSort] = useState("early");
   const [timeFilters, setTimeFilters] = useState({ before6: false, morning: false, day: false, after18: false });
   const [verifiedOnly, setVerifiedOnly] = useState(false);
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
   const changeImage = (cardIndex, dir) => {
     setActiveImage((prev) => {
@@ -30,84 +32,31 @@ const RoutesResults = () => {
   return (
     <div className="min-h-screen bg-white overflow-hidden">
       <Header />
-      <RoutesSearch />
 
-      <div className="container-wide mt-8 flex gap-10 h-[calc(100vh-260px)]">
-        {/* Filters */}
+      {/* MOBILE SEARCH BAR */}
+      <div className="md:hidden px-4 mt-4">
+        <div className="bg-white border border-gray-200 rounded-2xl px-4 py-3 flex items-center justify-between">
+          <div onClick={() => setMobileSearchOpen(true)} className="cursor-pointer">
+            <div className="text-[15px] font-semibold">FERGHANA → TASHKENT</div>
+            <div className="text-[13px] text-gray-500">Ср, 31 дек · 4 пассажира</div>
+          </div>
+          <button onClick={() => setMobileFiltersOpen(true)} className="text-[#32BB78] font-semibold text-[15px]">
+            Фильтровать
+          </button>
+        </div>
+      </div>
+
+      {/* DESKTOP SEARCH */}
+      <div className="hidden md:block">
+        <RoutesSearch />
+      </div>
+
+      {/* DESKTOP CONTENT */}
+      <div className="container-wide mt-8 hidden md:flex gap-10 h-[calc(100vh-260px)]">
         <div className="w-[300px] shrink-0">
-          <div className="flex items-center justify-between mb-6">
-            <div className="text-[20px] font-semibold">Сортировать</div>
-            <button className="text-[14px] text-gray-500 hover:text-gray-700">Сбросить все</button>
-          </div>
-
-          {/* Radio */}
-          <div className="space-y-5">
-            {[
-              ["early", "Самые ранние поездки"],
-              ["cheap", "Самые дешевые поездки"],
-            ].map(([value, label]) => (
-              <label key={value} className="flex items-center gap-3 cursor-pointer text-[16px]">
-                <input type="radio" checked={sort === value} onChange={() => setSort(value)} className="sr-only" />
-                <span className={`w-5 h-5 rounded-full flex items-center justify-center border-2 ${sort === value ? "border-[#32BB78]" : "border-gray-300"}`}>
-                    {sort === value && <span className="w-2.5 h-2.5 rounded-full bg-[#32BB78]" />}
-                </span>
-                {label}
-              </label>
-            ))}
-          </div>
-
-          <div className="h-[2px] bg-gray-200 my-6" />
-
-          {/* Time filters */}
-          <div className="text-[18px] font-semibold mb-4">Время выезда</div>
-          <div className="space-y-4">
-            {[
-              ["before6", "До 06:00", 1],
-              ["morning", "06:00 - 12:00", 12],
-              ["day", "12:00 - 18:00", 6],
-              ["after18", "После 18:00", 0],
-            ].map(([key, label, count]) => (
-              <label key={key} className="flex items-center justify-between text-[15px] cursor-pointer">
-                <div className="flex items-center gap-3">
-                  <input type="checkbox" checked={timeFilters[key]} onChange={() => toggleTime(key)} className="sr-only" />
-                  <span className={`w-5 h-5 rounded flex items-center justify-center border-2 ${timeFilters[key] ? "bg-[#32BB78] border-[#32BB78]" : "border-gray-400"}`}>
-                    {timeFilters[key] && (
-                      <svg className="w-3.5 h-3.5 text-white" viewBox="0 0 20 20" fill="none">
-                        <path d="M5 10.5L8.5 14L15 7" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
-                    )}
-                  </span>
-                  {label}
-                </div>
-                <span className="text-gray-700">{count}</span>
-              </label>
-            ))}
-          </div>
-
-          <div className="h-[2px] bg-gray-200 my-6" />
-
-          {/* Verified */}
-          <div className="text-[18px] font-semibold mb-4">Доверие и безопасность</div>
-          <label className="flex items-center justify-between text-[15px] cursor-pointer">
-            <div className="flex items-center gap-3">
-              <input type="checkbox" checked={verifiedOnly} onChange={() => setVerifiedOnly(!verifiedOnly)} className="sr-only" />
-              <span className={`w-5 h-5 rounded flex items-center justify-center border-2 ${verifiedOnly ? "bg-[#32BB78] border-[#32BB78]" : "border-gray-400"}`}>
-                {verifiedOnly && (
-                  <svg className="w-3.5 h-3.5 text-white" viewBox="0 0 20 20" fill="none">
-                    <path d="M5 10.5L8.5 14L15 7" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                )}
-              </span>
-              Профиль подтвержден
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-gray-700">1</span>
-              <img src={userVerified} className="w-4 h-4" />
-            </div>
-          </label>
+          <RoutesFilters sort={sort} setSort={setSort} timeFilters={timeFilters} toggleTime={toggleTime} verifiedOnly={verifiedOnly} setVerifiedOnly={setVerifiedOnly} />
         </div>
 
-        {/* Results */}
         <div className="flex-1 overflow-y-auto pr-2">
           <div className="text-[20px] font-semibold mb-6">
             13 результатов по <span className="text-gray-500">FERGHANA - TASHKENT</span> в 13.01.2026
@@ -117,23 +66,22 @@ const RoutesResults = () => {
             {[0, 1, 2].map((cardIndex) => (
               <div key={cardIndex} className="border border-gray-200 rounded-[18px] p-4 flex gap-6 hover:bg-gray-50 transition cursor-pointer">
                 <div className="relative w-[260px] rounded-[14px] overflow-hidden shrink-0">
-                    <img src={images[activeImage[cardIndex]]} className="absolute inset-0 w-full h-full object-cover" />
+                  <img src={images[activeImage[cardIndex]]} className="absolute inset-0 w-full h-full object-cover" />
 
-                    <button onClick={(e) => { e.stopPropagation(); changeImage(cardIndex, "prev"); }} className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-black/30 rounded-full flex items-center justify-center">
-                        <ChevronLeft className="w-4 h-4 text-white" />
-                    </button>
+                  <button onClick={(e) => { e.stopPropagation(); changeImage(cardIndex, "prev"); }} className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-black/30 rounded-full flex items-center justify-center">
+                    <ChevronLeft className="w-4 h-4 text-white" />
+                  </button>
 
-                    <button onClick={(e) => { e.stopPropagation(); changeImage(cardIndex, "next"); }} className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-black/30 rounded-full flex items-center justify-center">
-                        <ChevronRight className="w-4 h-4 text-white" />
-                    </button>
+                  <button onClick={(e) => { e.stopPropagation(); changeImage(cardIndex, "next"); }} className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-black/30 rounded-full flex items-center justify-center">
+                    <ChevronRight className="w-4 h-4 text-white" />
+                  </button>
 
-                    <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2">
-                        {images.map((_, i) => (
-                        <span key={i} className={`w-2 h-2 rounded-full transition ${activeImage[cardIndex] === i ? "bg-white" : "bg-white/50"}`} />
-                        ))}
-                    </div>
+                  <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2">
+                    {images.map((_, i) => (
+                      <span key={i} className={`w-2 h-2 rounded-full ${activeImage[cardIndex] === i ? "bg-white" : "bg-white/50"}`} />
+                    ))}
+                  </div>
                 </div>
-
 
                 <div className="flex-1 flex flex-col justify-between">
                   <div className="flex items-start justify-between">
@@ -172,9 +120,7 @@ const RoutesResults = () => {
                     <div className="flex items-center gap-3">
                       <img src={avatar} className="w-10 h-10 rounded-full object-cover" />
                       <div>
-                        <div className="flex items-center gap-2 font-semibold">
-                          Fayzullo Abdulazizov
-                        </div>
+                        <div className="font-semibold">Fayzullo Abdulazizov</div>
                         <div className="text-[14px]">+998 99 996-16-96</div>
                       </div>
                     </div>
@@ -185,6 +131,65 @@ const RoutesResults = () => {
           </div>
         </div>
       </div>
+
+      {/* MOBILE RESULTS */}
+      <div className="md:hidden px-4 mt-4 space-y-4">
+        {[0, 1, 2].map((i) => (
+          <div key={i} className="border border-gray-200 rounded-2xl p-4 bg-white">
+            <div className="flex gap-4">
+              <img src={carImg1} className="w-24 h-20 rounded-xl object-cover" />
+              <div className="flex-1">
+                <div className="flex justify-between">
+                  <div className="font-semibold">16:29</div>
+                  <div className="font-bold">150 000 сум</div>
+                </div>
+                <div className="text-gray-500 text-[14px]">FERGHANA → TASHKENT</div>
+                <div className="mt-1 text-[14px] text-gray-600">Chevrolet Malibu · 3 места</div>
+                <div className="mt-2 flex items-center gap-2">
+                  <img src={avatar} className="w-6 h-6 rounded-full" />
+                  <span className="text-[13px]">Fayzullo Abdulazizov</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* MOBILE SEARCH MODAL */}
+      {mobileSearchOpen && (
+        <div className="fixed inset-0 z-50 bg-white overflow-y-auto">
+          <div className="p-4 flex justify-end">
+            <button onClick={() => setMobileSearchOpen(false)}>
+              <X className="w-7 h-7" />
+            </button>
+          </div>
+          <RoutesSearch isMobileModal onClose={() => setMobileSearchOpen(false)} />
+        </div>
+      )}
+
+      {/* MOBILE FILTERS MODAL */}
+      {mobileFiltersOpen && (
+        <div className="fixed inset-0 z-50 bg-white overflow-y-auto">
+          <div className="p-4 flex justify-end">
+            <button onClick={() => setMobileFiltersOpen(false)}>
+              <X className="w-7 h-7" />
+            </button>
+          </div>
+
+          <div className="px-4 pb-4">
+
+            <RoutesFilters
+              sort={sort}
+              setSort={setSort}
+              timeFilters={timeFilters}
+              toggleTime={toggleTime}
+              verifiedOnly={verifiedOnly}
+              setVerifiedOnly={setVerifiedOnly}
+            />
+          </div>
+
+        </div>
+      )}
     </div>
   );
 };
