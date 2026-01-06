@@ -1,6 +1,6 @@
-// src/pages/routes/Details.jsx
+// src/pages/routes/RouteDetails.jsx
 import React, { useState } from "react";
-import { ArrowLeft, Share2, ChevronLeft, ChevronRight, Star, Phone, Armchair } from "lucide-react";
+import { Share2, ChevronLeft, ChevronRight, Star, Phone, Armchair } from "lucide-react";
 import Header from "../../components/layout/Header";
 import carImg1 from "../../assets/mycar1.jpg";
 import carImg2 from "../../assets/mycar2.jpg";
@@ -15,25 +15,28 @@ const RouteDetails = () => {
   const [active, setActive] = useState(0);
 
   return (
-    <div className="min-h-screen bg-white pb-24">
+    <div className="min-h-screen bg-white pb-8">
       <Header />
 
       <div className="container-wide">
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between py-6 border-b border-gray-300 gap-4">
-          <div className="flex items-center gap-4">
-            <button className="flex items-center gap-2 px-3 py-2 rounded-lg text-[15px] font-medium text-gray-700 hover:bg-gray-100 hover:text-black transition">
-              <ChevronLeft size={18} />
-              Назад
-            </button>
-            <div className="text-[28px] lg:text-[36px] font-semibold">Детали маршрута</div>
+        {/* HEADER */}
+        <div className="relative flex items-center py-4 border-b border-gray-300">
+          <button onClick={() => window.history.back()} className="absolute left-0 flex items-center px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition lg:static lg:mr-4">
+            <ChevronLeft size={18} />
+            <span className="hidden lg:inline ml-2 text-[15px] font-medium">Назад</span>
+          </button>
+
+          <div className="mx-auto text-[20px] lg:text-[36px] font-semibold text-center lg:text-left lg:mx-0">
+            Детали маршрута
           </div>
 
-          <button className="flex items-center gap-2 px-3 py-2 rounded-lg text-[15px] font-medium text-gray-700 hover:bg-gray-100 hover:text-black transition self-start lg:self-auto">
+          <button className="absolute right-0 flex items-center px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition lg:static lg:ml-auto">
             <Share2 size={18} />
-            Поделиться
+            <span className="hidden lg:inline ml-2 text-[15px] font-medium">Поделиться</span>
           </button>
         </div>
 
+        {/* CONTENT */}
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_440px] gap-4 mt-6">
           {/* LEFT */}
           <div>
@@ -65,6 +68,7 @@ const RouteDetails = () => {
               </div>
             </div>
 
+            {/* DRIVER */}
             <div className="mt-8 border rounded-2xl p-5 border-gray-300">
               <div className="flex items-center gap-4">
                 <img src={avatar} alt="" className="w-14 h-14 rounded-full object-cover" />
@@ -82,7 +86,6 @@ const RouteDetails = () => {
                   <img src={userVerified} alt="" className="w-5 h-5" />
                   <span>Профиль подтвержден</span>
                 </div>
-
                 <div className="flex items-center gap-2">
                   <Phone size={16} />
                   <span>+998 (99) 996-16-96</span>
@@ -145,20 +148,20 @@ const RouteDetails = () => {
 
               <div className="mt-6 flex items-center justify-between gap-4">
                 <div className="text-[18px] font-bold">Номер машины</div>
-                <div className="inline-flex items-center border-2 border-black rounded-xl overflow-hidden bg-white">
-                  <div className="px-3 py-2 text-[18px] font-semibold border-r-2 border-black">01</div>
-                  <div className="flex items-center gap-3 px-3 py-2">
-                    <div className="text-[18px] font-semibold tracking-widest">F 001 AA</div>
+                <div className="inline-flex items-center border-2 border-black rounded-lg overflow-hidden bg-white max-w-full">
+                  <div className="px-2 py-1 text-[14px] lg:px-3 lg:py-2 lg:text-[18px] font-semibold border-r-2 border-black">01</div>
+                  <div className="flex items-center gap-2 px-2 py-1 lg:gap-3 lg:px-3 lg:py-2">
+                    <div className="text-[14px] lg:text-[18px] font-semibold tracking-widest break-all">F 001 AA</div>
                     <div className="flex flex-col items-center">
-                      <img src={uzFlag} alt="" className="w-5 h-3 mb-[2px]" />
-                      <div className="text-[11px] font-semibold text-blue-600 leading-none">UZ</div>
+                      <img src={uzFlag} alt="" className="w-4 h-[10px] lg:w-5 lg:h-3 mb-[2px]" />
+                      <div className="text-[10px] lg:text-[11px] font-semibold text-blue-600 leading-none">UZ</div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
 
-            <button className="w-full h-[56px] mt-4 bg-black text-white rounded-xl text-[17px] font-semibold hover:bg-gray-800 transition">
+            <button className="w-full h-[56px] mt-4 bg-[#32BB78] text-white rounded-xl text-[17px] font-semibold hover:bg-[#2aa86e] transition">
               Продолжить
             </button>
           </div>
