@@ -8,6 +8,8 @@ import carImg2 from "../../assets/mycar2.jpg";
 import avatar from "../../assets/driverbookingtest.jpg";
 import chevroletLogo from "../../assets/chevrolet.png";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+
 
 const images = [carImg1, carImg2];
 
@@ -18,6 +20,8 @@ const RoutesResults = () => {
   const [verifiedOnly, setVerifiedOnly] = useState(false);
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  const navigate = useNavigate();
+
 
   const changeImage = (cardIndex, dir) => {
     setActiveImage((prev) => {
@@ -64,7 +68,7 @@ const RoutesResults = () => {
 
           <div className="space-y-4">
             {[0, 1, 2].map((cardIndex) => (
-              <div key={cardIndex} className="border border-gray-200 rounded-[18px] p-4 flex gap-6 hover:bg-gray-50 transition cursor-pointer">
+              <div key={cardIndex} onClick={() => navigate("details")} className="border border-gray-200 rounded-[18px] p-4 flex gap-6 hover:bg-gray-50 transition cursor-pointer">
                 <div className="relative w-[260px] rounded-[14px] overflow-hidden shrink-0">
                   <img src={images[activeImage[cardIndex]]} className="absolute inset-0 w-full h-full object-cover" />
 
@@ -135,7 +139,7 @@ const RoutesResults = () => {
       {/* MOBILE RESULTS */}
       <div className="md:hidden px-4 mt-4 space-y-4">
         {[0, 1, 2].map((i) => (
-          <div key={i} className="border border-gray-200 rounded-2xl p-4 bg-white">
+          <div key={i} onClick={() => navigate("details")} className="border border-gray-200 rounded-2xl p-4 bg-white cursor-pointer">
             <div className="flex gap-4">
               <img src={carImg1} className="w-24 h-20 rounded-xl object-cover" />
               <div className="flex-1">
