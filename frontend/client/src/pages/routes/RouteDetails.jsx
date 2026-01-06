@@ -2,23 +2,27 @@
 import React, { useState } from "react";
 import { Share2, ChevronLeft, ChevronRight, Star, Phone, Armchair } from "lucide-react";
 import Header from "../../components/layout/Header";
+import Footer from "../../components/layout/Footer";
 import carImg1 from "../../assets/mycar1.jpg";
 import carImg2 from "../../assets/mycar2.jpg";
 import avatar from "../../assets/driverbookingtest.jpg";
 import chevroletLogo from "../../assets/chevrolet.png";
 import uzFlag from "../../assets/flag-uz.svg";
 import userVerified from "../../assets/userverified.svg";
+import { useNavigate } from "react-router-dom";
 
 const images = [carImg1, carImg2, carImg1, carImg2];
 
 const RouteDetails = () => {
   const [active, setActive] = useState(0);
+  const navigate = useNavigate();
+
 
   return (
-    <div className="min-h-screen bg-white pb-8">
+    <div className="min-h-screen bg-white">
       <Header />
 
-      <div className="container-wide">
+      <div className="container-wide pb-20 lg:pb-32">
         {/* HEADER */}
         <div className="relative flex items-center py-4 border-b border-gray-300">
           <button onClick={() => window.history.back()} className="absolute left-0 flex items-center px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition lg:static lg:mr-4">
@@ -107,66 +111,88 @@ const RouteDetails = () => {
 
           {/* RIGHT */}
           <div>
-            <div className="lg:sticky lg:top-24 bg-[#F9FAFB] border border-gray-300 rounded-2xl p-6">
-              <div className="text-[22px] font-bold mb-1">Маршрут</div>
-              <div className="text-[16px] text-gray-600 mb-6">Суббота, 12 августа</div>
+            <div className="lg:sticky lg:top-24">
+              <div className="bg-[#F9FAFB] border border-gray-300 rounded-2xl p-6">
+                <div className="text-[22px] font-bold mb-1">Маршрут</div>
+                <div className="text-[16px] text-gray-600 mb-6">Суббота, 12 августа</div>
 
-              <div className="grid grid-cols-[auto_24px_1fr] gap-3">
-                <div className="flex flex-col gap-[38px] text-[15px] font-medium">
-                  <div>23:00</div>
-                  <div>03:00</div>
-                </div>
-
-                <div className="flex flex-col items-center">
-                  <div className="w-4 h-4 rounded-full border-2 border-black bg-white" />
-                  <div className="w-[2px] h-[52px] bg-black" />
-                  <div className="w-4 h-4 rounded-full border-2 border-black bg-white" />
-                </div>
-
-                <div className="flex flex-col gap-4">
-                  <div>
-                    <div className="text-[18px] font-bold">FERGHANA</div>
-                    <div className="text-[14px] text-gray-500">Ферганская область, Узбекистан</div>
+                <div className="grid grid-cols-[auto_24px_1fr] gap-3">
+                  <div className="flex flex-col gap-[38px] text-[15px] font-medium">
+                    <div>23:00</div>
+                    <div>03:00</div>
                   </div>
-                  <div>
-                    <div className="text-[18px] font-bold">TASHKENT</div>
-                    <div className="text-[14px] text-gray-500">Ташкентская область, Узбекистан</div>
-                  </div>
-                </div>
-              </div>
 
-              <div className="mt-6 border-t pt-5 border-gray-300">
-                <div className="text-[22px] font-bold mb-3">Автомобиль</div>
-                <div className="flex items-center gap-3">
-                  <img src={chevroletLogo} alt="" className="w-10 h-10" />
-                  <div>
-                    <div className="text-[20px] font-semibold">Chevrolet Malibu 2 turbo</div>
-                    <div className="text-[16px] text-gray-500">Черный</div>
+                  <div className="flex flex-col items-center">
+                    <div className="w-4 h-4 rounded-full border-2 border-black bg-white" />
+                    <div className="w-[2px] h-[52px] bg-black" />
+                    <div className="w-4 h-4 rounded-full border-2 border-black bg-white" />
+                  </div>
+
+                  <div className="flex flex-col gap-4">
+                    <div>
+                      <div className="text-[18px] font-bold">FERGHANA</div>
+                      <div className="text-[14px] text-gray-500">
+                        Ферганская область, Узбекистан
+                      </div>
+                    </div>
+                    <div>
+                      <div className="text-[18px] font-bold">TASHKENT</div>
+                      <div className="text-[14px] text-gray-500">
+                        Ташкентская область, Узбекистан
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <div className="mt-6 flex items-center justify-between gap-4">
-                <div className="text-[18px] font-bold">Номер машины</div>
-                <div className="inline-flex items-center border-2 border-black rounded-lg overflow-hidden bg-white max-w-full">
-                  <div className="px-2 py-1 text-[14px] lg:px-3 lg:py-2 lg:text-[18px] font-semibold border-r-2 border-black">01</div>
-                  <div className="flex items-center gap-2 px-2 py-1 lg:gap-3 lg:px-3 lg:py-2">
-                    <div className="text-[14px] lg:text-[18px] font-semibold tracking-widest break-all">F 001 AA</div>
-                    <div className="flex flex-col items-center">
-                      <img src={uzFlag} alt="" className="w-4 h-[10px] lg:w-5 lg:h-3 mb-[2px]" />
-                      <div className="text-[10px] lg:text-[11px] font-semibold text-blue-600 leading-none">UZ</div>
+                <div className="mt-6 border-t pt-5 border-gray-300">
+                  <div className="text-[22px] font-bold mb-3">Автомобиль</div>
+                  <div className="flex items-center gap-3">
+                    <img src={chevroletLogo} alt="" className="w-12 h-10" />
+                    <div>
+                      <div className="text-[20px] font-semibold">
+                        Chevrolet Malibu 2 turbo
+                      </div>
+                      <div className="text-[16px] text-gray-500">Черный</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-6 flex items-center justify-between gap-4">
+                  <div className="text-[18px] font-bold">Номер машины</div>
+                  <div className="inline-flex items-center border-2 border-black rounded-lg overflow-hidden bg-white max-w-full">
+                    <div className="px-2 py-1 text-[14px] lg:px-3 lg:py-2 lg:text-[18px] font-semibold border-r-2 border-black">
+                      01
+                    </div>
+                    <div className="flex items-center gap-2 px-2 py-1 lg:gap-3 lg:px-3 lg:py-2">
+                      <div className="text-[14px] lg:text-[18px] font-semibold tracking-widest">
+                        F 001 AA
+                      </div>
+                      <div className="flex flex-col items-center">
+                        <img
+                          src={uzFlag}
+                          alt=""
+                          className="w-4 h-[10px] lg:w-5 lg:h-3 mb-[2px]"
+                        />
+                        <div className="text-[10px] lg:text-[11px] font-semibold text-blue-600 leading-none">
+                          UZ
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
 
-            <button className="w-full h-[56px] mt-4 bg-[#32BB78] text-white rounded-xl text-[17px] font-semibold hover:bg-[#2aa86e] transition">
-              Продолжить
-            </button>
+              <button
+                onClick={() => navigate("booking")}
+                className="w-full h-[56px] mt-4 bg-[#32BB78] text-white rounded-xl text-[17px] font-semibold hover:bg-[#2aa86e] transition"
+              >
+                Продолжить
+              </button>
+            </div>
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };
