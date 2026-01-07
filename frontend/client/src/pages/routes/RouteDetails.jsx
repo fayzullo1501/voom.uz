@@ -112,7 +112,7 @@ const RouteDetails = () => {
           {/* RIGHT */}
           <div>
             <div className="lg:sticky lg:top-24">
-              <div className="bg-[#F9FAFB] border border-gray-300 rounded-2xl p-6">
+              <div className=" border border-gray-300 rounded-2xl p-6">
                 <div className="text-[22px] font-bold mb-1">Маршрут</div>
                 <div className="text-[16px] text-gray-600 mb-6">Суббота, 12 августа</div>
 

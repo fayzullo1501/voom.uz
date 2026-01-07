@@ -1,15 +1,18 @@
 import React, { useState } from "react";
 import { X, Filter } from "lucide-react";
-import { useNavigate } from "react-router-dom";
 import walletIcon from "../../assets/icons/wallet.svg";
 import userIcon from "../../assets/icons/user.svg";
 import carAvatar from "../../assets/carbookingtest.jpg";
 import driverAvatar from "../../assets/driverbookingtest.jpg";
+import { useNavigate, useParams } from "react-router-dom";
+
 
 
 const MyBookings = () => {
   const navigate = useNavigate();
   const [tab, setTab] = useState("active");
+const { lang } = useParams();
+
 
   const bookings = [
     {
@@ -106,6 +109,7 @@ const MyBookings = () => {
             {bookings.map((b) => (
               <div
                 key={b.id}
+                onClick={() => navigate(`/${lang}/profile/bookings/details`)}
                 className="border border-gray-200 rounded-2xl px-4 sm:px-6 py-4 sm:py-5 hover:bg-gray-50 transition cursor-pointer"
               >
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 md:gap-6">
