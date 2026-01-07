@@ -140,7 +140,7 @@ const MyBookingDetails = () => {
                   <img src={driverAvatar} className="w-12 h-12 rounded-full object-cover" />
                   <div>
                     <div className="font-semibold">Fayzullo Abdulazizov</div>
-                    <div className="text-sm text-gray-500">★ 5 / 5 · 4 отзыва</div>
+                    <div className="text-sm text-gray-500">5 / 5 · 4 отзыва</div>
                   </div>
                 </div>
 
@@ -193,7 +193,7 @@ const MyBookingDetails = () => {
 
               <div className="border border-gray-300 rounded-2xl p-4 mb-4">
                 <div className="font-semibold text-[20px] mb-4">Стоимость за поездку</div>
-                <div className="flex justify-between border-t pt-4">
+                <div className="flex justify-between border-t border-gray-300 pt-4">
                   <span>Всего</span>
                   <span className="font-bold">132 000 сум</span>
                 </div>
