@@ -103,6 +103,7 @@ const MyRoutes = () => {
             {bookings.map((b) => (
               <div
                 key={b.id}
+                onClick={() => navigate(`details`)}
                 className="border border-gray-200 rounded-2xl px-4 sm:px-6 py-4 sm:py-5 hover:bg-gray-50 transition cursor-pointer"
               >
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 md:gap-6">
