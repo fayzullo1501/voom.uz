@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { X } from "lucide-react";
-import priceImg from "../../assets/crrouteseats.png";
+import priceImg from "../../assets/crrouteseatsprice.png";
 
 // форматирует число: 100000 → 100 000
 const formatMoney = (val) => {

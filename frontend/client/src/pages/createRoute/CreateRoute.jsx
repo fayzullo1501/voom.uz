@@ -150,7 +150,7 @@ const CreateRoute = () => {
         className="flex items-center"
         style={{ minHeight: "calc(100vh - 96px)" }}
       >
-        <div className="container-wide w-full">
+        <div className="container-wide w-full pb-6">
           <div className="flex flex-col lg:flex-row justify-between w-full gap-6">
 
             {/* LEFT BLOCK */}
@@ -316,14 +316,7 @@ const CreateRoute = () => {
 
             {/* RIGHT BLOCK */}
             <div className="w-full lg:w-1/2 flex justify-center">
-              <div
-                className="relative rounded-[32px] overflow-hidden shadow-lg w-full"
-                style={{
-                  maxWidth: "720px",
-                  height: "100%",
-                  maxHeight: "calc(100vh - 120px)"
-                }}
-              >
+              <div className="relative rounded-[32px] overflow-hidden shadow-lg w-full" style={{ maxWidth: "720px", height: "620px" }} >
                 <img src={bgImg} alt="banner" className="w-full h-full object-cover" />
 
                 <div className="absolute left-6 right-6 bottom-6 bg-white rounded-2xl shadow-md p-6 flex flex-col sm:flex-row gap-4">

@@ -16,7 +16,16 @@
       "createRoute": "Yo'nalish yaratish"
     },
     "profile": {
-      "namePlaceholder": "Fayzullo"
+      "namePlaceholder": "Fayzullo",
+      "login": "Kirish",
+      "register": "Ro‘yxatdan o‘tish",
+      "menu": {
+        "profile": "Profil",
+        "bookings": "Mening bronlarim",
+        "routes": "Mening marshrutlarim",
+        "chat": "Chat messenjer",
+        "notifications": "Bildirishnomalar"
+      }
     }
   },
 
