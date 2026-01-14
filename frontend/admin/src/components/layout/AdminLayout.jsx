@@ -1,10 +1,14 @@
+// src/components/layout/AdminLayout.jsx
 import Sidebar from "./Sidebar";
 
 const AdminLayout = ({ children }) => {
   return (
-    <div className="min-h-screen flex bg-[#F5F6FA]">
+    <div className="h-screen flex overflow-hidden">
+      {/* SIDEBAR */}
       <Sidebar />
-      <div className="flex-1 p-6">
+
+      {/* RIGHT SIDE */}
+      <div className="flex-1 flex flex-col bg-white">
         {children}
       </div>
     </div>
