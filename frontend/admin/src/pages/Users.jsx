@@ -89,50 +89,47 @@ const Users = () => {
 
         {/* TABLE */}
         <div className="border border-gray-200 rounded-2xl overflow-hidden">
-          <table className="w-full">
-            <thead className="bg-gray-50 text-[13px] text-gray-500">
-              <tr>
-                <th className="px-4 py-4 w-[56px]">
-                  <Checkbox />
+        <div className="overflow-x-auto">
+            <table className="w-full min-w-[1000px] text-[13px]">
+            <thead className="bg-gray-50 text-gray-500">
+                <tr>
+                <th className="px-3 py-3 w-[48px]">
+                    <Checkbox />
                 </th>
-                <th className="px-4 py-4 text-left">№</th>
-                <th className="px-4 py-4 text-left">ID</th>
-                <th className="px-4 py-4 text-left">ФИО</th>
-                <th className="px-4 py-4 text-left">Телефон</th>
-                <th className="px-4 py-4 text-left">Почта</th>
-                <th className="px-4 py-4 text-left">Водитель</th>
-                <th className="px-4 py-4 text-left">Дата регистрации</th>
-                <th className="px-4 py-4 w-[56px]"></th>
-              </tr>
+                <th className="px-3 py-3 w-[48px] text-left">№</th>
+                <th className="px-3 py-3 w-[90px] text-left">ID</th>
+                <th className="px-3 py-3 w-[180px] text-left">ФИО</th>
+                <th className="px-3 py-3 w-[140px] text-left">Телефон</th>
+                <th className="px-3 py-3 w-[200px] text-left">Почта</th>
+                <th className="px-3 py-3 w-[110px] text-left">Водитель</th>
+                <th className="px-3 py-3 w-[150px] text-left">Дата регистрации</th>
+                <th className="px-3 py-3 w-[48px]"></th>
+                </tr>
             </thead>
 
             <tbody>
-              {visible.map((u, i) => (
-                <tr
-                  key={u.id}
-                  className="border-t border-gray-100 hover:bg-gray-50 transition"
-                >
-                  <td className="px-4 py-4">
+                {visible.map((u, i) => (
+                <tr key={u.id} className="border-t border-gray-100 hover:bg-gray-50 transition">
+                    <td className="px-3 py-3">
                     <Checkbox />
-                  </td>
-                  <td className="px-4 py-4">
-                    {start + i + 1}
-                  </td>
-                  <td className="px-4 py-4 text-gray-600">{u.id}</td>
-                  <td className="px-4 py-4 font-medium">{u.name}</td>
-                  <td className="px-4 py-4">{u.phone}</td>
-                  <td className="px-4 py-4">{u.email}</td>
-                  <td className="px-4 py-4">{u.driver}</td>
-                  <td className="px-4 py-4">{u.date}</td>
-                  <td className="px-4 py-4">
-                    <button className="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-gray-200 transition">
-                      <Eye size={18} />
+                    </td>
+                    <td className="px-3 py-3">{start + i + 1}</td>
+                    <td className="px-3 py-3 text-gray-600">{u.id}</td>
+                    <td className="px-3 py-3 font-medium">{u.name}</td>
+                    <td className="px-3 py-3 whitespace-nowrap">{u.phone}</td>
+                    <td className="px-3 py-3">{u.email}</td>
+                    <td className="px-3 py-3">{u.driver}</td>
+                    <td className="px-3 py-3 whitespace-nowrap">{u.date}</td>
+                    <td className="px-3 py-3">
+                    <button className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-200 transition">
+                        <Eye size={16} />
                     </button>
-                  </td>
+                    </td>
                 </tr>
-              ))}
+                ))}
             </tbody>
-          </table>
+            </table>
+        </div>
         </div>
 
         {/* PAGINATION */}
