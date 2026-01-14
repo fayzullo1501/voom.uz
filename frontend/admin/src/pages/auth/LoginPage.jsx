@@ -2,11 +2,15 @@
 import React, { useState } from "react";
 import { X, Eye, EyeOff } from "lucide-react";
 import logo from "../../assets/logo.svg";
+import { useNavigate } from "react-router-dom";
+
 
 const LoginPage = () => {
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
   const [showPass, setShowPass] = useState(false);
+  const navigate = useNavigate();
+
 
   return (
     <div className="min-h-screen flex flex-col bg-white text-gray-900">
@@ -62,9 +66,10 @@ const LoginPage = () => {
             </div>
           </div>
 
-          <button className="w-full h-[52px] bg-[#000] text-white rounded-xl text-[17px] font-semibold hover:bg-[#2aa86e] transition">
+          <button onClick={() => { localStorage.setItem("admin_auth", "true"); navigate("/dashboard"); }} className="w-full h-[52px] bg-black text-white rounded-xl text-[17px] font-semibold">
             Войти
           </button>
+
         </div>
       </main>
 
