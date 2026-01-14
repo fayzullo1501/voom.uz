@@ -24,14 +24,14 @@ const Sidebar = () => {
       <div>
         {/* HEADER */}
         <div
-          className={`flex items-center mb-10 ${collapsed ? "justify-center" : "justify-between"}`}
+          className={`flex items-center mb-5 ${collapsed ? "justify-center" : "justify-between"}`}
           onMouseEnter={() => setHoverLogo(true)}
           onMouseLeave={() => setHoverLogo(false)}
         >
           {/* EXPANDED */}
           {!collapsed && (
             <>
-              <img src={logo} alt="VOOM" className="h-8" />
+              <img src={logo} alt="VOOM" className="h-10 px-4 " />
               <div onClick={() => setCollapsed(true)} className="h-8 w-8 flex items-center justify-center rounded-lg cursor-pointer hover:bg-gray-100 transition">
                 <PanelLeft size={20} />
               </div>

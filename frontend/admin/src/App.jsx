@@ -5,6 +5,7 @@ import LoginPage from "./pages/auth/LoginPage";
 
 import Dashboard from "./pages/Dashboard";
 import Users from "./pages/Users";
+import MRoutes from "./pages/Routes";
 
 const App = () => {
   const isAuth = localStorage.getItem("admin_auth") === "true";
@@ -26,6 +27,7 @@ const App = () => {
 
         <Route path="/dashboard" element={protectedPage(Dashboard)} />
         <Route path="/users" element={protectedPage(Users)} />
+        <Route path="/routes" element={protectedPage(MRoutes)} />
       </Routes>
     </DeviceGuard>
   );
