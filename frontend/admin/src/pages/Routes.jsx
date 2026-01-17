@@ -41,7 +41,7 @@ const Routes = () => {
         {/* ACTIONS */}
         <div className="flex items-center justify-between mb-6">
           <div className="flex gap-3">
-            <button className="h-[42px] px-5 rounded-lg border border-red-600 text-red-600 text-[14px] font-medium hover:bg-red-50 transition">
+            <button className="h-[42px] px-5 rounded-lg border border-red-600 text-red-600 text-[14px] font-medium bg-red-100 hover:bg-red-200 transition">
               Удалить
             </button>
           </div>
@@ -63,7 +63,7 @@ const Routes = () => {
             <table className="w-full min-w-[1100px] text-[13px]">
             <thead className="bg-gray-50 text-gray-500">
                 <tr>
-                <th className="px-3 py-3 w-[48px]">
+                <th className="px-3 py-3 w-[48px] text-left">
                     <Checkbox />
                 </th>
                 <th className="px-3 py-3 w-[48px] text-left">№</th>

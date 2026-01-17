@@ -55,7 +55,7 @@ const Users = () => {
             <button
                 onClick={() => console.log("EDIT")}
                 disabled
-                className="h-[42px] px-5 rounded-lg border border-gray-600 text-gray-600 text-[14px] font-medium hover:bg-gray-100 transition"
+                className="h-[42px] px-5 rounded-lg border border-gray-600 text-gray-600 text-[14px] font-medium bg-gray-100 hover:bg-gray-200 transition"
             >
                 Изменить
             </button>
@@ -64,7 +64,7 @@ const Users = () => {
             <button
                 onClick={() => console.log("DELETE")}
                 disabled
-                className="h-[42px] px-5 rounded-lg border border-red-600 text-red-600 text-[14px] font-medium hover:bg-red-50 transition"
+                className="h-[42px] px-5 rounded-lg border border-red-600 text-red-600 text-[14px] font-medium bg-red-100 hover:bg-red-200 transition"
             >
                 Удалить
             </button>
@@ -93,7 +93,7 @@ const Users = () => {
             <table className="w-full min-w-[1000px] text-[13px]">
             <thead className="bg-gray-50 text-gray-500">
                 <tr>
-                <th className="px-3 py-3 w-[48px]">
+                <th className="px-3 py-3 w-[48px] text-left">
                     <Checkbox />
                 </th>
                 <th className="px-3 py-3 w-[48px] text-left">№</th>
