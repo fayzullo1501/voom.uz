@@ -1,6 +1,6 @@
 // src/components/layout/Sidebar.jsx
 import { useNavigate, useLocation } from "react-router-dom";
-import { LayoutGrid, Users, Route, ClipboardList, BookOpen, LogOut, PanelLeft, ChevronDown, MapPin, Car, CarFront, Palette, Settings as SettingsIcon } from "lucide-react";
+import { LayoutGrid, Users, Route, ClipboardList, BookOpen, LogOut, PanelLeft, ChevronDown, MapPin, Car, CarFront, Palette, Settings as SettingsIcon, Newspaper, Megaphone } from "lucide-react";
 import { useState } from "react";
 import logo from "../../assets/logo.svg";
 import logoShort from "../../assets/logo-short.svg";
@@ -14,7 +14,7 @@ const Sidebar = () => {
 
   return (
     <div className={`h-screen bg-white border-r border-gray-200 flex flex-col justify-between transition-all duration-300 ${collapsed ? "w-[72px]" : "w-[260px]"} px-4 py-6`}>
-      <div>
+      <div className="flex flex-col flex-1 overflow-y-auto pr-1">
         {/* HEADER */}
         <div className={`flex items-center mb-5 ${collapsed ? "justify-center" : "justify-between"}`} onMouseEnter={() => setHoverLogo(true)} onMouseLeave={() => setHoverLogo(false)}>
           {!collapsed && (
@@ -59,6 +59,18 @@ const Sidebar = () => {
             <ClipboardList size={22} />
             {!collapsed && <span className="text-[16px] font-medium">Заявки</span>}
           </div>
+          
+          <div onClick={() => navigate("/news")} className={`flex items-center gap-3 rounded-xl cursor-pointer transition ${collapsed ? "justify-center px-2 py-3" : "px-4 py-3"} ${pathname === "/news" ? "bg-gray-100" : "hover:bg-gray-100"}`}>
+            <Newspaper size={22} />
+            {!collapsed && <span className="text-[16px] font-medium">Новости</span>}
+          </div>
+
+          <div onClick={() => navigate("/ads")} className={`flex items-center gap-3 rounded-xl cursor-pointer transition ${collapsed ? "justify-center px-2 py-3" : "px-4 py-3"} ${pathname === "/ads" ? "bg-gray-100" : "hover:bg-gray-100"}`}>
+            <Megaphone size={22} />
+            {!collapsed && <span className="text-[16px] font-medium">Рекламы</span>}
+          </div>
+
+
 
           {/* DIRECTORIES */}
           <div>

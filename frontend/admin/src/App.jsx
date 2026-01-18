@@ -11,6 +11,8 @@ import DirectoriesCities from "./pages/DirectoriesCities";
 import DirectoriesCarBrands from "./pages/DirectoriesCarBrands";
 import DirectoriesCarModels from "./pages/DirectoriesCarModels";
 import DirectoriesCarColors from "./pages/DirectoriesCarColors";
+import News from "./pages/News";
+import Ads from "./pages/Ads";
 import Settings from "./pages/Settings";
 
 const App = () => {
@@ -39,6 +41,8 @@ const App = () => {
         <Route path="/directories/brands" element={protectedPage(DirectoriesCarBrands)} />
         <Route path="/directories/models" element={protectedPage(DirectoriesCarModels)} />
         <Route path="/directories/colors" element={protectedPage(DirectoriesCarColors)} />
+        <Route path="/news" element={protectedPage(News)} />
+        <Route path="/ads" element={protectedPage(Ads)} />
         <Route path="/settings" element={protectedPage(Settings)} />
       </Routes>
     </DeviceGuard>

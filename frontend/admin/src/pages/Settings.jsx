@@ -20,7 +20,7 @@ const Settings = () => {
   const [chatEnabled, setChatEnabled] = useState(true);
   const [identEnabled, setIdentEnabled] = useState(false);
 
-  const themeLabel = theme === "system" ? "Системная" : theme === "dark" ? "Темная" : "Светлая";
+  const themeLabel = theme === "light" ? "Светлая" : theme === "dark" ? "Темная" : "Светлая";
   const langLabel = language === "ru" ? "Русский" : "English";
 
   return (
@@ -89,7 +89,7 @@ const Settings = () => {
             )}
 
             {section === "notifications" && (
-              <div className="flex flex-col gap-6">
+              <div className="flex flex-col gap-5">
                 <div className="flex items-center justify-between border-b border-gray-200 py-5">
                   <div className="text-[16px] font-medium">Чаты</div>
                   <div onClick={() => setChatEnabled(!chatEnabled)} className="cursor-pointer">
@@ -97,7 +97,7 @@ const Settings = () => {
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between border-b border-gray-200 pb-4">
+                <div className="flex items-center justify-between border-b border-gray-200 pb-5">
                   <div className="text-[16px] font-medium">Идентификация</div>
                   <div onClick={() => setIdentEnabled(!identEnabled)} className="cursor-pointer">
                     <Toggle enabled={identEnabled} />
