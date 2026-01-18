@@ -10,7 +10,7 @@ const Header = ({ title }) => {
 
       <div className="flex items-center gap-3">
         <div className="text-[15px] font-medium text-gray-800">
-          Администратор
+          FAYZULLO ABDULAZIZOV HAKIMJON O'G'LI
         </div>
         <img src={userAvatar} alt="User" className="w-9 h-9 rounded-full" />
       </div>

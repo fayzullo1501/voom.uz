@@ -73,7 +73,7 @@ const Routes = () => {
                 <th className="px-3 py-3 w-[120px] text-left">Куда</th>
                 <th className="px-3 py-3 w-[110px] text-left">Пассажиры</th>
                 <th className="px-3 py-3 w-[140px] text-left">Дата выезда</th>
-                <th className="px-3 py-3 w-[130px] text-left">Создан</th>
+                <th className="px-3 py-3 w-[130px] text-left">Дата создания</th>
                 <th className="px-3 py-3 w-[48px]"></th>
                 </tr>
             </thead>
