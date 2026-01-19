@@ -49,7 +49,7 @@ const Dashboard = () => {
         {/* CONTENT */}
         <div className="grid grid-cols-12 gap-6 flex-1 min-h-0">
           {/* FINANCE */}
-          <div className="col-span-4 bg-white rounded-2xl p-6 flex flex-col justify-between min-h-0">
+          <div className="col-span-4 bg-white rounded-2xl p-6 flex flex-col">
             <div>
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2 text-[15px] font-medium">
@@ -79,17 +79,15 @@ const Dashboard = () => {
             <div className="mt-6">
               <div className="text-[15px] font-semibold mb-4">Агрегаторы</div>
 
-              <div className="flex flex-col gap-2">
-                {/* CLICK */}
-                <div className="bg-gray-50 rounded-2xl p-4 h-[110px] flex flex-col items-start justify-center">
-                  <img src={clickLogo} alt="Click" className="h-[28px] max-w-[120px] object-contain mb-2" />
+              <div className="flex flex-col gap-3">
+                <div className="bg-gray-50 rounded-2xl p-4 h-[100px] flex flex-col items-start justify-center text-left">
+                  <img src={clickLogo} alt="Click" className="h-[26px] mb-2" />
                   <div className="text-[18px] font-semibold">10 000 120 000 сум</div>
                   <div className="text-[13px] text-green-600">Активный</div>
                 </div>
 
-                {/* PAYME */}
-                <div className="bg-gray-50 rounded-2xl p-4 h-[110px] flex flex-col items-start justify-center">
-                  <img src={paymeLogo} alt="Payme" className="h-[28px] max-w-[120px] object-contain mb-2" />
+                <div className="bg-gray-50 rounded-2xl p-4 h-[100px] flex flex-col items-start justify-center text-left">
+                  <img src={paymeLogo} alt="Payme" className="h-[26px] mb-2" />
                   <div className="text-[18px] font-semibold">1 123 120 000 сум</div>
                   <div className="text-[13px] text-green-600">Активный</div>
                 </div>
@@ -133,7 +131,7 @@ const Dashboard = () => {
             </div>
 
             {/* CHART */}
-            <div className="bg-white rounded-2xl p-6 flex flex-col flex-1 min-h-0">
+            <div className="bg-white rounded-2xl p-6 h-[380px] flex flex-col">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2 text-[15px] font-semibold">
                   <Wallet size={16} />
@@ -145,7 +143,7 @@ const Dashboard = () => {
                 </div>
               </div>
 
-              <div className="flex-1 min-h-0">
+              <div className="flex-1">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={chartData}>
                     <XAxis dataKey="name" axisLine={false} tickLine={false} />
