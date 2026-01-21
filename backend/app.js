@@ -8,7 +8,25 @@ import devRoutes from "./routes/dev.routes.js";
 
 const app = express();
 
-app.use(cors({ origin: env.corsOrigin, credentials: true }));
+const allowedOrigins = [
+  "https://voom.uz",
+  "https://admin.voom.uz",
+  "http://localhost:5173",
+];
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, origin);
+      }
+      return callback(new Error("Not allowed by CORS"));
+    },
+    credentials: true,
+  })
+);
+
 app.use(express.json());
 app.use(cookieParser());
 
