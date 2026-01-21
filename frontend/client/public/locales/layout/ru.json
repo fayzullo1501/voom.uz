@@ -16,7 +16,7 @@
       "createRoute": "Создать маршрут"
     },
     "profile": {
-      "namePlaceholder": "Fayzullo",
+      "defaultName": "Пользователь",
       "login": "Войти",
       "register": "Зарегистрироваться",
       "menu": {
@@ -24,7 +24,7 @@
         "bookings": "Мои бронирования",
         "routes": "Мои маршруты",
         "chat": "Чат мессенджер",
-        "notifications": "Уведомления"
+        "logout": "Выйти"
       }
     }
   },

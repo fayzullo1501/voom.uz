@@ -16,15 +16,15 @@
       "createRoute": "Create route"
     },
     "profile": {
-      "namePlaceholder": "Fayzullo",
-      "login": "Log in",
-      "register": "Sign up",
+      "defaultName": "User",
+      "login": "Login",
+      "register": "Register",
       "menu": {
         "profile": "Profile",
         "bookings": "My bookings",
         "routes": "My routes",
-        "chat": "Chat messenger",
-        "notifications": "Notifications"
+        "chat": "Chat",
+        "logout": "Log out"
       }
     }
   },

@@ -16,15 +16,15 @@
       "createRoute": "Yo'nalish yaratish"
     },
     "profile": {
-      "namePlaceholder": "Fayzullo",
+      "defaultName": "Foydalanuvchi",
       "login": "Kirish",
       "register": "Ro‘yxatdan o‘tish",
       "menu": {
         "profile": "Profil",
-        "bookings": "Mening bronlarim",
-        "routes": "Mening marshrutlarim",
-        "chat": "Chat messenjer",
-        "notifications": "Bildirishnomalar"
+        "bookings": "Bronlarim",
+        "routes": "Marshrutlarim",
+        "chat": "Chat",
+        "logout": "Chiqish"
       }
     }
   },

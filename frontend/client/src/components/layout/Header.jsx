@@ -19,12 +19,33 @@ const Header = () => {
 
   const currentLang = lang || i18n.language || "ru";
 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    window.location.href = `/${currentLang}/login`;
+  };
+
   const [menuOpen, setMenuOpen] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const [mobileProfileOpen, setMobileProfileOpen] = useState(false);
 
-  const isAuth = true;
+  const token = localStorage.getItem("token");
+  const isAuth = !!token;
+
+  const storedUser = localStorage.getItem("user");
+  const user = storedUser ? JSON.parse(storedUser) : null;
+
+  const displayName =
+    user?.firstName?.trim() ||
+    t("header.profile.defaultName");
+
+  const avatarSrc =
+    user?.avatar ||
+    user?.photo ||
+    avatarPlaceholder;
+
+
 
   const profileRef = useRef(null);
 
@@ -101,8 +122,15 @@ const Header = () => {
 
           <div ref={profileRef} className="relative">
             <div className="flex items-center gap-2 cursor-pointer hover:bg-gray-100 px-3 py-1 rounded-lg" onClick={() => setProfileOpen(!profileOpen)}>
-              <span className="text-[15px] font-medium">{isAuth ? t("header.profile.namePlaceholder") : t("header.profile.login")}</span>
-              <img src={avatarPlaceholder} alt="avatar" className="w-8 h-8 rounded-full bg-gray-200" />
+              <span className="text-[15px] font-medium">
+                {isAuth ? displayName : t("header.profile.login")}
+              </span>
+
+              <img
+                src={isAuth ? avatarSrc : avatarPlaceholder}
+                alt="avatar"
+                className="w-8 h-8 rounded-full bg-gray-200"
+              />
             </div>
 
             {profileOpen && (
@@ -118,7 +146,7 @@ const Header = () => {
                     <div className="px-4 py-3 rounded-xl hover:bg-gray-100 cursor-pointer text-[15px]" onClick={() => navigate(`/${currentLang}/profile/bookings`)}>{t("header.profile.menu.bookings")}</div>
                     <div className="px-4 py-3 rounded-xl hover:bg-gray-100 cursor-pointer text-[15px]" onClick={() => navigate(`/${currentLang}/profile/routes`)}>{t("header.profile.menu.routes")}</div>
                     <div className="px-4 py-3 rounded-xl hover:bg-gray-100 cursor-pointer text-[15px]" onClick={() => navigate(`/${currentLang}/profile/chat`)}>{t("header.profile.menu.chat")}</div>
-                    <div className="px-4 py-3 rounded-xl hover:bg-gray-100 cursor-pointer text-[15px]" onClick={() => navigate(`/${currentLang}/profile/notifications`)}>{t("header.profile.menu.notifications")}</div>
+                    <div className="px-4 py-3 rounded-xl hover:bg-gray-100 cursor-pointer text-[15px] text-red-500" onClick={handleLogout} > {t("header.profile.menu.logout")} </div>
                   </>
                 )}
               </div>
@@ -163,8 +191,10 @@ const Header = () => {
 
           <div className="relative w-full">
             <div className="flex items-center gap-3 cursor-pointer mt-2" onClick={() => setMobileProfileOpen(!mobileProfileOpen)}>
-              <img src={avatarPlaceholder} alt="profile" className="w-10 h-10 rounded-full bg-gray-200" />
-              <span className="text-[16px] font-medium">{isAuth ? t("header.profile.namePlaceholder") : t("header.profile.login")}</span>
+              <img src={isAuth ? avatarSrc : avatarPlaceholder} alt="profile" className="w-10 h-10 rounded-full bg-gray-200" />
+              <span className="text-[16px] font-medium">
+                {isAuth ? displayName : t("header.profile.login")}
+              </span>
             </div>
 
             {mobileProfileOpen && (
@@ -180,7 +210,7 @@ const Header = () => {
                     <div className="px-4 py-3 rounded-xl hover:bg-gray-100 cursor-pointer text-[15px]" onClick={() => navigate(`/${currentLang}/profile/bookings`)}>{t("header.profile.menu.bookings")}</div>
                     <div className="px-4 py-3 rounded-xl hover:bg-gray-100 cursor-pointer text-[15px]" onClick={() => navigate(`/${currentLang}/profile/routes`)}>{t("header.profile.menu.routes")}</div>
                     <div className="px-4 py-3 rounded-xl hover:bg-gray-100 cursor-pointer text-[15px]" onClick={() => navigate(`/${currentLang}/profile/chat`)}>{t("header.profile.menu.chat")}</div>
-                    <div className="px-4 py-3 rounded-xl hover:bg-gray-100 cursor-pointer text-[15px]" onClick={() => navigate(`/${currentLang}/profile/notifications`)}>{t("header.profile.menu.notifications")}</div>
+                    <div className="px-4 py-3 rounded-xl hover:bg-gray-100 cursor-pointer text-[15px] text-red-500" onClick={handleLogout} > {t("header.profile.menu.logout")} </div>
                   </>
                 )}
               </div>
