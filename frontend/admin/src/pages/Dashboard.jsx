@@ -64,7 +64,7 @@ const Dashboard = () => {
                   </div>
                 </div>
 
-                <div className="text-[26px] font-semibold">11 123 019 200.00 сум</div>
+                <div className="text-[26px] font-semibold">123 240 590.00 сум</div>
 
                 <div className="inline-flex items-center gap-1 mt-2 px-3 py-1 rounded-full bg-green-100 text-green-700 text-[13px] font-medium">
                   +3.2%
@@ -87,7 +87,7 @@ const Dashboard = () => {
                     </button>
 
                     <img src={clickLogo} alt="Click" className="h-[26px] mb-2" />
-                    <div className="text-[18px] font-semibold">10 000 120 000 сум</div>
+                    <div className="text-[18px] font-semibold">100 120 590 сум</div>
                     <div className="text-[13px] text-green-600">Активный</div>
                   </div>
 
@@ -97,7 +97,7 @@ const Dashboard = () => {
                     </button>
 
                     <img src={paymeLogo} alt="Payme" className="h-[26px] mb-2" />
-                    <div className="text-[18px] font-semibold">1 123 120 000 сум</div>
+                    <div className="text-[18px] font-semibold">23 120 000 сум</div>
                     <div className="text-[13px] text-green-600">Активный</div>
                   </div>
                 </div>
@@ -158,7 +158,7 @@ const Dashboard = () => {
                   <BarChart data={chartData}>
                     <XAxis dataKey="name" axisLine={false} tickLine={false} interval={0} height={40} tickFormatter={(value) => value.slice(0, 3)} />
                     <YAxis axisLine={false} tickLine={false} />
-                    <Tooltip formatter={(value) => [`${value}`, "Маршруты"]} cursor={{ fill: "#ddddddff", radius: [8, 8, 0, 0] }} />
+                    <Tooltip formatter={(value) => [`${value}`, "Маршруты"]} cursor={{ fill: "#ddddddff", radius: [8, 8, 8, 8] }} />
                     <Bar dataKey="value" radius={[8, 8, 8, 8]} fill="#32BB78" />
                   </BarChart>
                 </ResponsiveContainer>
