@@ -1,6 +1,22 @@
 {
+  "edit": {
+    "title": "O‘zingiz haqingizda",
+    "firstName": "Ism",
+    "firstNamePlaceholder": "Ismingizni kiriting",
+    "lastName": "Familiya",
+    "lastNamePlaceholder": "Familiyangizni kiriting",
+    "birthDate": "Tug‘ilgan sana",
+    "birthDatePlaceholder": "KK / OO / YYYY",
+    "email": "Elektron pochta",
+    "phone": "Telefon raqami",
+    "about": "O‘zingiz haqida",
+    "aboutPlaceholder": "O‘zingiz haqida qisqacha yozing",
+    "save": "Saqlash",
+    "success": "Ma’lumotlar muvaffaqiyatli saqlandi",
+    "error": "Ma’lumotlarni saqlashda xatolik"
+  },
   "tabs": {
-    "about": "Haqida",
+    "about": "O‘zingiz haqida",
     "account": "Hisob"
   }
 }

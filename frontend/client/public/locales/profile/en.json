@@ -1,4 +1,20 @@
 {
+  "edit": {
+    "title": "About you",
+    "firstName": "First name",
+    "firstNamePlaceholder": "Enter your first name",
+    "lastName": "Last name",
+    "lastNamePlaceholder": "Enter your last name",
+    "birthDate": "Date of birth",
+    "birthDatePlaceholder": "DD / MM / YYYY",
+    "email": "Email address",
+    "phone": "Phone number",
+    "about": "About",
+    "aboutPlaceholder": "Tell a bit about yourself",
+    "save": "Save",
+    "success": "Profile updated successfully",
+    "error": "Failed to save profile"
+  },
   "tabs": {
     "about": "About",
     "account": "Account"

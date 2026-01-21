@@ -1,18 +1,64 @@
 {
-  "title": "Shaxsiy kabinetga kirish",
   "loginGoogle": "Google orqali davom etish",
   "loginFacebook": "Facebook orqali davom etish",
-  "emailOrPhone": "Telefon yoki E-mail",
-  "password": "Parol",
+  "registerTitle": "Roʻyxatdan oʻtish",
+  "alreadyAccount": "Hisobingiz bormi?",
+  "loginLink": "Kirish",
+  "termsFooter": "voom platformasidan foydalanib, siz Shartlar va Maxfiylik siyosatini qabul qilasiz.",
+  "emailPlaceholder": "example@mail.com",
+  "next": "Davom etish",
+  "emailOrPhone": "Pochta yoki telefon",
+  "title": "Kirish",
+  "passwordLabel": "Parol",
   "loginBtn": "Kirish",
   "forgotPassword": "Parolni unutdingizmi?",
-  "noAccount": "Akkaunt yo‘qmi?",
-  "createAccount": "Ro‘yxatdan o‘tish",
-  "termsFooter": "Voom platformasidan foydalangan holda Siz Shartlar va Maxfiylik siyosatini qabul qilasiz.",
-
-  "registerTitle": "Akkaunt yaratish",
-  "email": "E-mail",
-  "registerBtn": "Ro‘yxatdan o‘tish",
-  "alreadyAccount": "Akkauntingiz bormi?",
-  "loginLink": "Kirish"
+  "noAccount": "Hisobingiz yoʻqmi?",
+  "createAccount": "Roʻyxatdan oʻtish",
+  "tabs": {
+    "phone": "Telefon",
+    "email": "Pochta"
+  },
+  "success": {
+    "loginSuccess": "Akkauntga muvaffaqiyatli kirdingiz"
+  },
+  "errors": {
+    "invalidPhone": "Toʻgʻri telefon raqamini kiriting",
+    "invalidEmail": "Toʻgʻri elektron pochtani kiriting",
+    "accountExists": "Hisob allaqachon mavjud. Iltimos, kiring",
+    "checkFailed": "Foydalanuvchini tekshirishda xatolik, qayta urunub ko'ring",
+    "smsFailed": "SMS yuborilmadi, qayta urunub ko'ring",
+    "emailFailed": "Tasdiqlash kodi emailga yuborilmadi, qayta urunub ko'ring",
+    "network": "Server bilan ulanishda xatolik, qayta urunub ko'ring",
+    "invalidCredentials": "Email yoki parol noto‘g‘ri"
+  },
+  "confirm": {
+    "titleSms": "SMS orqali kelgan kodni kiriting",
+    "titleEmail": "Email orqali kelgan kodni kiriting",
+    "sentTo": "Yuborildi:",
+    "codePlaceholder": "Kodni kiriting",
+    "confirmBtn": "Tasdiqlash",
+    "resend": "Kodni qayta yuborish",
+    "resending": "Yuborilmoqda...",
+    "resendIn": "Yangi kodni {{timer}} soniyadan keyin olish mumkin",
+    "errors": {
+      "enterCodeSms": "SMS kodni kiriting",
+      "enterCodeEmail": "Email kodni kiriting",
+      "invalidCode": "Notoʻgʻri kod",
+      "expired": "Kodning amal qilish muddati tugadi",
+      "tooMany": "Juda koʻp urinish. Yangi kod soʻrang",
+      "resendFailed": "Kodni qayta yuborib boʻlmadi",
+      "general": "Kodni tekshirishda xatolik"
+    }
+  },
+  "password": {
+    "title": "Parol yarating",
+    "password": "Parol",
+    "repeat": "Parolni takrorlang",
+    "submit": "Roʻyxatdan oʻtishni yakunlash",
+    "errors": {
+      "tooShort": "Parol kamida 6 ta belgidan iborat boʻlishi kerak",
+      "notMatch": "Parollar mos kelmadi",
+      "general": "Roʻyxatdan oʻtishda xatolik"
+    }
+  }
 }

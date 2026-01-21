@@ -8,6 +8,8 @@ import News from "./pages/News";
 import Contact from "./pages/Contact";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
+import RegisterConfirm from "./pages/auth/RegisterConfirm";
+import RegisterPassword from "./pages/auth/RegisterPassword";
 import CreateRoute from "./pages/createRoute/CreateRoute";
 import ProfileMenu from "./pages/profile/ProfileMenu";
 import ProfileAccount from "./pages/profile/ProfileAccount";
@@ -71,6 +73,8 @@ function App() {
 
           {/* Регистрация */}
           <Route path="/:lang/register" element={<LangWrapper Component={Register} />} />
+          <Route path="/:lang/register/confirm" element={<LangWrapper Component={RegisterConfirm} />} />
+          <Route path="/:lang/register/password" element={<LangWrapper Component={RegisterPassword} />} />
 
           {/* Создание маршрута */}
           <Route path="/:lang/create-route" element={<LangWrapper Component={CreateRoute} />} />

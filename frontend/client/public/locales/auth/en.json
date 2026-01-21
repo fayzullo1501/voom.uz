@@ -1,18 +1,64 @@
 {
-  "title": "Login to your account",
   "loginGoogle": "Continue with Google",
   "loginFacebook": "Continue with Facebook",
-  "emailOrPhone": "Phone or E-mail",
-  "password": "Password",
-  "loginBtn": "Login",
-  "forgotPassword": "Forgot password?",
-  "noAccount": "Don’t have an account?",
-  "createAccount": "Create account",
-  "termsFooter": "By using the Voom platform, you accept the Terms and Privacy Policy.",
-
-  "registerTitle": "Create an account",
-  "email": "E-mail",
-  "registerBtn": "Sign up",
+  "registerTitle": "Sign up",
   "alreadyAccount": "Already have an account?",
-  "loginLink": "Login"
+  "loginLink": "Log in",
+  "termsFooter": "By using the voom platform, you agree to the Terms and Privacy Policy.",
+  "emailPlaceholder": "example@mail.com",
+  "next": "Next",
+  "emailOrPhone": "Email or phone",
+  "title": "Login",
+  "passwordLabel": "Password",
+  "loginBtn": "Log in",
+  "forgotPassword": "Forgot password?",
+  "noAccount": "Don't have an account?",
+  "createAccount": "Create one",
+  "tabs": {
+    "phone": "Phone",
+    "email": "Email"
+  },
+  "success": {
+    "loginSuccess": "You have successfully logged in"
+  },
+  "errors": {
+    "invalidPhone": "Enter a valid phone number",
+    "invalidEmail": "Enter a valid email address",
+    "accountExists": "Account already exists. Please log in",
+    "checkFailed": "User verification failed",
+    "smsFailed": "Failed to send SMS",
+    "emailFailed": "Failed to send verification email",
+    "network": "Server connection error",
+    "invalidCredentials": "Invalid email or password"
+  },
+  "confirm": {
+    "titleSms": "Enter the code from SMS",
+    "titleEmail": "Enter the code from email",
+    "sentTo": "Sent to",
+    "codePlaceholder": "Enter the code",
+    "confirmBtn": "Confirm",
+    "resend": "Resend code",
+    "resending": "Sending...",
+    "resendIn": "You can request a new code in {{timer}} seconds",
+    "errors": {
+      "enterCodeSms": "Enter the SMS code",
+      "enterCodeEmail": "Enter the email code",
+      "invalidCode": "Invalid code",
+      "expired": "The code has expired",
+      "tooMany": "Too many attempts. Request a new code",
+      "resendFailed": "Failed to resend the code",
+      "general": "Code verification failed"
+    }
+  },
+  "password": {
+    "title": "Create a password",
+    "password": "Password",
+    "repeat": "Repeat password",
+    "submit": "Complete registration",
+    "errors": {
+      "tooShort": "Password must be at least 6 characters",
+      "notMatch": "Passwords do not match",
+      "general": "Registration error"
+    }
+  }
 }

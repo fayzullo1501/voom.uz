@@ -1,4 +1,20 @@
 {
+  "edit": {
+    "title": "Информация о себе",
+    "firstName": "Имя",
+    "firstNamePlaceholder": "Введите своё имя",
+    "lastName": "Фамилия",
+    "lastNamePlaceholder": "Введите свою фамилию",
+    "birthDate": "Дата рождения",
+    "birthDatePlaceholder": "ДД / ММ / ГГГГ",
+    "email": "Адрес эл. почты",
+    "phone": "Номер телефона",
+    "about": "О себе",
+    "aboutPlaceholder": "Расскажите немного о себе",
+    "save": "Сохранить",
+    "success": "Данные успешно сохранены",
+    "error": "Не удалось сохранить данные"
+  },
   "tabs": {
     "about": "О себе",
     "account": "Учётная запись"
