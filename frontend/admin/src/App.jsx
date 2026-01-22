@@ -16,7 +16,7 @@ import Ads from "./pages/Ads";
 import Settings from "./pages/Settings";
 
 const App = () => {
-  const isAuth = localStorage.getItem("admin_auth") === "true";
+  const isAuth = Boolean(localStorage.getItem("admin_token"));
 
   const protectedPage = (Page) =>
     isAuth ? (

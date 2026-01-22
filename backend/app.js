@@ -5,13 +5,17 @@ import env from "./config/env.js";
 
 import authRoutes from "./routes/auth.routes.js";
 import devRoutes from "./routes/dev.routes.js";
+import adminRoutes from "./routes/admin.routes.js";
+
 
 const app = express();
 
 const allowedOrigins = [
+  "https://www.voom.uz",
   "https://voom.uz",
   "https://admin.voom.uz",
   "http://localhost:5173",
+  "http://localhost:5174", // admin local
 ];
 
 app.use(
@@ -21,7 +25,7 @@ app.use(
       if (allowedOrigins.includes(origin)) {
         return callback(null, origin);
       }
-      return callback(new Error("Not allowed by CORS"));
+      return callback(null, false);
     },
     credentials: true,
   })
@@ -38,6 +42,8 @@ app.get("/health", (req, res) => {
  * AUTH (login, me)
  */
 app.use("/api/auth", authRoutes);
+app.use("/api/admin", adminRoutes);
+
 
 /**
  * DEV ONLY (create admin)
