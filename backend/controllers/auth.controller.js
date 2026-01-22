@@ -339,13 +339,52 @@ export const setPassword = async (req, res) => {
  * firstName, lastName, birthDate, about
  */
 export const updateProfile = async (req, res) => {
-  const { firstName, lastName, birthDate, about } = req.body;
+  const { firstName, lastName, birthDate, about, email, phone } = req.body;
 
   const user = await User.findById(req.user.id);
   if (!user) {
     return res.status(404).json({ message: "user_not_found" });
   }
 
+  // ===== EMAIL =====
+  if (email !== undefined) {
+    const normalizedEmail = email ? normalizeEmail(email) : null;
+
+    if (normalizedEmail) {
+      const exists = await User.findOne({
+        email: normalizedEmail,
+        _id: { $ne: user._id },
+      });
+
+      if (exists) {
+        return res.status(409).json({ message: "email_already_in_use" });
+      }
+    }
+
+    user.email = normalizedEmail;
+    user.emailVerified = false;
+  }
+
+  // ===== PHONE =====
+  if (phone !== undefined) {
+    const normalizedPhone = phone ? normalizePhone9(phone) : null;
+
+    if (normalizedPhone) {
+      const exists = await User.findOne({
+        phone: normalizedPhone,
+        _id: { $ne: user._id },
+      });
+
+      if (exists) {
+        return res.status(409).json({ message: "phone_already_in_use" });
+      }
+    }
+
+    user.phone = normalizedPhone;
+    user.phoneVerified = false;
+  }
+
+  // ===== OTHER FIELDS =====
   if (typeof firstName === "string") user.firstName = firstName.trim();
   if (typeof lastName === "string") user.lastName = lastName.trim();
   if (birthDate !== undefined) user.birthDate = birthDate || null;

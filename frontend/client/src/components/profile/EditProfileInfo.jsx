@@ -22,6 +22,28 @@ const formatInputToISO = (value) => {
   return `${year}-${month}-${day}`;
 };
 
+const formatBirthDateInput = (value) => {
+  const digits = value.replace(/\D/g, "").slice(0, 8);
+
+  if (digits.length <= 2) return digits;
+  if (digits.length <= 4) return `${digits.slice(0, 2)}/${digits.slice(2)}`;
+  return `${digits.slice(0, 2)}/${digits.slice(2, 4)}/${digits.slice(4)}`;
+};
+
+const formatPhoneView = (value) => {
+  if (!value) return "";
+  const v = value.replace(/\D/g, "").slice(0, 9);
+
+  const p1 = v.slice(0, 2);
+  const p2 = v.slice(2, 5);
+  const p3 = v.slice(5, 7);
+  const p4 = v.slice(7, 9);
+
+  return [p1, p2, p3, p4].filter(Boolean).join(" ");
+};
+
+
+
 const EditProfileInfo = () => {
   const navigate = useNavigate();
   const { lang } = useParams();
@@ -34,7 +56,7 @@ const EditProfileInfo = () => {
   const [lastName, setLastName] = useState("");
   const [birthDate, setBirthDate] = useState("");
   const [about, setAbout] = useState("");
-  const [phone, setPhone] = useState(null);
+  const [phone, setPhone] = useState("");
   const [email, setEmail] = useState(null);
 
   const [initialState, setInitialState] = useState(null);
@@ -57,7 +79,7 @@ const EditProfileInfo = () => {
         setLastName(data.lastName || "");
         setBirthDate(formattedBirthDate);
         setAbout(data.about || "");
-        setPhone(data.phone);
+        setPhone(data.phone || "");
         setEmail(data.email);
 
         setInitialState({
@@ -65,7 +87,10 @@ const EditProfileInfo = () => {
           lastName: data.lastName || "",
           birthDate: formattedBirthDate,
           about: data.about || "",
+          email: data.email || "",
+          phone: data.phone || "",
         });
+
 
         setLoading(false);
       });
@@ -73,10 +98,16 @@ const EditProfileInfo = () => {
 
   const hasChanges =
     initialState &&
-    (firstName !== initialState.firstName ||
+    (
+      firstName !== initialState.firstName ||
       lastName !== initialState.lastName ||
       birthDate !== initialState.birthDate ||
-      about !== initialState.about);
+      about !== initialState.about ||
+      email !== initialState.email ||
+      phone !== initialState.phone
+    );
+
+
 
   const handleSave = async () => {
     const token = localStorage.getItem("token");
@@ -93,6 +124,8 @@ const EditProfileInfo = () => {
           lastName,
           birthDate: formatInputToISO(birthDate),
           about,
+          email,
+          phone,
         }),
       });
 
@@ -135,25 +168,30 @@ const EditProfileInfo = () => {
 
         <div>
           <span className="text-gray-500 text-[15px]">{t("edit.birthDate")}</span>
-          <input value={birthDate} onChange={(e) => setBirthDate(e.target.value)} placeholder={t("edit.birthDatePlaceholder")} className="w-full text-[18px] font-medium mt-1 outline-none placeholder:text-gray-400" />
+          <input value={birthDate} onChange={(e) => setBirthDate(formatBirthDateInput(e.target.value))} placeholder={t("edit.birthDatePlaceholder")} inputMode="numeric" className="w-full text-[18px] font-medium mt-1 outline-none placeholder:text-gray-400" />
         </div>
 
-        {email && (
-          <div>
-            <span className="text-gray-500 text-[15px]">{t("edit.email")}</span>
-            <div className="text-[18px] font-medium mt-1">{email}</div>
-          </div>
-        )}
+        <div>
+          <span className="text-gray-500 text-[15px]">{t("edit.email")}</span>
+          <input
+            value={email || ""}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder={t("edit.emailPlaceholder")}
+            className={`w-full text-[18px] font-medium mt-1 outline-none placeholder:text-gray-400`}
+          />
+        </div>
 
-        {phone && (
-          <div>
-            <span className="text-gray-500 text-[15px]">{t("edit.phone")}</span>
-            <div className="flex items-center gap-2 mt-1">
-              <img src={uzFlag} alt="UZ" className="w-5 h-5 rounded-sm" />
-              <span className="text-[18px] font-medium">+998 {phone}</span>
-            </div>
+
+        <div>
+          <span className="text-gray-500 text-[15px]">{t("edit.phone")}</span>
+          <div className="flex items-center gap-2 mt-1">
+            <img src={uzFlag} alt="UZ" className="w-5 h-5 rounded-sm" />
+            <span className="text-[18px] font-medium">+998</span>
+            <input
+              value={formatPhoneView(phone)} onChange={(e) => setPhone(e.target.value.replace(/\D/g, "").slice(0, 9))} placeholder={t("edit.phonePlaceholder")} inputMode="numeric" className="w-full text-[18px] font-medium outline-none placeholder:text-gray-400" />
           </div>
-        )}
+        </div>
+
 
         <div>
           <span className="text-gray-500 text-[15px]">{t("edit.about")}</span>
@@ -161,7 +199,7 @@ const EditProfileInfo = () => {
         </div>
 
         {hasChanges && (
-          <button onClick={handleSave} className="mt-6 bg-[#32BB78] text-white rounded-xl h-[52px] text-[17px] font-semibold hover:bg-[#2aa86e]">
+          <button onClick={handleSave} className="bg-[#32BB78] text-white rounded-xl h-[52px] text-[17px] font-semibold hover:bg-[#2aa86e]">
             {t("edit.save")}
           </button>
         )}
