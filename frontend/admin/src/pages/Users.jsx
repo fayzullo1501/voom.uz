@@ -4,6 +4,10 @@ import Checkbox from "../components/ui/Checkbox";
 import { Search, Filter, Eye, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
 import PageHeader from "../components/layout/Header";
 import { API_URL } from "../config/api";
+import AddUserModal from "../components/users/AddUserModal";
+import EditUserModal from "../components/users/EditUserModal";
+import FilterUsersModal from "../components/users/FilterUsersModal";
+
 
 const PER_PAGE = 20;
 
@@ -17,31 +21,91 @@ const Users = () => {
   const [users, setUsers] = useState([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [search, setSearch] = useState("");
+  const [showAdd, setShowAdd] = useState(false);
+  const [showEdit, setShowEdit] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [selectedIds, setSelectedIds] = useState([]);
+  const [showFilter, setShowFilter] = useState(false);
+  const [filters, setFilters] = useState({});
+
+
+
+
+  const loadUsers = async () => {
+    try {
+      setLoading(true);
+
+      const params = new URLSearchParams();
+      if (search) params.append("search", search);
+
+      if (filters.role) params.append("role", filters.role);
+      if (filters.verified !== "") params.append("phoneVerified", filters.verified);
+      if (filters.from) params.append("from", filters.from);
+      if (filters.to) params.append("to", filters.to);
+
+
+      const res = await fetch(`${API_URL}/api/admin/users?${params.toString()}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("admin_token")}`,
+        },
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        setUsers(data);
+        setPage(1);
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const loadUsers = async () => {
-      try {
-        setLoading(true);
-        const res = await fetch(`${API_URL}/api/admin/users`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("admin_token")}`,
-          },
-        });
-        const data = await res.json();
-        if (res.ok) {
-          setUsers(data);
-        }
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadUsers();
-  }, []);
+    const timer = setTimeout(() => {
+      loadUsers();
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [search, filters]);
+
+
+
 
   const totalPages = Math.ceil(users.length / PER_PAGE);
   const start = (page - 1) * PER_PAGE;
   const end = start + PER_PAGE;
   const visible = users.slice(start, end);
+
+  const handleDelete = async () => {
+    if (selectedIds.length === 0) return;
+
+    const ok = window.confirm(
+      `Удалить пользователей: ${selectedIds.length} шт.?`
+    );
+    if (!ok) return;
+
+    try {
+      setLoading(true);
+
+      await Promise.all(
+        selectedIds.map((id) =>
+          fetch(`${API_URL}/api/admin/users/${id}`, {
+            method: "DELETE",
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("admin_token")}`,
+            },
+          })
+        )
+      );
+
+      setSelectedIds([]);
+      loadUsers();
+    } finally {
+      setLoading(false);
+    }
+  };
+
 
   return (
     <>
@@ -51,17 +115,17 @@ const Users = () => {
         {/* ACTIONS */}
         <div className="flex items-center justify-between mb-6">
           <div className="flex gap-3">
-            <button className="h-[42px] px-5 rounded-lg bg-[#32BB78] text-white text-[14px] font-medium hover:bg-[#28a96a] transition">Добавить</button>
-            <button disabled className="h-[42px] px-5 rounded-lg border border-gray-600 text-gray-600 text-[14px] font-medium bg-gray-100 hover:bg-gray-200 transition">Изменить</button>
-            <button disabled className="h-[42px] px-5 rounded-lg border border-red-600 text-red-600 text-[14px] font-medium bg-red-100 hover:bg-red-200 transition">Удалить</button>
+            <button onClick={() => setShowAdd(true)} className="h-[42px] px-5 rounded-lg bg-[#32BB78] text-white text-[14px] font-medium hover:bg-[#28a96a] transition">Добавить</button>
+            <button disabled={selectedIds.length !== 1} onClick={() => { const user = users.find((u) => u._id === selectedIds[0]); setSelectedUser(user); setShowEdit(true); }} className={`h-[42px] px-5 rounded-lg border text-[14px] font-medium transition ${ selectedIds.length === 1 ? "border-gray-600 text-gray-800 hover:bg-gray-100" : "border-gray-300 text-gray-400 bg-gray-100 cursor-not-allowed"  }`} > Изменить </button>
+            <button disabled={selectedIds.length === 0} onClick={handleDelete} className={`h-[42px] px-5 rounded-lg border text-[14px] font-medium transition ${ selectedIds.length > 0 ? "border-red-600 text-red-600 hover:bg-red-100" : "border-gray-300 text-gray-400 bg-gray-100 cursor-not-allowed" }`} > Удалить </button>
           </div>
 
           <div className="flex items-center gap-2">
             <div className="relative">
               <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-              <input placeholder="Поиск..." className="h-[42px] w-[240px] pl-10 pr-4 rounded-lg border border-gray-300 text-[14px] focus:outline-none" />
+              <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Поиск..." className="h-[42px] w-[240px] pl-10 pr-4 rounded-lg border border-gray-300 text-[14px] focus:outline-none" />
             </div>
-            <button className="h-[42px] w-[42px] flex items-center justify-center rounded-lg border border-gray-300 hover:bg-gray-100 transition">
+            <button onClick={() => setShowFilter(true)} className="h-[42px] w-[42px] flex items-center justify-center rounded-lg border border-gray-300 hover:bg-gray-100 transition">
               <Filter size={18} />
             </button>
           </div>
@@ -73,7 +137,14 @@ const Users = () => {
             <table className="w-full min-w-[1000px] text-[13px]">
               <thead className="bg-gray-50 text-gray-500">
                 <tr>
-                  <th className="px-3 py-3 w-[48px] text-left"><Checkbox /></th>
+                  <th className="px-3 py-3 w-[48px] text-left">
+                    <Checkbox
+                      checked={selectedIds.length === users.length && users.length > 0}
+                      onChange={(checked) => {
+                        setSelectedIds(checked ? users.map((u) => u._id) : []);
+                      }}
+                    />
+                  </th>
                   <th className="px-3 py-3 w-[48px] text-left">№</th>
                   <th className="px-3 py-3 w-[90px] text-left">ID</th>
                   <th className="px-3 py-3 w-[180px] text-left">ФИО</th>
@@ -89,7 +160,18 @@ const Users = () => {
               <tbody>
                 {!loading && visible.map((u, i) => (
                   <tr key={u._id} className="border-t border-gray-100 hover:bg-gray-50 transition">
-                    <td className="px-3 py-3"><Checkbox /></td>
+                    <th className="px-3 py-3 w-[48px] text-left">
+                      <Checkbox
+                        checked={selectedIds.includes(u._id)}
+                        onChange={(checked) => {
+                          setSelectedIds(
+                            checked
+                              ? [...selectedIds, u._id]
+                              : selectedIds.filter((id) => id !== u._id)
+                          );
+                        }}
+                      />
+                    </th>
                     <td className="px-3 py-3">{start + i + 1}</td>
                     <td className="px-3 py-3 text-gray-600">{u._id.slice(-6)}</td>
                     <td className="px-3 py-3 font-medium">{`${u.firstName || ""} ${u.lastName || ""}`.trim() || "—"}</td>
@@ -102,6 +184,7 @@ const Users = () => {
                       <button className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-200 transition">
                         <Eye size={16} />
                       </button>
+
                     </td>
                   </tr>
                 ))}
@@ -125,6 +208,41 @@ const Users = () => {
           </div>
         )}
       </div>
+      {showAdd && (
+        <AddUserModal
+          onClose={() => setShowAdd(false)}
+          onSuccess={() => {
+            setShowAdd(false);
+            loadUsers();
+          }}
+        />
+      )}
+
+      {showEdit && selectedUser && (
+        <EditUserModal
+          user={selectedUser}
+          onClose={() => {
+            setShowEdit(false);
+            setSelectedUser(null);
+          }}
+          onSuccess={() => {
+            setShowEdit(false);
+            setSelectedUser(null);
+            loadUsers();
+          }}
+        />
+      )}
+
+      {showFilter && (
+        <FilterUsersModal
+          initialFilters={filters}
+          onClose={() => setShowFilter(false)}
+          onApply={(f) => {
+            setFilters(f);
+            setPage(1);
+          }}
+        />
+      )}
     </>
   );
 };
