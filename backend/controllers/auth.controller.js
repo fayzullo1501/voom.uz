@@ -130,12 +130,6 @@ export const sendCode = async (req, res) => {
       return res.status(400).json({ message: "invalid_phone" });
     }
 
-    const existing = await PhoneCode.findOne({ phone });
-
-    if (existing && existing.createdAt > new Date(Date.now() - 60 * 1000)) {
-      return res.status(429).json({ message: "wait_before_resend" });
-    }
-
     const code = Math.floor(1000 + Math.random() * 9000).toString();
 
     await PhoneCode.deleteMany({ phone });
@@ -165,12 +159,6 @@ export const sendEmailCode = async (req, res) => {
 
     if (!email) {
       return res.status(400).json({ message: "invalid_email" });
-    }
-
-    const existing = await EmailCode.findOne({ email });
-
-    if (existing && existing.createdAt > new Date(Date.now() - 60 * 1000)) {
-      return res.status(429).json({ message: "wait_before_resend" });
     }
 
     const code = Math.floor(1000 + Math.random() * 9000).toString();

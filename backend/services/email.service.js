@@ -1,48 +1,99 @@
 // backend/services/email.service.js
-import nodemailer from "nodemailer";
+import { Resend } from "resend";
 
-if (
-  !process.env.EMAIL_HOST ||
-  !process.env.EMAIL_PORT ||
-  !process.env.EMAIL_USER ||
-  !process.env.EMAIL_PASS ||
-  !process.env.EMAIL_FROM
-) {
-  console.warn("⚠️ EMAIL ENV variables are not fully defined");
+if (!process.env.RESEND_API_KEY || !process.env.EMAIL_FROM) {
+  console.warn("⚠️ RESEND_API_KEY or EMAIL_FROM is not defined");
 }
 
-const transporter = nodemailer.createTransport({
-  host: process.env.EMAIL_HOST,
-  port: Number(process.env.EMAIL_PORT),
-  secure: process.env.EMAIL_SECURE === "true",
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-});
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export const sendEmail = async (email, code) => {
   try {
-    await transporter.sendMail({
-      from: `"VOOM" <${process.env.EMAIL_FROM}>`,
+    await resend.emails.send({
+      from: process.env.EMAIL_FROM, // voom.uz <no-reply@voom.uz>
       to: email,
-      subject: "Код подтверждения VOOM",
+      subject: "voom.uz — код подтверждения",
       html: `
-        <div style="font-family: Arial, sans-serif; line-height: 1.6">
-          <h2>VOOM</h2>
-          <p>Ваш код подтверждения:</p>
-          <h1 style="letter-spacing: 4px">${code}</h1>
-          <p>Код действителен 10 минут.</p>
-          <p style="color:#666;font-size:13px">
-            Если вы не запрашивали регистрацию — просто проигнорируйте это письмо.
-          </p>
-        </div>
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>voom.uz verification</title>
+</head>
+<body style="margin:0;padding:0;background:#f6f6f6;font-family:Arial,Helvetica,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f6f6f6;padding:24px 0;">
+    <tr>
+      <td align="center">
+        <table width="520" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:12px;overflow:hidden;">
+          
+          <tr>
+            <td align="center" style="padding:32px 24px 16px;">
+              <img
+                src="https://voom.uz/logo-email.svg"
+                alt="voom.uz"
+                width="96"
+                height="96"
+                style="display:block;border-radius:20px;"
+              />
+            </td>
+          </tr>
+
+          <tr>
+            <td align="center" style="padding:8px 24px 24px;">
+              <p style="margin:0;font-size:16px;color:#333;">
+                Ваш код подтверждения
+              </p>
+            </td>
+          </tr>
+
+          <tr>
+            <td align="center" style="padding:0 24px 24px;">
+              <div style="
+                display:inline-block;
+                padding:18px 28px;
+                font-size:32px;
+                font-weight:700;
+                letter-spacing:6px;
+                color:#111;
+                border-radius:12px;
+                background:#f2f3f5;
+              ">
+                ${code}
+              </div>
+            </td>
+          </tr>
+
+          <tr>
+            <td align="center" style="padding:0 24px 32px;">
+              <p style="margin:0;font-size:14px;color:#666;">
+                Код действителен 10 минут
+              </p>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="border-top:1px solid #eee;padding:20px 24px;">
+              <p style="margin:0;font-size:13px;color:#888;line-height:1.5;">
+                Если вы не запрашивали регистрацию в voom.uz, просто проигнорируйте это письмо.
+              </p>
+            </td>
+          </tr>
+        </table>
+
+        <p style="margin:16px 0 0;font-size:12px;color:#aaa;">
+          © ${new Date().getFullYear()} VOOM
+        </p>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
       `,
     });
 
     console.log(`📧 EMAIL sent to ${email}`);
   } catch (err) {
-    console.error("❌ EMAIL send error:", err.message);
+    console.error("❌ EMAIL send error:", err);
     throw new Error("EMAIL send failed");
   }
 };
