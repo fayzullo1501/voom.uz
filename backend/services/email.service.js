@@ -29,7 +29,7 @@ export const sendEmail = async (email, code) => {
           <tr>
             <td align="center" style="padding:32px 24px 16px;">
               <img
-                src="https://www.voom.uz/logo-email.svg"
+                src="https://www.voom.uz/logo-email-v2.png"
                 alt="voom.uz"
                 width="96"
                 height="96"
