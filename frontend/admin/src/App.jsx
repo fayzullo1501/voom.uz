@@ -5,6 +5,7 @@ import LoginPage from "./pages/auth/LoginPage";
 
 import Dashboard from "./pages/Dashboard";
 import Users from "./pages/Users";
+import UserDetails from "./pages/users/UserDetails";
 import MRoutes from "./pages/Routes";
 import Requests from "./pages/Requests";
 import DirectoriesCities from "./pages/DirectoriesCities";
@@ -35,6 +36,7 @@ const App = () => {
 
         <Route path="/dashboard" element={protectedPage(Dashboard)} />
         <Route path="/users" element={protectedPage(Users)} />
+        <Route path="/users/:id" element={protectedPage(UserDetails)} />
         <Route path="/routes" element={protectedPage(MRoutes)} />
         <Route path="/requests" element={protectedPage(Requests)} />
         <Route path="/directories/cities" element={protectedPage(DirectoriesCities)} />

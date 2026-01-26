@@ -6,7 +6,8 @@ import { signToken } from "../utils/jwt.js";
 import { sendSMS } from "../services/sms.service.js";
 import EmailCode from "../models/EmailCode.js";
 import { sendEmail } from "../services/email.service.js";
-
+import { uploadToR2 } from "../utils/r2Upload.js";
+import crypto from "crypto";
 
 /**
  * Приведение телефона к формату 9 цифр: 901234567
@@ -69,6 +70,8 @@ export const login = async (req, res) => {
       phoneVerified: user.phoneVerified,
       emailVerified: user.emailVerified,
       createdAt: user.createdAt,
+      profilePhoto: user.profilePhoto,
+      passportVerified: user.passportVerified,
     },
   });
 };
@@ -94,6 +97,8 @@ export const me = async (req, res) => {
     phoneVerified: user.phoneVerified,
     emailVerified: user.emailVerified,
     createdAt: user.createdAt,
+    profilePhoto: user.profilePhoto,
+    passportVerified: user.passportVerified,  
   });
 };
 
@@ -293,9 +298,12 @@ export const setPassword = async (req, res) => {
     about: "",
     phoneVerified: !!phone,
     emailVerified: !!email,
-    photoVerified: false,
     passportVerified: false,
+    profilePhoto: {
+      status: "empty",
+    },
   });
+
 
 
   const token = signToken({
@@ -393,5 +401,50 @@ export const updateProfile = async (req, res) => {
     emailVerified: user.emailVerified,
     createdAt: user.createdAt,
   });
+};
+
+/**
+ * UPLOAD PROFILE PHOTO
+ * POST /profile/photo
+ */
+
+export const uploadProfilePhoto = async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ message: "file_required" });
+    }
+
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      return res.status(404).json({ message: "user_not_found" });
+    }
+
+    const ext = req.file.mimetype.split("/")[1] || "jpg";
+    const key = `profile-photos/${user._id}/avatar.${ext}`;
+
+    const url = await uploadToR2({
+      buffer: req.file.buffer,
+      mimeType: req.file.mimetype,
+      key,
+    });
+
+    user.profilePhoto = {
+      url,
+      status: "pending",
+      rejectionReason: "",
+      uploadedAt: new Date(),
+      reviewedAt: null,
+    };
+
+    await user.save();
+
+    res.json({
+      ok: true,
+      profilePhoto: user.profilePhoto,
+    });
+  } catch (err) {
+    console.error("UPLOAD PROFILE PHOTO ERROR:", err);
+    res.status(500).json({ message: "upload_failed" });
+  }
 };
 

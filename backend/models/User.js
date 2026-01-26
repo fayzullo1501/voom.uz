@@ -69,10 +69,34 @@ const userSchema = new mongoose.Schema(
       default: false,
     },
 
-    photoVerified: {
-      type: Boolean,
-      default: false,
+    profilePhoto: {
+      url: {
+        type: String,
+        default: null,
+      },
+
+      status: {
+        type: String,
+        enum: ["empty", "pending", "approved", "rejected"],
+        default: "empty",
+      },
+
+      rejectionReason: {
+        type: String,
+        default: "",
+      },
+
+      uploadedAt: {
+        type: Date,
+        default: null,
+      },
+
+      reviewedAt: {
+        type: Date,
+        default: null,
+      },
     },
+
 
     passportVerified: {
       type: Boolean,

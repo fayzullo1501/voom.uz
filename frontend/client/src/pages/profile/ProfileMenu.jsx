@@ -6,7 +6,7 @@ import ProfileTopBar from "./ProfileTopBar";
 
 import avatarPlaceholder from "../../assets/avatar-placeholder.svg";
 import userVerifiedIcon from "../../assets/userverified.svg";
-
+import { LoaderCircle } from "lucide-react";
 import { API_URL } from "../../config/api";
 
 /* ===== Универсальная зелёная галочка (ТОЛЬКО подтверждения) ===== */
@@ -17,6 +17,37 @@ const CheckIcon = () => (
     </svg>
   </div>
 );
+
+/* ===== СЕРАЯ ИКОНКА "+" (добавить) ===== */
+const PlusIcon = () => (
+  <div className="w-8 h-8 rounded-full border-2 border-gray-400 flex items-center justify-center shrink-0">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" >
+      <path d="M7 1V13M1 7H13" stroke="#9CA3AF" strokeWidth="2" strokeLinecap="round" />
+    </svg>
+  </div>
+);
+
+/* ===== ИКОНКА ПРОВЕРКИ"+" (ожидание) ===== */
+const PendingIcon = () => (
+  <div className="w-8 h-8 rounded-full bg-[#FF8B47] flex items-center justify-center shrink-0">
+    <LoaderCircle className="w-4 h-4 text-white animate-spin" />
+  </div>
+);
+
+/* ===== ИКОНКА ОТКЛОНЕНИЯ ===== */
+const RejectedIcon = () => (
+  <div className="w-8 h-8 rounded-full bg-red-600 flex items-center justify-center shrink-0">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+      <path
+        d="M1 1L13 13M13 1L1 13"
+        stroke="white"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+    </svg>
+  </div>
+);
+
 
 const ProfileMenu = () => {
   const navigate = useNavigate();
@@ -51,19 +82,32 @@ const ProfileMenu = () => {
         setLoading(false);
       })
       .catch(() => {
+        setLoading(false); // 🔥 ВАЖНО
         localStorage.removeItem("token");
         localStorage.removeItem("user");
-        navigate(`/${lang}/login`);
+        navigate(`/${lang}/login`, { replace: true });
       });
   }, [lang, navigate]);
 
-  if (loading) return null;
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        Загрузка...
+      </div>
+    );
+  }
+
 
   const displayName =
   (user?.firstName || "").trim() ||
   defaultNameByLang[lang] ||
   defaultNameByLang.ru;
-  const avatarSrc = user?.avatarUrl || user?.avatar || user?.photoUrl || user?.photo || avatarPlaceholder;
+  const avatarSrc =
+  user?.profilePhoto?.status === "approved"
+    ? `${user.profilePhoto.url}?v=${user.profilePhoto.uploadedAt}`
+    : avatarPlaceholder;
+  const photoStatus = user?.profilePhoto?.status || "empty";
+
 
   return (
     <>
@@ -102,10 +146,32 @@ const ProfileMenu = () => {
           <div className="mt-8">
             <h3 className="font-bold text-[20px] mb-5">Подтвердите свой профиль</h3>
 
-            <div onClick={() => navigate(`/${lang}/profile/photo`)} className="flex items-center gap-3 py-3 px-2 rounded-lg hover:bg-gray-100 cursor-pointer transition">
-              <CheckIcon />
-              <span className="text-[16px] font-medium">Фото профиля</span>
+            <div
+              onClick={() => navigate(`/${lang}/profile/photo`)}
+              className="flex items-start gap-3 py-3 px-2 rounded-lg hover:bg-gray-100 cursor-pointer transition"
+            >
+              {photoStatus === "approved" && <CheckIcon />}
+              {photoStatus === "pending" && <PendingIcon />}
+              {photoStatus === "rejected" && <RejectedIcon />}
+              {photoStatus === "empty" && <PlusIcon />}
+
+              <div className="flex flex-col">
+                <span className="text-[16px] font-medium">
+                  {photoStatus === "approved" && "Фото профиля подтверждено"}
+                  {photoStatus === "pending" && "Фото на проверке"}
+                  {photoStatus === "empty" && "Добавить фото профиля"}
+                  {photoStatus === "rejected" && "Фото профиля отклонено"}
+                </span>
+
+                {photoStatus === "rejected" && user?.profilePhoto?.rejectionReason && (
+                  <span className="mt-1 text-[14px] text-red-600">
+                    Причина: {user.profilePhoto.rejectionReason}
+                  </span>
+                )}
+              </div>
             </div>
+
+
 
             <div onClick={() => navigate(`/${lang}/profile/passport-verification`)} className="flex items-center gap-3 py-3 px-2 rounded-lg hover:bg-gray-100 cursor-pointer transition">
               <CheckIcon />

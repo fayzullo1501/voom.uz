@@ -7,6 +7,8 @@ import { API_URL } from "../config/api";
 import AddUserModal from "../components/users/AddUserModal";
 import EditUserModal from "../components/users/EditUserModal";
 import FilterUsersModal from "../components/users/FilterUsersModal";
+import { useNavigate } from "react-router-dom";
+
 
 
 const PER_PAGE = 20;
@@ -17,10 +19,19 @@ const formatDate = (value) => {
   return d.toLocaleDateString("ru-RU");
 };
 
+const isUserVerified = (u) => {
+  return (
+    u.phoneVerified === true &&
+    u.passportVerified === true &&
+    u.profilePhoto?.status === "approved"
+  );
+};
+
+
 const Users = () => {
   const [users, setUsers] = useState([]);
   const [page, setPage] = useState(1);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [showAdd, setShowAdd] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
@@ -28,6 +39,8 @@ const Users = () => {
   const [selectedIds, setSelectedIds] = useState([]);
   const [showFilter, setShowFilter] = useState(false);
   const [filters, setFilters] = useState({});
+  const navigate = useNavigate();
+
 
 
 
@@ -40,7 +53,6 @@ const Users = () => {
       if (search) params.append("search", search);
 
       if (filters.role) params.append("role", filters.role);
-      if (filters.verified !== "") params.append("phoneVerified", filters.verified);
       if (filters.from) params.append("from", filters.from);
       if (filters.to) params.append("to", filters.to);
 
@@ -72,10 +84,16 @@ const Users = () => {
 
 
 
-  const totalPages = Math.ceil(users.length / PER_PAGE);
+  const filteredUsers = users.filter((u) => {
+    if (filters.verified === "true" && !isUserVerified(u)) return false;
+    if (filters.verified === "false" && isUserVerified(u)) return false;
+    return true;
+  });
+
+  const totalPages = Math.ceil(filteredUsers.length / PER_PAGE);
   const start = (page - 1) * PER_PAGE;
   const end = start + PER_PAGE;
-  const visible = users.slice(start, end);
+  const visible = filteredUsers.slice(start, end);
 
   const handleDelete = async () => {
     if (selectedIds.length === 0) return;
@@ -158,6 +176,17 @@ const Users = () => {
               </thead>
 
               <tbody>
+                {loading && (
+                  <tr>
+                    <td colSpan={10} className="h-[240px]">
+                      <div className="flex flex-col items-center justify-center gap-3 text-gray-500">
+                        <div className="w-8 h-8 border-3 border-gray-300 border-t-[#000] rounded-full animate-spin"></div>
+                        <div className="text-[14px]">Загрузка...</div>
+                      </div>
+                    </td>
+                  </tr>
+                )}
+
                 {!loading && visible.map((u, i) => (
                   <tr key={u._id} className="border-t border-gray-100 hover:bg-gray-50 transition">
                     <th className="px-3 py-3 w-[48px] text-left">
@@ -178,13 +207,12 @@ const Users = () => {
                     <td className="px-3 py-3 whitespace-nowrap">+998 {u.phone}</td>
                     <td className="px-3 py-3">{u.email || "—"}</td>
                     <td className="px-3 py-3">{u.role}</td>
-                    <td className="px-3 py-3"> {u.phoneVerified ? "Да" : "Нет"} </td>
+                    <td className="px-3 py-3">{isUserVerified(u) ? "Да" : "Нет"}</td>
                     <td className="px-3 py-3 whitespace-nowrap">{formatDate(u.createdAt)}</td>
                     <td className="px-3 py-3">
-                      <button className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-200 transition">
+                      <button onClick={() => navigate(`/users/${u._id}`)} className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-200 transition">
                         <Eye size={16} />
                       </button>
-
                     </td>
                   </tr>
                 ))}

@@ -2,11 +2,43 @@ import User from "../models/User.js";
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 
+/**
+ * ===============================
+ * HELPERS
+ * ===============================
+ */
+const calcVerified = (u) =>
+  Boolean(
+    u.phoneVerified &&
+    u.passportVerified &&
+    u.profilePhoto?.status === "approved"
+  );
 
+  const buildUserFiles = (user) => {
+  const files = [];
+
+  if (user.profilePhoto?.url) {
+    files.push({
+      _id: "profilePhoto",
+      name: "Фото профиля",
+      type: "profile_photo",
+      url: user.profilePhoto.url,
+      status: user.profilePhoto.status, // pending | approved
+      createdAt: user.profilePhoto.uploadedAt,
+    });
+  }
+
+  // 🔜 в будущем:
+  // if (user.passport?.url) { ... }
+
+  return files;
+};
 
 /**
+ * ===============================
  * GET /admin/users
  * search, filters, date range
+ * ===============================
  */
 export const getUsers = async (req, res) => {
   try {
@@ -18,7 +50,6 @@ export const getUsers = async (req, res) => {
       search,
       role,
       phoneVerified,
-      emailVerified,
       from,
       to,
     } = req.query;
@@ -27,20 +58,20 @@ export const getUsers = async (req, res) => {
 
     /* SEARCH */
     if (search) {
-        const regex = new RegExp(search, "i");
+      const regex = new RegExp(search, "i");
 
-        const or = [
-            { firstName: regex },
-            { lastName: regex },
-            { phone: regex },
-            { email: regex },
-        ];
+      const or = [
+        { firstName: regex },
+        { lastName: regex },
+        { phone: regex },
+        { email: regex },
+      ];
 
-        if (mongoose.Types.ObjectId.isValid(search)) {
-            or.push({ _id: search });
-        }
+      if (mongoose.Types.ObjectId.isValid(search)) {
+        or.push({ _id: search });
+      }
 
-        query.$or = or;
+      query.$or = or;
     }
 
     /* FILTERS */
@@ -48,10 +79,6 @@ export const getUsers = async (req, res) => {
 
     if (phoneVerified !== undefined) {
       query.phoneVerified = phoneVerified === "true";
-    }
-
-    if (emailVerified !== undefined) {
-      query.emailVerified = emailVerified === "true";
     }
 
     /* DATE RANGE */
@@ -64,10 +91,16 @@ export const getUsers = async (req, res) => {
     const users = await User.find(query)
       .sort({ createdAt: -1 })
       .select(
-        "_id firstName lastName phone email role phoneVerified emailVerified createdAt"
-      );
+        "_id firstName lastName phone email role phoneVerified passportVerified profilePhoto createdAt"
+      )
+      .lean();
 
-    res.json(users);
+    const result = users.map((u) => ({
+      ...u,
+      verified: calcVerified(u),
+    }));
+
+    res.json(result);
   } catch (err) {
     console.error("ADMIN GET USERS ERROR:", err);
     res.status(500).json({ message: "Server error" });
@@ -75,8 +108,10 @@ export const getUsers = async (req, res) => {
 };
 
 /**
+ * ===============================
  * POST /admin/users
  * create user
+ * ===============================
  */
 export const createUser = async (req, res) => {
   try {
@@ -87,9 +122,8 @@ export const createUser = async (req, res) => {
     const { password, ...rest } = req.body;
 
     if (!rest.phone) {
-        delete rest.phone;
+      delete rest.phone;
     }
-
 
     if (!password) {
       return res.status(400).json({ message: "Password required" });
@@ -110,8 +144,10 @@ export const createUser = async (req, res) => {
 };
 
 /**
+ * ===============================
  * PUT /admin/users/:id
  * update user
+ * ===============================
  */
 export const updateUser = async (req, res) => {
   try {
@@ -145,7 +181,9 @@ export const updateUser = async (req, res) => {
 };
 
 /**
+ * ===============================
  * DELETE /admin/users/:id
+ * ===============================
  */
 export const deleteUser = async (req, res) => {
   try {
@@ -158,5 +196,117 @@ export const deleteUser = async (req, res) => {
   } catch (err) {
     console.error("ADMIN DELETE USER ERROR:", err);
     res.status(400).json({ message: "Delete failed" });
+  }
+};
+
+/**
+ * ===============================
+ * GET /admin/users/:id
+ * get single user for admin
+ * ===============================
+ */
+export const getUserById = async (req, res) => {
+  try {
+    if (req.user.role !== "admin") {
+      return res.status(403).json({ message: "Forbidden" });
+    }
+
+    const user = await User.findById(req.params.id)
+      .select(
+        "_id firstName lastName birthDate about phone email role phoneVerified passportVerified profilePhoto createdAt"
+      )
+      .lean();
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.json({
+      ...user,
+      verified: calcVerified(user),
+      files: buildUserFiles(user),
+    });
+  } catch (err) {
+    console.error("ADMIN GET USER ERROR:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+/**
+ * ===============================
+ * POST /admin/users/:id/photo/approve
+ * ===============================
+ */
+export const approveProfilePhoto = async (req, res) => {
+  try {
+    if (req.user.role !== "admin") {
+      return res.status(403).json({ message: "Forbidden" });
+    }
+
+    const user = await User.findById(req.params.id);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    if (!user.profilePhoto || user.profilePhoto.status !== "pending") {
+      return res.status(400).json({ message: "photo_not_pending" });
+    }
+
+    user.profilePhoto.status = "approved";
+    user.profilePhoto.rejectionReason = "";
+    user.profilePhoto.reviewedAt = new Date();
+
+    await user.save();
+
+    res.json({
+      ok: true,
+      profilePhoto: user.profilePhoto,
+    });
+  } catch (err) {
+    console.error("APPROVE PROFILE PHOTO ERROR:", err);
+    res.status(500).json({ message: "approve_failed" });
+  }
+};
+
+
+/**
+ * ===============================
+ * POST /admin/users/:id/photo/reject
+ * ===============================
+ */
+export const rejectProfilePhoto = async (req, res) => {
+  try {
+    if (req.user.role !== "admin") {
+      return res.status(403).json({ message: "Forbidden" });
+    }
+
+    const { reason } = req.body;
+
+    if (!reason || !reason.trim()) {
+      return res.status(400).json({ message: "rejection_reason_required" });
+    }
+
+    const user = await User.findById(req.params.id);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    if (!user.profilePhoto || user.profilePhoto.status !== "pending") {
+      return res.status(400).json({ message: "photo_not_pending" });
+    }
+
+    user.profilePhoto.status = "rejected";
+    user.profilePhoto.rejectionReason = reason.trim();
+    user.profilePhoto.reviewedAt = new Date();
+
+    await user.save();
+
+    res.json({
+      ok: true,
+      profilePhoto: user.profilePhoto,
+    });
+  } catch (err) {
+    console.error("REJECT PROFILE PHOTO ERROR:", err);
+    res.status(500).json({ message: "reject_failed" });
   }
 };

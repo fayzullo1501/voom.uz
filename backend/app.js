@@ -34,6 +34,8 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 
+app.use("/uploads", express.static("uploads"));
+
 app.get("/health", (req, res) => {
   res.json({ ok: true });
 });
