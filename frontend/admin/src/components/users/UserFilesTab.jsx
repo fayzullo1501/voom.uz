@@ -47,8 +47,13 @@ const UserFilesTab = ({ userId, files, loading, onRefresh }) => {
   const [rejectFile, setRejectFile] = useState(null);
 
   /* ===== ПОДТВЕРДИТЬ ===== */
-  const approveFile = async () => {
-    await fetch(`${API_URL}/api/admin/users/${userId}/photo/approve`, {
+  const approveFile = async (file) => {
+    const endpoint =
+      file.type === "passport"
+        ? "passport/approve"
+        : "photo/approve";
+
+    await fetch(`${API_URL}/api/admin/users/${userId}/${endpoint}`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${localStorage.getItem("admin_token")}`,
@@ -58,9 +63,15 @@ const UserFilesTab = ({ userId, files, loading, onRefresh }) => {
     onRefresh();
   };
 
+
   /* ===== ОТКЛОНИТЬ ===== */
   const rejectFileSubmit = async (comment) => {
-    await fetch(`${API_URL}/api/admin/users/${userId}/photo/reject`, {
+    const endpoint =
+      rejectFile.type === "passport"
+        ? "passport/reject"
+        : "photo/reject";
+
+    await fetch(`${API_URL}/api/admin/users/${userId}/${endpoint}`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${localStorage.getItem("admin_token")}`,
@@ -70,6 +81,7 @@ const UserFilesTab = ({ userId, files, loading, onRefresh }) => {
         reason: comment,
       }),
     });
+
     setRejectFile(null);
     onRefresh();
   };
@@ -147,7 +159,7 @@ const UserFilesTab = ({ userId, files, loading, onRefresh }) => {
                     {f.status === "pending" && (
                       <>
                         <button
-                          onClick={approveFile}
+                          onClick={() => approveFile(f)}
                           className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-green-50 text-green-600"
                         >
                           <Check size={16} />

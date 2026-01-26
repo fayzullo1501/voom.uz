@@ -7,6 +7,8 @@ import {
   deleteUser,
   approveProfilePhoto,
   rejectProfilePhoto,
+  approvePassport,
+  rejectPassport,
 } from "../controllers/admin.controller.js";
 import auth from "../middlewares/auth.middleware.js";
 
@@ -19,6 +21,8 @@ router.delete("/users/:id", auth, deleteUser);
 router.get("/users/:id", auth, getUserById);
 router.post("/users/:id/photo/approve", auth, approveProfilePhoto);
 router.post("/users/:id/photo/reject", auth, rejectProfilePhoto);
+router.post("/users/:id/passport/approve", auth, approvePassport);
+router.post("/users/:id/passport/reject", auth, rejectPassport);
 
 
 export default router;

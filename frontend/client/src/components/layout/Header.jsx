@@ -29,21 +29,22 @@ const Header = () => {
   const [langOpen, setLangOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const [mobileProfileOpen, setMobileProfileOpen] = useState(false);
+  const [user, setUser] = useState(null);
+
 
   const token = localStorage.getItem("token");
   const isAuth = !!token;
-
-  const storedUser = localStorage.getItem("user");
-  const user = storedUser ? JSON.parse(storedUser) : null;
 
   const displayName =
     user?.firstName?.trim() ||
     t("header.profile.defaultName");
 
+
   const avatarSrc =
-    user?.avatar ||
-    user?.photo ||
-    avatarPlaceholder;
+    user?.profilePhoto?.status === "approved"
+      ? user.profilePhoto.url
+      : avatarPlaceholder;
+
 
 
 
@@ -56,6 +57,30 @@ const Header = () => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  useEffect(() => {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    setUser(null);
+    return;
+  }
+
+  fetch(`${import.meta.env.VITE_API_URL || ""}/api/auth/me`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+    .then((res) => res.ok ? res.json() : null)
+    .then((data) => {
+      if (data) {
+        setUser(data);
+        localStorage.setItem("user", JSON.stringify(data)); // 🔥 важно
+      }
+    })
+    .catch(() => {
+      setUser(null);
+    });
+}, []);
 
   const languages = [
     { code: "ru", flag: flagRu },

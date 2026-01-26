@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
+import { API_URL } from "../../config/api";
+import { useToast } from "../ui/useToast";
 import { X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
@@ -6,6 +8,39 @@ import passportExample from "../../assets/passport-example.svg";
 
 const PassportVerification = () => {
   const navigate = useNavigate();
+  const { showToast } = useToast();
+  const [file, setFile] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  const submit = async () => {
+    if (!file || loading) return;
+
+    try {
+      setLoading(true);
+
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const res = await fetch(`${API_URL}/api/auth/profile/passport`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: formData,
+      });
+
+      if (!res.ok) throw new Error("upload_failed");
+
+      showToast("Паспорт успешно отправлен на проверку", "success");
+
+      navigate(-1);
+    } catch (err) {
+      showToast("Не удалось загрузить паспорт", "error");
+    } finally {
+      setLoading(false);
+    }
+  };
+
 
   return (
     <div className="min-h-screen bg-white px-6 pt-6 pb-12 flex flex-col">
@@ -39,6 +74,12 @@ const PassportVerification = () => {
           Загрузите скан или фото паспорта
         </p>
 
+        {file && (
+          <div className="mb-6 text-[14px] text-black  text-center">
+            Выбран файл: <span className="font-semibold">{file.name}</span>
+          </div>
+        )}
+
         {/* Actions */}
         <div className="flex flex-col sm:flex-row gap-4">
 
@@ -60,23 +101,17 @@ const PassportVerification = () => {
               type="file"
               accept="image/*,application/pdf"
               className="hidden"
+              onChange={(e) => setFile(e.target.files?.[0] || null)}
             />
           </label>
 
           {/* Submit */}
           <button
-            className="
-              px-10 py-3
-              rounded-xl
-              bg-[#32BB78]
-              text-white
-              text-[16px]
-              font-medium
-              hover:opacity-90
-              transition
-            "
+            onClick={submit}
+            disabled={!file || loading}
+            className="px-10 py-3 rounded-xl bg-[#32BB78] text-white text-[16px] font-medium hover:opacity-90 transition disabled:opacity-50"
           >
-            Отправить
+            {loading ? "Отправка..." : "Отправить"}
           </button>
         </div>
 

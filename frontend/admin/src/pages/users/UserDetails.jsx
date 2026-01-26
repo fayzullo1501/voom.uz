@@ -27,6 +27,8 @@ const UserDetails = () => {
 
   const [activeTab, setActiveTab] = useState("profile");
   const [user, setUser] = useState(null);
+  const hasPendingFiles =
+  user?.files?.some((f) => f.status === "pending") || false;
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -101,20 +103,32 @@ const UserDetails = () => {
 
         {/* TABS */}
         <div className="border-b border-gray-200 flex gap-8 mb-6">
-          {tabs.map(({ key, label, icon: Icon }) => (
-            <button
-              key={key}
-              onClick={() => setActiveTab(key)}
-              className={`flex items-center gap-2 pb-4 text-[15px] font-medium transition ${
-                activeTab === key
-                  ? "text-gray-900 border-b-2 border-gray-900"
-                  : "text-gray-400 hover:text-gray-700"
-              }`}
-            >
-              <Icon size={16} />
-              {label}
-            </button>
-          ))}
+          {tabs.map(({ key, label, icon: Icon }) => {
+            const highlightFiles =
+              key === "files" && hasPendingFiles;
+
+            return (
+              <button
+                key={key}
+                onClick={() => setActiveTab(key)}
+                className={`flex items-center gap-2 pb-4 text-[15px] transition ${
+                  activeTab === key
+                    ? "border-b-2 border-gray-900"
+                    : "hover:text-gray-700"
+                } ${
+                  highlightFiles
+                    ? "font-semibold text-yellow-700"
+                    : "text-gray-400"
+                }`}
+              >
+                <Icon
+                  size={16}
+                  className={highlightFiles ? "text-yellow-600" : ""}
+                />
+                {label}
+              </button>
+            );
+          })}
         </div>
 
         {/* TAB CONTENT */}

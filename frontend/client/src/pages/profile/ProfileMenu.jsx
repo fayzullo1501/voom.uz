@@ -107,6 +107,8 @@ const ProfileMenu = () => {
     ? `${user.profilePhoto.url}?v=${user.profilePhoto.uploadedAt}`
     : avatarPlaceholder;
   const photoStatus = user?.profilePhoto?.status || "empty";
+  const passportStatus = user?.passport?.status || "empty";
+
 
 
   return (
@@ -148,34 +150,58 @@ const ProfileMenu = () => {
 
             <div
               onClick={() => navigate(`/${lang}/profile/photo`)}
-              className="flex items-start gap-3 py-3 px-2 rounded-lg hover:bg-gray-100 cursor-pointer transition"
+              className="flex items-center gap-3 py-3 px-2 rounded-lg hover:bg-gray-100 cursor-pointer transition"
             >
               {photoStatus === "approved" && <CheckIcon />}
               {photoStatus === "pending" && <PendingIcon />}
               {photoStatus === "rejected" && <RejectedIcon />}
               {photoStatus === "empty" && <PlusIcon />}
 
-              <div className="flex flex-col">
-                <span className="text-[16px] font-medium">
-                  {photoStatus === "approved" && "Фото профиля подтверждено"}
-                  {photoStatus === "pending" && "Фото на проверке"}
-                  {photoStatus === "empty" && "Добавить фото профиля"}
-                  {photoStatus === "rejected" && "Фото профиля отклонено"}
-                </span>
+              <span className="text-[16px] font-medium">
+                {photoStatus === "approved" && "Фото профиля подтверждено"}
+                {photoStatus === "pending" && "Фото на проверке"}
+                {photoStatus === "empty" && "Добавить фото профиля"}
 
-                {photoStatus === "rejected" && user?.profilePhoto?.rejectionReason && (
-                  <span className="mt-1 text-[14px] text-red-600">
-                    Причина: {user.profilePhoto.rejectionReason}
-                  </span>
+                {photoStatus === "rejected" && (
+                  <>
+                    Фото профиля отклонено
+                    {user?.profilePhoto?.rejectionReason && (
+                      <span className="ml-2 text-[14px] text-red-600 font-normal">
+                        (Причина: {user.profilePhoto.rejectionReason})
+                      </span>
+                    )}
+                  </>
                 )}
-              </div>
+              </span>
             </div>
 
 
 
-            <div onClick={() => navigate(`/${lang}/profile/passport-verification`)} className="flex items-center gap-3 py-3 px-2 rounded-lg hover:bg-gray-100 cursor-pointer transition">
-              <CheckIcon />
-              <span className="text-[16px] font-medium">Паспорт</span>
+            <div
+              onClick={() => navigate(`/${lang}/profile/passport-verification`)}
+              className="flex items-center gap-3 py-3 px-2 rounded-lg hover:bg-gray-100 cursor-pointer transition"
+            >
+              {passportStatus === "approved" && <CheckIcon />}
+              {passportStatus === "pending" && <PendingIcon />}
+              {passportStatus === "rejected" && <RejectedIcon />}
+              {passportStatus === "empty" && <PlusIcon />}
+
+              <span className="text-[16px] font-medium">
+                {passportStatus === "approved" && "Паспорт подтверждён"}
+                {passportStatus === "pending" && "Паспорт на проверке"}
+                {passportStatus === "empty" && "Загрузить паспортные данные"}
+
+                {passportStatus === "rejected" && (
+                  <>
+                    Паспорт отклонён
+                    {user?.passport?.rejectionReason && (
+                      <span className="ml-2 text-[14px] text-red-600 font-normal">
+                        (Причина: {user.passport.rejectionReason})
+                      </span>
+                    )}
+                  </>
+                )}
+              </span>
             </div>
 
             <div onClick={() => navigate(`/${lang}/profile/phone-verification`)} className="flex items-center gap-3 py-3 px-2 rounded-lg hover:bg-gray-100 cursor-pointer transition">

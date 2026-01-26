@@ -188,7 +188,7 @@ const Users = () => {
                 )}
 
                 {!loading && visible.map((u, i) => (
-                  <tr key={u._id} className="border-t border-gray-100 hover:bg-gray-50 transition">
+                  <tr key={u._id} className={`border-t border-gray-100 transition ${ u.hasPending ? "bg-yellow-50 hover:bg-yellow-100 font-semibold" : "hover:bg-gray-50" }`} >
                     <th className="px-3 py-3 w-[48px] text-left">
                       <Checkbox
                         checked={selectedIds.includes(u._id)}

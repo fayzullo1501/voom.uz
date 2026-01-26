@@ -98,9 +98,32 @@ const userSchema = new mongoose.Schema(
     },
 
 
-    passportVerified: {
-      type: Boolean,
-      default: false,
+    passport: {
+      url: {
+        type: String,
+        default: null,
+      },
+
+      status: {
+        type: String,
+        enum: ["empty", "pending", "approved", "rejected"],
+        default: "empty",
+      },
+
+      rejectionReason: {
+        type: String,
+        default: "",
+      },
+
+      uploadedAt: {
+        type: Date,
+        default: null,
+      },
+
+      reviewedAt: {
+        type: Date,
+        default: null,
+      },
     },
   },
   { timestamps: true }

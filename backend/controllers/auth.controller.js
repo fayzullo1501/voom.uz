@@ -71,7 +71,7 @@ export const login = async (req, res) => {
       emailVerified: user.emailVerified,
       createdAt: user.createdAt,
       profilePhoto: user.profilePhoto,
-      passportVerified: user.passportVerified,
+      passport: user.passport,
     },
   });
 };
@@ -98,7 +98,7 @@ export const me = async (req, res) => {
     emailVerified: user.emailVerified,
     createdAt: user.createdAt,
     profilePhoto: user.profilePhoto,
-    passportVerified: user.passportVerified,  
+    passport: user.passport,
   });
 };
 
@@ -298,8 +298,10 @@ export const setPassword = async (req, res) => {
     about: "",
     phoneVerified: !!phone,
     emailVerified: !!email,
-    passportVerified: false,
     profilePhoto: {
+      status: "empty",
+    },
+    passport: {
       status: "empty",
     },
   });
@@ -448,3 +450,47 @@ export const uploadProfilePhoto = async (req, res) => {
   }
 };
 
+
+/**
+ * UPLOAD PASSPORT
+ * POST /profile/passport
+ */
+export const uploadPassport = async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ message: "file_required" });
+    }
+
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      return res.status(404).json({ message: "user_not_found" });
+    }
+
+    const ext = req.file.mimetype.split("/")[1] || "jpg";
+    const key = `passports/${user._id}/passport.${ext}`;
+
+    const url = await uploadToR2({
+      buffer: req.file.buffer,
+      mimeType: req.file.mimetype,
+      key,
+    });
+
+    user.passport = {
+      url,
+      status: "pending",
+      rejectionReason: "",
+      uploadedAt: new Date(),
+      reviewedAt: null,
+    };
+
+    await user.save();
+
+    res.json({
+      ok: true,
+      passport: user.passport,
+    });
+  } catch (err) {
+    console.error("UPLOAD PASSPORT ERROR:", err);
+    res.status(500).json({ message: "upload_failed" });
+  }
+};

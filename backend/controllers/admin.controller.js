@@ -10,9 +10,30 @@ import bcrypt from "bcryptjs";
 const calcVerified = (u) =>
   Boolean(
     u.phoneVerified &&
-    u.passportVerified &&
+    u.passport?.status === "approved" &&
     u.profilePhoto?.status === "approved"
   );
+
+  const hasPendingFiles = (u) =>
+    u.profilePhoto?.status === "pending" ||
+    u.passport?.status === "pending";
+
+  const getPendingAt = (u) => {
+    const times = [];
+
+    if (u.profilePhoto?.status === "pending" && u.profilePhoto.uploadedAt) {
+      times.push(u.profilePhoto.uploadedAt);
+    }
+
+    if (u.passport?.status === "pending" && u.passport.uploadedAt) {
+      times.push(u.passport.uploadedAt);
+    }
+
+    if (!times.length) return null;
+
+    return new Date(Math.max(...times.map((t) => new Date(t).getTime())));
+  };
+
 
   const buildUserFiles = (user) => {
   const files = [];
@@ -28,8 +49,18 @@ const calcVerified = (u) =>
     });
   }
 
-  // 🔜 в будущем:
-  // if (user.passport?.url) { ... }
+  if (user.passport?.url) {
+    files.push({
+      _id: "passport",
+      name: "Паспорт",
+      type: "passport",
+      url: user.passport.url,
+      status: user.passport.status,
+      rejectionReason: user.passport.rejectionReason,
+      createdAt: user.passport.uploadedAt,
+    });
+  }
+
 
   return files;
 };
@@ -46,13 +77,7 @@ export const getUsers = async (req, res) => {
       return res.status(403).json({ message: "Forbidden" });
     }
 
-    const {
-      search,
-      role,
-      phoneVerified,
-      from,
-      to,
-    } = req.query;
+    const { search, role, phoneVerified, from, to } = req.query;
 
     const query = {};
 
@@ -89,16 +114,43 @@ export const getUsers = async (req, res) => {
     }
 
     const users = await User.find(query)
-      .sort({ createdAt: -1 })
       .select(
-        "_id firstName lastName phone email role phoneVerified passportVerified profilePhoto createdAt"
+        "_id firstName lastName phone email role phoneVerified passport profilePhoto createdAt"
       )
       .lean();
 
-    const result = users.map((u) => ({
-      ...u,
-      verified: calcVerified(u),
-    }));
+    const result = users
+      .map((u) => {
+        const pendingDates = [];
+
+        if (u.profilePhoto?.status === "pending" && u.profilePhoto.uploadedAt) {
+          pendingDates.push(new Date(u.profilePhoto.uploadedAt));
+        }
+
+        if (u.passport?.status === "pending" && u.passport.uploadedAt) {
+          pendingDates.push(new Date(u.passport.uploadedAt));
+        }
+
+        return {
+          ...u,
+          verified: calcVerified(u),
+          hasPending:
+            u.profilePhoto?.status === "pending" ||
+            u.passport?.status === "pending",
+          pendingAt: pendingDates.length
+            ? new Date(Math.max(...pendingDates.map((d) => d.getTime())))
+            : null,
+        };
+      })
+      .sort((a, b) => {
+        if (a.hasPending && b.hasPending) {
+          return new Date(b.pendingAt) - new Date(a.pendingAt);
+        }
+        if (a.hasPending) return -1;
+        if (b.hasPending) return 1;
+
+        return new Date(b.createdAt) - new Date(a.createdAt);
+      });
 
     res.json(result);
   } catch (err) {
@@ -213,7 +265,7 @@ export const getUserById = async (req, res) => {
 
     const user = await User.findById(req.params.id)
       .select(
-        "_id firstName lastName birthDate about phone email role phoneVerified passportVerified profilePhoto createdAt"
+        "_id firstName lastName birthDate about phone email role phoneVerified passport profilePhoto createdAt"
       )
       .lean();
 
@@ -307,6 +359,69 @@ export const rejectProfilePhoto = async (req, res) => {
     });
   } catch (err) {
     console.error("REJECT PROFILE PHOTO ERROR:", err);
+    res.status(500).json({ message: "reject_failed" });
+  }
+};
+
+/**
+ * ===============================
+ * POST /admin/users/:id/passport/approve
+ * ===============================
+ */
+export const approvePassport = async (req, res) => {
+  try {
+    if (req.user.role !== "admin") {
+      return res.status(403).json({ message: "Forbidden" });
+    }
+
+    const user = await User.findById(req.params.id);
+    if (!user || !user.passport || user.passport.status !== "pending") {
+      return res.status(400).json({ message: "passport_not_pending" });
+    }
+
+    user.passport.status = "approved";
+    user.passport.rejectionReason = "";
+    user.passport.reviewedAt = new Date();
+
+    await user.save();
+
+    res.json({ ok: true, passport: user.passport });
+  } catch (err) {
+    console.error("APPROVE PASSPORT ERROR:", err);
+    res.status(500).json({ message: "approve_failed" });
+  }
+};
+
+/**
+ * ===============================
+ * POST /admin/users/:id/passport/reject
+ * ===============================
+ */
+export const rejectPassport = async (req, res) => {
+  try {
+    if (req.user.role !== "admin") {
+      return res.status(403).json({ message: "Forbidden" });
+    }
+
+    const { reason } = req.body;
+    if (!reason || !reason.trim()) {
+      return res.status(400).json({ message: "rejection_reason_required" });
+    }
+
+    const user = await User.findById(req.params.id);
+    if (!user || !user.passport || user.passport.status !== "pending") {
+      return res.status(400).json({ message: "passport_not_pending" });
+    }
+
+    user.passport.status = "rejected";
+    user.passport.rejectionReason = reason.trim();
+    user.passport.reviewedAt = new Date();
+
+    await user.save();
+
+    res.json({ ok: true, passport: user.passport });
+  } catch (err) {
+    console.error("REJECT PASSPORT ERROR:", err);
     res.status(500).json({ message: "reject_failed" });
   }
 };
