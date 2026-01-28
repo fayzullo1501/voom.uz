@@ -108,6 +108,12 @@ const ProfileMenu = () => {
     : avatarPlaceholder;
   const photoStatus = user?.profilePhoto?.status || "empty";
   const passportStatus = user?.passport?.status || "empty";
+  const isVerified =
+  user?.profilePhoto?.status === "approved" &&
+  user?.passport?.status === "approved" &&
+  user?.phoneVerified &&
+  user?.emailVerified;
+
 
 
 
@@ -127,13 +133,22 @@ const ProfileMenu = () => {
             </div>
 
             <div className="flex flex-col">
-              <div className="flex items-center gap-2">
-                <span className="text-[36px] font-semibold leading-tight">{displayName}</span>
-
-                {user?.isVerified && <img src={userVerifiedIcon} alt="Verified" className="w-7 h-7" />}
+              <div className="flex items-center gap-3">
+                <span className="text-[36px] font-semibold leading-tight">
+                  {displayName}
+                </span>
               </div>
 
-              {user?.isVerified && <span className="mt-1 text-sm text-[#32BB78]">{verifiedLabelByLang[lang] || verifiedLabelByLang.ru}</span>}
+              {isVerified ? (
+  <div className="mt-2 inline-flex items-center gap-2 bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-medium w-fit">
+    <span>{verifiedLabelByLang[lang] || verifiedLabelByLang.ru}</span>
+  </div>
+) : (
+  <div className="mt-2 inline-flex items-center gap-2 bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-sm font-medium w-fit">
+    <span>Не верифицирован</span>
+  </div>
+)}
+
             </div>
           </div>
 
@@ -204,9 +219,56 @@ const ProfileMenu = () => {
               </span>
             </div>
 
-            <div onClick={() => navigate(`/${lang}/profile/phone-verification`)} className="flex items-center gap-3 py-3 px-2 rounded-lg hover:bg-gray-100 cursor-pointer transition">
-              <CheckIcon />
-              <span className="text-[16px] font-medium">+998 {user?.phone}</span>
+            <div
+              onClick={() => {
+                if (!user?.phone) {
+                  navigate(`/${lang}/profile/edit`);
+                } else if (!user.phoneVerified) {
+                  navigate(`/${lang}/profile/phone-verification`);
+                }
+              }}
+              className="flex items-center gap-3 py-3 px-2 rounded-lg hover:bg-gray-100 cursor-pointer transition"
+            >
+              {user?.phone && user.phoneVerified && <CheckIcon />}
+              {(!user?.phone || !user.phoneVerified) && <PlusIcon />}
+
+              <span className="text-[16px] font-medium">
+                {user?.phone && user.phoneVerified && (
+                  <>Тел. номер подтверждён&nbsp;+998 {user.phone}</>
+                )}
+
+                {user?.phone && !user.phoneVerified && (
+                  <>Подтвердите номер телефона&nbsp;+998 {user.phone}</>
+                )}
+
+                {!user?.phone && <>Добавить номер телефона</>}
+              </span>
+            </div>
+
+            <div
+              onClick={() => {
+                if (!user?.email) {
+                  navigate(`/${lang}/profile/edit`);
+                } else if (!user.emailVerified) {
+                  navigate(`/${lang}/profile/email-verification`);
+                }
+              }}
+              className="flex items-center gap-3 py-3 px-2 rounded-lg hover:bg-gray-100 cursor-pointer transition"
+            >
+              {user?.email && user.emailVerified && <CheckIcon />}
+              {(!user?.email || !user.emailVerified) && <PlusIcon />}
+
+              <span className="text-[16px] font-medium">
+                {user?.email && user.emailVerified && (
+                  <>Email подтверждён&nbsp;{user.email}</>
+                )}
+
+                {user?.email && !user.emailVerified && (
+                  <>Подтвердите email&nbsp;{user.email}</>
+                )}
+
+                {!user?.email && <>Добавить email</>}
+              </span>
             </div>
           </div>
 

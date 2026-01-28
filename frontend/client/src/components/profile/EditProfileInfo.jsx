@@ -51,6 +51,7 @@ const EditProfileInfo = () => {
   const { showToast } = useToast();
 
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -111,26 +112,36 @@ const EditProfileInfo = () => {
 
   const handleSave = async () => {
     const token = localStorage.getItem("token");
+    setSaving(true);
 
     try {
+      const payload = {
+        firstName,
+        lastName,
+        birthDate: formatInputToISO(birthDate),
+        about,
+      };
+
+      if (email !== initialState.email) {
+        payload.email = email;
+      }
+
+      if (phone !== initialState.phone) {
+        payload.phone = phone;
+      }
+
       const res = await fetch(`${API_URL}/api/auth/profile`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({
-          firstName,
-          lastName,
-          birthDate: formatInputToISO(birthDate),
-          about,
-          email,
-          phone,
-        }),
+        body: JSON.stringify(payload),
       });
 
       if (!res.ok) {
         showToast(t("edit.error"), "error");
+        setSaving(false);
         return;
       }
 
@@ -138,6 +149,7 @@ const EditProfileInfo = () => {
       navigate(-1);
     } catch {
       showToast(t("edit.error"), "error");
+      setSaving(false);
     }
   };
 
@@ -195,12 +207,20 @@ const EditProfileInfo = () => {
 
         <div>
           <span className="text-gray-500 text-[15px]">{t("edit.about")}</span>
-          <textarea value={about} onChange={(e) => setAbout(e.target.value)} placeholder={t("edit.aboutPlaceholder")} rows={3} className="w-full text-[18px] font-medium mt-1 outline-none resize-none placeholder:text-gray-400" />
+          <textarea value={about} onChange={(e) => setAbout(e.target.value)} placeholder={t("edit.aboutPlaceholder")} rows={2} className="w-full text-[18px] font-medium mt-1 outline-none resize-none placeholder:text-gray-400" />
         </div>
 
         {hasChanges && (
-          <button onClick={handleSave} className="bg-[#32BB78] text-white rounded-xl h-[52px] text-[17px] font-semibold hover:bg-[#2aa86e]">
-            {t("edit.save")}
+          <button
+            onClick={handleSave}
+            disabled={saving}
+            className="bg-[#32BB78] text-white rounded-xl h-[52px] text-[17px] font-semibold hover:bg-[#2aa86e] disabled:opacity-70 flex items-center justify-center"
+          >
+            {saving ? (
+              <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+            ) : (
+              t("edit.save")
+            )}
           </button>
         )}
       </div>

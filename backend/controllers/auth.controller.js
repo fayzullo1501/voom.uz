@@ -85,6 +85,12 @@ export const me = async (req, res) => {
     return res.status(404).json({ message: "user not found" });
   }
 
+  const verified =
+    user.phoneVerified === true &&
+    user.emailVerified === true &&
+    user.profilePhoto?.status === "approved" &&
+    user.passport?.status === "approved";
+
   res.json({
     id: user._id,
     role: user.role,
@@ -96,9 +102,10 @@ export const me = async (req, res) => {
     about: user.about,
     phoneVerified: user.phoneVerified,
     emailVerified: user.emailVerified,
-    createdAt: user.createdAt,
     profilePhoto: user.profilePhoto,
     passport: user.passport,
+    verified, // ✅ ВАЖНО
+    createdAt: user.createdAt,
   });
 };
 
@@ -143,8 +150,10 @@ export const sendCode = async (req, res) => {
       phone,
       code,
       attempts: 0,
+      verified: false,
       expiresAt: new Date(Date.now() + 2 * 60 * 1000),
     });
+
 
     await sendSMS(phone, code);
 
@@ -174,8 +183,10 @@ export const sendEmailCode = async (req, res) => {
       email,
       code,
       attempts: 0,
+      verified: false,
       expiresAt: new Date(Date.now() + 10 * 60 * 1000),
     });
+
 
     await sendEmail(email, code);
 
@@ -220,8 +231,9 @@ export const verifyCode = async (req, res) => {
     return res.status(400).json({ message: "invalid_code" });
   }
 
-  // ✅ код верный
-  await PhoneCode.deleteMany({ phone });
+  // ✅ код верный (для регистрации)
+  record.verified = true;
+  await record.save();
 
   res.json({ ok: true });
 };
@@ -259,7 +271,8 @@ export const verifyEmailCode = async (req, res) => {
     return res.status(400).json({ message: "invalid_code" });
   }
 
-  await EmailCode.deleteMany({ email });
+  record.verified = true;
+  await record.save();
 
   res.json({ ok: true });
 };
@@ -286,6 +299,21 @@ export const setPassword = async (req, res) => {
     return res.status(409).json({ message: "user_already_exists" });
   }
 
+  // ===== CHECK VERIFIED CODE (registration) =====
+  if (phone) {
+    const phoneCode = await PhoneCode.findOne({ phone, verified: true });
+    if (!phoneCode) {
+      return res.status(400).json({ message: "phone_not_verified" });
+    }
+  }
+
+  if (email) {
+    const emailCode = await EmailCode.findOne({ email, verified: true });
+    if (!emailCode) {
+      return res.status(400).json({ message: "email_not_verified" });
+    }
+  }
+
   const passwordHash = await bcrypt.hash(password, 10);
 
   const user = await User.create({
@@ -305,6 +333,16 @@ export const setPassword = async (req, res) => {
       status: "empty",
     },
   });
+
+  // cleanup verified codes after registration
+  if (phone) {
+    await PhoneCode.deleteMany({ phone });
+  }
+
+  if (email) {
+    await EmailCode.deleteMany({ email });
+  }
+
 
 
 
@@ -494,3 +532,117 @@ export const uploadPassport = async (req, res) => {
     res.status(500).json({ message: "upload_failed" });
   }
 };
+
+/**
+ * VERIFY PROFILE PHONE (authorized user)
+ * подтверждение телефона из профиля
+ */
+export const verifyProfilePhone = async (req, res) => {
+  const user = await User.findById(req.user.id);
+  if (!user || !user.phone) {
+    return res.status(400).json({ message: "phone_not_set" });
+  }
+
+  const phone = user.phone;
+  const code = String(req.body.code || "").trim();
+
+  if (!code) {
+    return res.status(400).json({ message: "code_required" });
+  }
+
+  const record = await PhoneCode.findOne({
+    phone,
+    verified: false,
+    expiresAt: { $gt: new Date() },
+  }).sort({ createdAt: -1 });
+
+
+  if (!record) {
+    return res.status(400).json({ message: "code_not_found" });
+  }
+
+  if (record.expiresAt < new Date()) {
+    await PhoneCode.deleteMany({ phone });
+    return res.status(400).json({ message: "code_expired" });
+  }
+
+  if (record.attempts >= 5) {
+    await PhoneCode.deleteMany({ phone });
+    return res.status(429).json({ message: "too_many_attempts" });
+  }
+
+  if (record.code !== code) {
+    record.attempts += 1;
+    await record.save();
+    return res.status(400).json({ message: "invalid_code" });
+  }
+
+  // ✅ код верный
+  user.phoneVerified = true;
+  await user.save();
+
+  await PhoneCode.deleteMany({ phone });
+
+  res.json({
+    ok: true,
+    phone: user.phone,
+    phoneVerified: true,
+  });
+};
+
+
+/**
+ * VERIFY PROFILE EMAIL (authorized user)
+ */
+export const verifyProfileEmail = async (req, res) => {
+  const user = await User.findById(req.user.id);
+  if (!user || !user.email) {
+    return res.status(400).json({ message: "email_not_set" });
+  }
+
+  const email = user.email;
+  const code = String(req.body.code || "").trim();
+
+  if (!code) {
+    return res.status(400).json({ message: "code_required" });
+  }
+
+  const record = await EmailCode.findOne({
+    email,
+    verified: false,
+    expiresAt: { $gt: new Date() },
+  }).sort({ createdAt: -1 });
+
+
+  if (!record) {
+    return res.status(400).json({ message: "code_not_found" });
+  }
+
+  if (record.expiresAt < new Date()) {
+    await EmailCode.deleteMany({ email });
+    return res.status(400).json({ message: "code_expired" });
+  }
+
+  if (record.attempts >= 5) {
+    await EmailCode.deleteMany({ email });
+    return res.status(429).json({ message: "too_many_attempts" });
+  }
+
+  if (record.code !== code) {
+    record.attempts += 1;
+    await record.save();
+    return res.status(400).json({ message: "invalid_code" });
+  }
+
+  // ✅ УСПЕХ
+  user.emailVerified = true;
+  await user.save();
+  await EmailCode.deleteMany({ email });
+
+  res.json({
+    ok: true,
+    email: user.email,
+    emailVerified: true,
+  });
+};
+

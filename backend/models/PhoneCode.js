@@ -7,21 +7,32 @@ const phoneCodeSchema = new mongoose.Schema(
       required: true,
       index: true,
     },
+
     code: {
       type: String,
       required: true,
     },
+
     attempts: {
       type: Number,
       default: 0,
     },
+
+    verified: {
+      type: Boolean,
+      default: false,
+      index: true,
+    },
+
     expiresAt: {
       type: Date,
       required: true,
-      index: true,
     },
   },
   { timestamps: true }
 );
+
+// TTL: удалять документ, когда expiresAt < now
+phoneCodeSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
 
 export default mongoose.model("PhoneCode", phoneCodeSchema);

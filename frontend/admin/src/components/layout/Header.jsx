@@ -28,6 +28,12 @@ const Header = ({ title }) => {
       ? `${admin.firstName || ""} ${admin.lastName || ""}`.trim()
       : "";
 
+  const avatarSrc =
+    admin?.profilePhoto?.status === "approved" && admin?.profilePhoto?.url
+      ? admin.profilePhoto.url
+      : userAvatar;
+
+
   return (
     <div className="h-[72px] bg-white border-b border-gray-200 flex items-center justify-between px-8 shrink-0">
       <div className="text-[26px] font-semibold text-gray-900">
@@ -41,9 +47,12 @@ const Header = ({ title }) => {
           </div>
         )}
         <img
-          src={admin?.avatar || userAvatar}
-          alt="User"
+          src={avatarSrc}
+          alt="Admin"
           className="w-9 h-9 rounded-full object-cover"
+          onError={(e) => {
+            e.currentTarget.src = userAvatar;
+          }}
         />
       </div>
     </div>

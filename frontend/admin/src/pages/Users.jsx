@@ -19,13 +19,8 @@ const formatDate = (value) => {
   return d.toLocaleDateString("ru-RU");
 };
 
-const isUserVerified = (u) => {
-  return (
-    u.phoneVerified === true &&
-    u.passportVerified === true &&
-    u.profilePhoto?.status === "approved"
-  );
-};
+const isUserVerified = (u) => Boolean(u.verified);
+
 
 
 const Users = () => {
