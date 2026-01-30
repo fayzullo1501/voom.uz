@@ -646,3 +646,48 @@ export const verifyProfileEmail = async (req, res) => {
   });
 };
 
+/**
+ * ADMIN LOGIN
+ * только для admin
+ */
+export const adminLogin = async (req, res) => {
+  const password = req.body.password;
+  const phone = req.body.phone ? normalizePhone9(req.body.phone) : null;
+  const email = req.body.email ? normalizeEmail(req.body.email) : null;
+
+  if ((!phone && !email) || !password) {
+    return res.status(400).json({ message: "credentials_required" });
+  }
+
+  const user = await User.findOne(phone ? { phone } : { email });
+  if (!user) {
+    return res.status(401).json({ message: "invalid_credentials" });
+  }
+
+  if (user.role !== "admin") {
+    return res.status(403).json({ message: "admin_only" });
+  }
+
+  const ok = await comparePassword(password, user.passwordHash);
+  if (!ok) {
+    return res.status(401).json({ message: "invalid_credentials" });
+  }
+
+  const token = signToken({
+    id: user._id.toString(),
+    role: user.role,
+  });
+
+  res.json({
+    token,
+    user: {
+      id: user._id,
+      role: user.role,
+      phone: user.phone,
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      createdAt: user.createdAt,
+    },
+  });
+};

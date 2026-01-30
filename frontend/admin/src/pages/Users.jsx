@@ -54,7 +54,7 @@ const Users = () => {
 
       const res = await fetch(`${API_URL}/api/admin/users?${params.toString()}`, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("admin_token")}`,
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
 
@@ -106,7 +106,7 @@ const Users = () => {
           fetch(`${API_URL}/api/admin/users/${id}`, {
             method: "DELETE",
             headers: {
-              Authorization: `Bearer ${localStorage.getItem("admin_token")}`,
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
             },
           })
         )

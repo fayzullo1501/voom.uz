@@ -1,4 +1,5 @@
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
 import DeviceGuard from "./components/layout/DeviceGuard";
 import AdminLayout from "./components/layout/AdminLayout";
 import LoginPage from "./pages/auth/LoginPage";
@@ -16,8 +17,19 @@ import News from "./pages/News";
 import Ads from "./pages/Ads";
 import Settings from "./pages/Settings";
 
+const getAuth = () => {
+  const token = localStorage.getItem("token");
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
+  return Boolean(token && user.role === "admin");
+};
+
 const App = () => {
-  const isAuth = Boolean(localStorage.getItem("admin_token"));
+  const location = useLocation();
+  const [isAuth, setIsAuth] = useState(getAuth);
+
+  useEffect(() => {
+    setIsAuth(getAuth());
+  }, [location.pathname]);
 
   const protectedPage = (Page) =>
     isAuth ? (
@@ -31,7 +43,7 @@ const App = () => {
   return (
     <DeviceGuard>
       <Routes>
-        <Route path="/login" element={<LoginPage />} />
+        <Route path="/login" element={isAuth ? <Navigate to="/dashboard" replace /> : <LoginPage />} />
         <Route path="/" element={<Navigate to="/dashboard" replace />} />
 
         <Route path="/dashboard" element={protectedPage(Dashboard)} />

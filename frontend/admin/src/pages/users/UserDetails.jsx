@@ -38,7 +38,7 @@ const UserDetails = () => {
 
         const res = await fetch(`${API_URL}/api/admin/users/${id}`, {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("admin_token")}`,
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         });
 
@@ -145,7 +145,7 @@ const UserDetails = () => {
               // повторно загрузить пользователя
               fetch(`${API_URL}/api/admin/users/${id}`, {
                 headers: {
-                  Authorization: `Bearer ${localStorage.getItem("admin_token")}`,
+                  Authorization: `Bearer ${localStorage.getItem("token")}`,
                 },
               })
                 .then((res) => res.json())

@@ -10,6 +10,7 @@ import {
   verifyEmailCode,
   setPassword,
   login,
+  adminLogin,
   me,
   updateProfile,
   uploadPassport,
@@ -40,6 +41,7 @@ router.post( "/profile/email/verify", auth, verifyProfileEmail );
 
 // логин
 router.post("/login", login);
+router.post("/admin/login", adminLogin)
 router.get("/me", auth, me);
 router.patch("/profile", auth, updateProfile);
 

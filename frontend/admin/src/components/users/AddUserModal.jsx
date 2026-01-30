@@ -23,7 +23,7 @@ const AddUserModal = ({ onClose, onSuccess }) => {
       setLoading(true);
       const res = await fetch(`${API_URL}/api/admin/users`, {
         method: "POST",
-        headers: { "Content-Type": "application/json", Authorization: `Bearer ${localStorage.getItem("admin_token")}` },
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${localStorage.getItem("token")}` },
         body: JSON.stringify({ ...form, phone: form.phone.replace(/\D/g, "") }),
       });
       if (res.ok) onSuccess();

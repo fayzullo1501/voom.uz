@@ -56,7 +56,7 @@ const UserFilesTab = ({ userId, files, loading, onRefresh }) => {
     await fetch(`${API_URL}/api/admin/users/${userId}/${endpoint}`, {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${localStorage.getItem("admin_token")}`,
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     });
 
@@ -74,7 +74,7 @@ const UserFilesTab = ({ userId, files, loading, onRefresh }) => {
     await fetch(`${API_URL}/api/admin/users/${userId}/${endpoint}`, {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${localStorage.getItem("admin_token")}`,
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({

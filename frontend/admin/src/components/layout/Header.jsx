@@ -11,7 +11,7 @@ const Header = ({ title }) => {
       try {
         const res = await fetch(`${API_URL}/api/auth/me`, {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("admin_token")}`,
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         });
         const data = await res.json();

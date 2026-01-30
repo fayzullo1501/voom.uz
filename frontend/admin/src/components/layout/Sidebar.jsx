@@ -40,32 +40,32 @@ const Sidebar = () => {
 
         {/* MENU */}
         <div className="flex flex-col gap-2">
-          <div onClick={() => navigate("/dashboard")} className={`flex items-center gap-3 rounded-xl cursor-pointer transition ${collapsed ? "justify-center px-2 py-3" : "px-4 py-3"} ${pathname === "/dashboard" ? "bg-gray-100" : "hover:bg-gray-100"}`}>
+          <div onClick={() => navigate("/dashboard")} className={`flex items-center gap-3 rounded-xl cursor-pointer transition ${collapsed ? "justify-center px-2 py-3" : "px-4 py-3"} ${pathname.startsWith("/dashboard") ? "bg-gray-100" : "hover:bg-gray-100"}`}>
             <LayoutGrid size={22} />
             {!collapsed && <span className="text-[16px] font-medium">Главная</span>}
           </div>
 
-          <div onClick={() => navigate("/users")} className={`flex items-center gap-3 rounded-xl cursor-pointer transition ${collapsed ? "justify-center px-2 py-3" : "px-4 py-3"} ${pathname === "/users" ? "bg-gray-100" : "hover:bg-gray-100"}`}>
+          <div onClick={() => navigate("/users")} className={`flex items-center gap-3 rounded-xl cursor-pointer transition ${collapsed ? "justify-center px-2 py-3" : "px-4 py-3"} ${pathname.startsWith("/users") ? "bg-gray-100" : "hover:bg-gray-100"}`}>
             <Users size={22} />
             {!collapsed && <span className="text-[16px] font-medium">Пользователи</span>}
           </div>
 
-          <div onClick={() => navigate("/routes")} className={`flex items-center gap-3 rounded-xl cursor-pointer transition ${collapsed ? "justify-center px-2 py-3" : "px-4 py-3"} ${pathname === "/routes" ? "bg-gray-100" : "hover:bg-gray-100"}`}>
+          <div onClick={() => navigate("/routes")} className={`flex items-center gap-3 rounded-xl cursor-pointer transition ${collapsed ? "justify-center px-2 py-3" : "px-4 py-3"} ${pathname.startsWith("/routes") ? "bg-gray-100" : "hover:bg-gray-100"}`}>
             <Route size={22} />
             {!collapsed && <span className="text-[16px] font-medium">Маршруты</span>}
           </div>
 
-          <div onClick={() => navigate("/requests")} className={`flex items-center gap-3 rounded-xl cursor-pointer transition ${collapsed ? "justify-center px-2 py-3" : "px-4 py-3"} ${pathname === "/requests" ? "bg-gray-100" : "hover:bg-gray-100"}`}>
+          <div onClick={() => navigate("/requests")} className={`flex items-center gap-3 rounded-xl cursor-pointer transition ${collapsed ? "justify-center px-2 py-3" : "px-4 py-3"} ${pathname.startsWith("/requests") ? "bg-gray-100" : "hover:bg-gray-100"}`}>
             <ClipboardList size={22} />
             {!collapsed && <span className="text-[16px] font-medium">Заявки</span>}
           </div>
           
-          <div onClick={() => navigate("/news")} className={`flex items-center gap-3 rounded-xl cursor-pointer transition ${collapsed ? "justify-center px-2 py-3" : "px-4 py-3"} ${pathname === "/news" ? "bg-gray-100" : "hover:bg-gray-100"}`}>
+          <div onClick={() => navigate("/news")} className={`flex items-center gap-3 rounded-xl cursor-pointer transition ${collapsed ? "justify-center px-2 py-3" : "px-4 py-3"} ${pathname.startsWith("/news") ? "bg-gray-100" : "hover:bg-gray-100"}`}>
             <Newspaper size={22} />
             {!collapsed && <span className="text-[16px] font-medium">Новости</span>}
           </div>
 
-          <div onClick={() => navigate("/ads")} className={`flex items-center gap-3 rounded-xl cursor-pointer transition ${collapsed ? "justify-center px-2 py-3" : "px-4 py-3"} ${pathname === "/ads" ? "bg-gray-100" : "hover:bg-gray-100"}`}>
+          <div onClick={() => navigate("/ads")} className={`flex items-center gap-3 rounded-xl cursor-pointer transition ${collapsed ? "justify-center px-2 py-3" : "px-4 py-3"} ${pathname.startsWith("/ads") ? "bg-gray-100" : "hover:bg-gray-100"}`}>
             <Megaphone size={22} />
             {!collapsed && <span className="text-[16px] font-medium">Рекламы</span>}
           </div>
@@ -86,22 +86,22 @@ const Sidebar = () => {
 
             {!collapsed && directoriesOpen && (
               <div className="flex flex-col gap-1 mt-1 px-4">
-                <div onClick={() => navigate("/directories/cities")} className={`flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer transition ${pathname === "/directories/cities" ? "bg-gray-100 text-black" : "text-black hover:bg-gray-100"}`}>
+                <div onClick={() => navigate("/directories/cities")} className={`flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer transition ${pathname.startsWith("/directories/cities") ? "bg-gray-100 text-black" : "text-black hover:bg-gray-100"}`}>
                   <MapPin size={20} />
                   <span className="text-[16px] font-medium">Города</span>
                 </div>
 
-                <div onClick={() => navigate("/directories/brands")} className={`flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer transition ${pathname === "/directories/brands" ? "bg-gray-100 text-black" : "text-black hover:bg-gray-100"}`}>
+                <div onClick={() => navigate("/directories/brands")} className={`flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer transition ${pathname.startsWith("/directories/brands") ? "bg-gray-100 text-black" : "text-black hover:bg-gray-100"}`}>
                   <Car size={20} />
                   <span className="text-[16px] font-medium">Марки автомобилей</span>
                 </div>
 
-                <div onClick={() => navigate("/directories/models")} className={`flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer transition ${pathname === "/directories/models" ? "bg-gray-100 text-black" : "text-black hover:bg-gray-100"}`}>
+                <div onClick={() => navigate("/directories/models")} className={`flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer transition ${pathname.startsWith("/directories/models") ? "bg-gray-100 text-black" : "text-black hover:bg-gray-100"}`}>
                   <CarFront size={20} />
                   <span className="text-[16px] font-medium">Модели автомобилей</span>
                 </div>
 
-                <div onClick={() => navigate("/directories/colors")} className={`flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer transition ${pathname === "/directories/colors" ? "bg-gray-100 text-black" : "text-black hover:bg-gray-100"}`}>
+                <div onClick={() => navigate("/directories/colors")} className={`flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer transition ${pathname.startsWith("/directories/colors") ? "bg-gray-100 text-black" : "text-black hover:bg-gray-100"}`}>
                   <Palette size={20} />
                   <span className="text-[16px] font-medium">Цвета автомобилей</span>
                 </div>
@@ -118,7 +118,8 @@ const Sidebar = () => {
       </div>
 
       {/* LOGOUT */}
-      <div onClick={() => { localStorage.removeItem("admin_auth"); navigate("/login"); }} className={`flex items-center gap-3 rounded-xl cursor-pointer transition text-red-600 hover:bg-gray-100 ${collapsed ? "justify-center px-2 py-3" : "px-4 py-3"}`}>
+      <div
+        onClick={() => { localStorage.removeItem("token"); localStorage.removeItem("user");  navigate("/login", { replace: true }); }} className={`flex items-center gap-3 rounded-xl cursor-pointer transition text-red-600 hover:bg-gray-100 ${ collapsed ? "justify-center px-2 py-3" : "px-4 py-3" }`} >
         <LogOut size={22} />
         {!collapsed && <span className="text-[16px] font-medium">Выйти</span>}
       </div>

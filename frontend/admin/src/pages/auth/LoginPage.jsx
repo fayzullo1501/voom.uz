@@ -37,7 +37,7 @@ const LoginPage = () => {
     try {
       setLoading(true);
 
-      const res = await fetch(`${API_URL}/api/auth/login`, {
+      const res = await fetch(`${API_URL}/api/auth/admin/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ phone: phoneRaw, password }),
@@ -50,13 +50,10 @@ const LoginPage = () => {
         return;
       }
 
-      if (data?.user?.role !== "admin") {
-        setError("Нет доступа");
-        return;
-      }
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
 
-      localStorage.setItem("admin_token", data.token);
-      navigate("/dashboard");
+      navigate("/dashboard", { replace: true });
     } catch {
       setError("Ошибка сервера");
     } finally {
