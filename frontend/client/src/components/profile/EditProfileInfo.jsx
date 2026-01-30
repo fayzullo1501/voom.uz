@@ -157,10 +157,12 @@ const EditProfileInfo = () => {
 
   return (
     <div className="min-h-screen bg-white px-6 pt-6 pb-10">
-      <header className="flex justify-end">
-        <button onClick={() => navigate(-1)} className="p-3 rounded-full hover:bg-gray-100 transition">
-          <X className="w-6 h-6 text-gray-700" />
-        </button>
+      <header>
+        <div className="container-wide flex items-center justify-end">
+          <button onClick={() => navigate(-1)} className="p-3 rounded-full hover:bg-gray-100 transition flex items-center justify-center">
+            <X className="w-6 h-6 text-gray-700 hover:text-black transition" />
+          </button>
+        </div>
       </header>
 
       <h1 className="text-[36px] font-medium text-center mb-10">
