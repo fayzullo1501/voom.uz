@@ -140,7 +140,12 @@ const BalanceTopUp = () => {
 
           {/* Кнопка */}
           <div className="flex justify-center pt-4">
-            <button onClick={handleSubmit} disabled={!amount || Number(amount) < 1000} className="min-w-[180px] px-10 py-3 rounded-xl text-white text-[16px] font-medium bg-[#32BB78] hover:bg-[#29a86b] transition disabled:opacity-50 disabled:pointer-events-none" >
+            <button
+              type="button"
+              onClick={handleSubmit}
+              disabled={!amount || Number(amount) < 1000}
+              className="min-w-[180px] px-10 py-3 rounded-xl text-white text-[16px] font-medium bg-[#32BB78] hover:bg-[#29a86b] transition disabled:opacity-50 disabled:pointer-events-none"
+            >
               Продолжить
             </button>
           </div>
