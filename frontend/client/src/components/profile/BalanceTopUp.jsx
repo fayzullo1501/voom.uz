@@ -20,23 +20,25 @@ const BalanceTopUp = () => {
   const [method, setMethod] = useState("click");
   const [amount, setAmount] = useState("");
 
-const handleSubmit = async () => {
-  const amountNum = Number(amount);
+  const handleSubmit = async () => {
+    const amountNum = Number(amount);
+    if (!amountNum || amountNum < 1000) return;
 
-  if (!amountNum || amountNum < 1000) return;
+    try {
+      const { data } = await axios.post("/api/payment/click/init", {
+        amount: amountNum,
+      });
 
-  try {
-    const { data } = await axios.post("/api/payment/click/init", {
-      amount: amountNum,
-    });
-
-    if (data?.payUrl) {
-      window.location.href = data.payUrl;
+      if (data?.payUrl) {
+        console.log("NEW CLICK FLOW ACTIVE", Date.now());
+        window.location.href = data.payUrl;
+      } else {
+        console.error("payUrl missing", data);
+      }
+    } catch (err) {
+      console.error("Top up failed", err);
     }
-  } catch (err) {
-    console.error("Top up failed", err);
-  }
-};
+  };
 
   return (
     <div className="min-h-screen bg-white px-6 pb-10 flex flex-col">
