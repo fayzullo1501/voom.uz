@@ -1,11 +1,29 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Header from "../../components/layout/Header";
 import ProfileTopBar from "./ProfileTopBar";
+import axios from "../../services/axios";
+
 
 const ProfileAccount = () => {
   const navigate = useNavigate();
   const { lang } = useParams();
+
+  const [balance, setBalance] = useState(0);
+
+  useEffect(() => {
+    const loadBalance = async () => {
+      try {
+        const { data } = await axios.get("/api/balance");
+        setBalance(data.balance || 0);
+      } catch (err) {
+        console.error("Failed to load balance", err);
+      }
+    };
+
+    loadBalance();
+  }, []);
+
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -35,7 +53,9 @@ const ProfileAccount = () => {
                 </svg>
               </div>
               <span className="flex-1 text-[16px] font-medium">Баланс</span>
-              <span className="text-black font-medium">125,000 UZS</span>
+              <span className="text-black font-medium">
+                {balance.toLocaleString("ru-RU")} UZS
+              </span>
             </div>
 
             {/* Разделитель */}
