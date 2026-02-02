@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { ChevronLeft } from "lucide-react";
+import axios from "../../services/axios";
 
 
 import clickIcon from "../../assets/click.svg";
@@ -18,6 +19,24 @@ const BalanceTopUp = () => {
 
   const [method, setMethod] = useState("click");
   const [amount, setAmount] = useState("");
+
+const handleSubmit = async () => {
+  const amountNum = Number(amount);
+
+  if (!amountNum || amountNum < 1000) return;
+
+  try {
+    const { data } = await axios.post("/api/payment/click/init", {
+      amount: amountNum,
+    });
+
+    if (data?.payUrl) {
+      window.location.href = data.payUrl;
+    }
+  } catch (err) {
+    console.error("Top up failed", err);
+  }
+};
 
   return (
     <div className="min-h-screen bg-white px-6 pb-10 flex flex-col">
@@ -63,8 +82,6 @@ const BalanceTopUp = () => {
             <div className="flex gap-4">
               {[
                 { id: "click", icon: clickIcon, alt: "Click" },
-                { id: "payme", icon: paymeIcon, alt: "Payme" },
-                { id: "uzum", icon: uzumIcon, alt: "Uzum Bank" },
               ].map((item) => {
                 const selected = method === item.id;
 
@@ -121,7 +138,7 @@ const BalanceTopUp = () => {
 
           {/* Кнопка */}
           <div className="flex justify-center pt-4">
-            <button className="min-w-[180px] px-10 py-3 rounded-xl text-white text-[16px] font-medium bg-[#32BB78] hover:bg-[#29a86b] transition">
+            <button onClick={handleSubmit} disabled={!amount || Number(amount) < 1000} className="min-w-[180px] px-10 py-3 rounded-xl text-white text-[16px] font-medium bg-[#32BB78] hover:bg-[#29a86b] transition disabled:opacity-50 disabled:pointer-events-none" >
               Продолжить
             </button>
           </div>

@@ -6,6 +6,9 @@ import env from "./config/env.js";
 import authRoutes from "./routes/auth.routes.js";
 import devRoutes from "./routes/dev.routes.js";
 import adminRoutes from "./routes/admin.routes.js";
+import balanceRoutes from "./routes/balance.routes.js";
+import paymentRoutes from "./routes/payment.routes.js";
+
 
 
 const app = express();
@@ -45,6 +48,16 @@ app.get("/health", (req, res) => {
  */
 app.use("/api/auth", authRoutes);
 app.use("/api/admin", adminRoutes);
+/**
+ * BALANCE
+ */
+app.use("/api/balance", balanceRoutes);
+/**
+ * PAYMENTS
+ */
+app.use("/api/payment", paymentRoutes);
+
+
 
 
 /**

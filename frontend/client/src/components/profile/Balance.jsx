@@ -1,11 +1,29 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { X, Plus, ArrowDown, RotateCcw } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import axios from "../../services/axios";
 
 import logoIcon from "../../assets/logo-icon.svg";
 
 const Balance = () => {
   const navigate = useNavigate();
+
+  const [balance, setBalance] = useState(0);
+  const [holderName, setHolderName] = useState("");
+
+  useEffect(() => {
+    const loadBalance = async () => {
+      try {
+        const { data } = await axios.get("/api/balance");
+        setBalance(data.balance || 0);
+        setHolderName(data.holderName || "");
+      } catch (err) {
+        console.error("Failed to load balance", err);
+      }
+    };
+
+    loadBalance();
+  }, []);
 
   return (
     <div className="min-h-screen bg-white px-6 pb-10 flex flex-col">
@@ -54,15 +72,16 @@ const Balance = () => {
 
           {/* Balance */}
           <div className="text-[32px] font-semibold mb-6">
-            125,000 UZS
+            {balance.toLocaleString("ru-RU")} UZS
           </div>
+
 
           {/* Holder */}
           <div className="text-xs opacity-80 uppercase tracking-wide">
             Держатель
           </div>
           <div className="text-sm font-medium">
-            FAYZULLO ABDULAZIZOV
+            {holderName}
           </div>
         </div>
 
