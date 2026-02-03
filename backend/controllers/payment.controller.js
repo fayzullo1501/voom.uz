@@ -22,7 +22,7 @@ export const initClickPayment = async (req, res) => {
     provider: "click",
   });
 
-  const returnUrl = `${env.CLIENT_URL}/profile/balance`;
+  const returnUrl = `${env.CLIENT_URL}/profile/balance/top-up`;
 
   const payUrl =
     `${env.CLICK_BASE_URL}` +
