@@ -21,6 +21,7 @@
       "register": "Register",
       "menu": {
         "profile": "Profile",
+        "balance": "Balance",
         "bookings": "My bookings",
         "routes": "My routes",
         "chat": "Chat",

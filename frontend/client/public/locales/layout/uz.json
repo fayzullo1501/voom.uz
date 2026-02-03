@@ -21,6 +21,7 @@
       "register": "Ro‘yxatdan o‘tish",
       "menu": {
         "profile": "Profil",
+        "balance": "Balans",
         "bookings": "Bronlarim",
         "routes": "Marshrutlarim",
         "chat": "Chat",

@@ -8,17 +8,20 @@ import logoIcon from "../../assets/logo-icon.svg";
 const Balance = () => {
   const navigate = useNavigate();
 
-  const [balance, setBalance] = useState(0);
-  const [holderName, setHolderName] = useState("");
+  const [balance, setBalance] = useState(null);
+  const [holderName, setHolderName] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const loadBalance = async () => {
       try {
         const { data } = await axios.get("/api/balance");
-        setBalance(data.balance || 0);
-        setHolderName(data.holderName || "");
+        setBalance(data.balance);
+        setHolderName(data.holderName);
       } catch (err) {
         console.error("Failed to load balance", err);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -72,7 +75,7 @@ const Balance = () => {
 
           {/* Balance */}
           <div className="text-[32px] font-semibold mb-6">
-            {balance.toLocaleString("ru-RU")} UZS
+            {loading ? "Загрузка..." : `${balance.toLocaleString("ru-RU")} UZS`}
           </div>
 
 
@@ -81,7 +84,7 @@ const Balance = () => {
             Держатель
           </div>
           <div className="text-sm font-medium">
-            {holderName}
+            {loading ? "Загрузка..." : holderName}
           </div>
         </div>
 

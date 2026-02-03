@@ -168,6 +168,7 @@ const Header = () => {
                 ) : (
                   <>
                     <div className="px-4 py-3 rounded-xl hover:bg-gray-100 cursor-pointer text-[15px]" onClick={() => navigate(`/${currentLang}/profile/menu`)}>{t("header.profile.menu.profile")}</div>
+                    <div className="px-4 py-3 rounded-xl hover:bg-gray-100 cursor-pointer text-[15px]" onClick={() => navigate(`/${currentLang}/profile/balance`)}>{t("header.profile.menu.balance")}</div>
                     <div className="px-4 py-3 rounded-xl hover:bg-gray-100 cursor-pointer text-[15px]" onClick={() => navigate(`/${currentLang}/profile/bookings`)}>{t("header.profile.menu.bookings")}</div>
                     <div className="px-4 py-3 rounded-xl hover:bg-gray-100 cursor-pointer text-[15px]" onClick={() => navigate(`/${currentLang}/profile/routes`)}>{t("header.profile.menu.routes")}</div>
                     <div className="px-4 py-3 rounded-xl hover:bg-gray-100 cursor-pointer text-[15px]" onClick={() => navigate(`/${currentLang}/profile/chat`)}>{t("header.profile.menu.chat")}</div>
@@ -232,6 +233,7 @@ const Header = () => {
                 ) : (
                   <>
                     <div className="px-4 py-3 rounded-xl hover:bg-gray-100 cursor-pointer text-[15px]" onClick={() => navigate(`/${currentLang}/profile/menu`)}>{t("header.profile.menu.profile")}</div>
+                    <div className="px-4 py-3 rounded-xl hover:bg-gray-100 cursor-pointer text-[15px]" onClick={() => navigate(`/${currentLang}/profile/balance`)}>{t("header.profile.menu.balance")}</div>
                     <div className="px-4 py-3 rounded-xl hover:bg-gray-100 cursor-pointer text-[15px]" onClick={() => navigate(`/${currentLang}/profile/bookings`)}>{t("header.profile.menu.bookings")}</div>
                     <div className="px-4 py-3 rounded-xl hover:bg-gray-100 cursor-pointer text-[15px]" onClick={() => navigate(`/${currentLang}/profile/routes`)}>{t("header.profile.menu.routes")}</div>
                     <div className="px-4 py-3 rounded-xl hover:bg-gray-100 cursor-pointer text-[15px]" onClick={() => navigate(`/${currentLang}/profile/chat`)}>{t("header.profile.menu.chat")}</div>
