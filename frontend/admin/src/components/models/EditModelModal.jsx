@@ -1,0 +1,135 @@
+// src/components/models/EditModelModal.jsx
+import { X } from "lucide-react";
+import { useEffect, useState } from "react";
+import { API_URL } from "../../config/api";
+
+const EditModelModal = ({ model, onClose, onSuccess }) => {
+  const [brands, setBrands] = useState([]);
+  const [form, setForm] = useState({
+    brand: model.brand?._id || "",
+    name: model.name || "",
+    status: model.status || "active",
+  });
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const loadBrands = async () => {
+      const res = await fetch(`${API_URL}/api/admin/brands`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
+      const data = await res.json();
+      setBrands(data.filter((b) => b.status === "active"));
+    };
+    loadBrands();
+  }, []);
+
+  const submit = async () => {
+    try {
+      setLoading(true);
+
+      const res = await fetch(`${API_URL}/api/admin/models/${model._id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({
+          brand: form.brand,
+          name: form.name,
+          status: form.status,
+        }),
+      });
+
+      if (res.ok) onSuccess();
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div onClick={onClose} className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+      <div onClick={(e) => e.stopPropagation()} className="bg-white w-[560px] rounded-2xl relative">
+        <div className="flex items-center justify-between px-8 pt-6">
+          <h2 className="text-[22px] font-semibold text-gray-900">
+            Изменить модель
+          </h2>
+          <button onClick={onClose} className="text-gray-500 hover:text-gray-800">
+            <X size={20} />
+          </button>
+        </div>
+
+        <div className="h-px bg-gray-200 mt-4" />
+
+        <div className="px-8 py-6 grid grid-cols-2 gap-x-6 gap-y-4">
+          <div className="flex flex-col gap-1 col-span-2">
+            <label className="text-[13px] font-medium text-gray-700">
+              Марка
+            </label>
+            <select
+              value={form.brand}
+              onChange={(e) => setForm({ ...form, brand: e.target.value })}
+              className="h-[44px] px-4 rounded-lg border border-gray-300 text-[14px] bg-white focus:outline-none"
+            >
+              <option value="">Выберите марку</option>
+              {brands.map((b) => (
+                <option key={b._id} value={b._id}>
+                  {b.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="flex flex-col gap-1 col-span-2">
+            <label className="text-[13px] font-medium text-gray-700">
+              Название модели
+            </label>
+            <input
+              value={form.name}
+              onChange={(e) => setForm({ ...form, name: e.target.value })}
+              placeholder="Введите название"
+              className="h-[44px] px-4 rounded-lg border border-gray-300 text-[14px] focus:outline-none"
+            />
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <label className="text-[13px] font-medium text-gray-700">
+              Статус
+            </label>
+            <select
+              value={form.status}
+              onChange={(e) => setForm({ ...form, status: e.target.value })}
+              className="h-[44px] px-4 rounded-lg border border-gray-300 text-[14px] bg-white focus:outline-none"
+            >
+              <option value="active">Активный</option>
+              <option value="inactive">Неактивный</option>
+            </select>
+          </div>
+        </div>
+
+        <div className="flex justify-end gap-3 px-8 pb-6">
+          <button
+            onClick={onClose}
+            disabled={loading}
+            className="h-[44px] px-6 rounded-lg border border-gray-300 text-[14px] font-medium hover:bg-gray-100 transition"
+          >
+            Отменить
+          </button>
+
+          <button
+            onClick={submit}
+            disabled={loading || !form.brand || !form.name.trim()}
+            className="h-[44px] px-6 rounded-lg bg-[#32BB78] text-white text-[14px] font-medium hover:bg-[#28a96a] transition flex items-center justify-center"
+          >
+            {loading ? (
+              <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+            ) : (
+              "Сохранить"
+            )}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default EditModelModal;

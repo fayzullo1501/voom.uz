@@ -30,14 +30,17 @@ const Header = () => {
   const [profileOpen, setProfileOpen] = useState(false);
   const [mobileProfileOpen, setMobileProfileOpen] = useState(false);
   const [user, setUser] = useState(null);
+  const [userLoading, setUserLoading] = useState(true);
 
 
   const token = localStorage.getItem("token");
   const isAuth = !!token;
 
-  const displayName =
-    user?.firstName?.trim() ||
-    t("header.profile.defaultName");
+  const displayName = userLoading
+  ? t("header.profile.loading")
+  : !isAuth
+    ? t("header.profile.login")
+    : user?.firstName?.trim() || t("header.profile.defaultName");
 
 
   const avatarSrc =
@@ -59,28 +62,35 @@ const Header = () => {
   }, []);
 
   useEffect(() => {
-  const token = localStorage.getItem("token");
-  if (!token) {
-    setUser(null);
-    return;
-  }
+    const token = localStorage.getItem("token");
 
-  fetch(`${import.meta.env.VITE_API_URL || ""}/api/auth/me`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  })
-    .then((res) => res.ok ? res.json() : null)
-    .then((data) => {
-      if (data) {
-        setUser(data);
-        localStorage.setItem("user", JSON.stringify(data)); // 🔥 важно
-      }
-    })
-    .catch(() => {
+    if (!token) {
       setUser(null);
-    });
-}, []);
+      setUserLoading(false);
+      return;
+    }
+
+    fetch(`${import.meta.env.VITE_API_URL || ""}/api/auth/me`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data) {
+          setUser(data);
+          localStorage.setItem("user", JSON.stringify(data));
+        } else {
+          setUser(null);
+        }
+      })
+      .catch(() => {
+        setUser(null);
+      })
+      .finally(() => {
+        setUserLoading(false);
+      });
+  }, []);
 
   const languages = [
     { code: "ru", flag: flagRu },

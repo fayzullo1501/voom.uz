@@ -18,6 +18,7 @@
     "profile": {
       "defaultName": "Foydalanuvchi",
       "login": "Kirish",
+      "loading": "Yuklanmoqda...",
       "register": "Ro‘yxatdan o‘tish",
       "menu": {
         "profile": "Profil",

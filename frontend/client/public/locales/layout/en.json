@@ -18,6 +18,7 @@
     "profile": {
       "defaultName": "User",
       "login": "Login",
+      "loading": "Loading...",
       "register": "Register",
       "menu": {
         "profile": "Profile",
