@@ -5,7 +5,9 @@ import env from "../config/env.js";
 
 const md5 = (str) => crypto.createHash("md5").update(str).digest("hex");
 
-// 🔹 Инициализация платежа
+// ======================================================
+// 🔹 Инициализация платежа (frontend → backend → Click)
+// ======================================================
 export const initClickPayment = async (req, res) => {
   const { amount } = req.body;
   const amountNum = Number(amount);
@@ -26,52 +28,91 @@ export const initClickPayment = async (req, res) => {
 
   const payUrl =
     `${env.CLICK_BASE_URL}` +
-    `?service_id=${env.CLICK_SERVICE_ID}` +
-    `&merchant_id=${env.CLICK_MERCHANT_ID}` +
-    `&merchant_user_id=${env.CLICK_MERCHANT_USER_ID}` +
-    `&transaction_param=${tx._id}` +
-    `&amount=${amountNum}` +
+    `?service_id=${encodeURIComponent(env.CLICK_SERVICE_ID)}` +
+    `&merchant_id=${encodeURIComponent(env.CLICK_MERCHANT_ID)}` +
+    `&merchant_user_id=${encodeURIComponent(env.CLICK_MERCHANT_USER_ID)}` +
+    `&transaction_param=${encodeURIComponent(tx._id.toString())}` +
+    `&amount=${encodeURIComponent(amountNum)}` +
     `&return_url=${encodeURIComponent(returnUrl)}`;
 
-  res.json({ payUrl });
+  return res.json({ payUrl });
 };
 
-// 🔹 Callback Click
+// ======================================================
+// 🔹 Callback Click (prepare + complete)
+// ======================================================
 export const clickCallback = async (req, res) => {
   const {
     click_trans_id,
     service_id,
     merchant_trans_id,
+    merchant_prepare_id,
     amount,
     action,
     sign_time,
     sign_string,
   } = req.body;
 
-  const signBase =
-    action === "1"
-      ? `${click_trans_id}${service_id}${env.CLICK_SECRET_KEY}${merchant_trans_id}${amount}${action}${sign_time}`
-      : `${click_trans_id}${service_id}${env.CLICK_SECRET_KEY}${merchant_trans_id}${amount}${action}${sign_time}`;
+  const actionNum = Number(action);
+  const amountNum = Number(amount);
+
+  // ===== Формирование подписи (СТРОГО как в рабочем старом коде) =====
+  let signBase = "";
+
+  if (actionNum === 0) {
+    signBase =
+      String(click_trans_id) +
+      String(service_id) +
+      String(env.CLICK_SECRET_KEY) +
+      String(merchant_trans_id) +
+      String(amountNum) +
+      String(actionNum) +
+      String(sign_time);
+  }
+
+  if (actionNum === 1) {
+    signBase =
+      String(click_trans_id) +
+      String(service_id) +
+      String(env.CLICK_SECRET_KEY) +
+      String(merchant_trans_id) +
+      String(merchant_prepare_id) +
+      String(amountNum) +
+      String(actionNum) +
+      String(sign_time);
+  }
 
   const expectedSign = md5(signBase);
 
   if (sign_string !== expectedSign) {
-    return res.json({ error: -1, error_note: "Invalid signature" });
+    console.warn("⚠️ SIGN CHECK FAILED", {
+      expectedSign,
+      receivedSign: sign_string,
+    });
+    return res.json({ error: -1, error_note: "SIGN CHECK FAILED" });
   }
 
+  // ===== Транзакция =====
   const tx = await Transaction.findById(merchant_trans_id);
   if (!tx) {
     return res.json({ error: -5, error_note: "Transaction not found" });
   }
 
-  if (action === "0") {
+  // ===== Проверка суммы (как в старом коде) =====
+  if (Number(tx.amount) !== amountNum) {
+    return res.json({ error: -2, error_note: "Incorrect amount" });
+  }
+
+  // ===== PREPARE =====
+  if (actionNum === 0) {
     return res.json({
       error: 0,
-      merchant_prepare_id: tx._id,
+      merchant_prepare_id: tx._id.toString(),
     });
   }
 
-  if (action === "1") {
+  // ===== COMPLETE =====
+  if (actionNum === 1) {
     if (tx.status === "success") {
       return res.json({ error: 0 });
     }
@@ -80,13 +121,16 @@ export const clickCallback = async (req, res) => {
     tx.meta = req.body;
     await tx.save();
 
-    await User.updateOne({ _id: tx.userId }, { $inc: { balance: tx.amount } });
+    await User.updateOne(
+      { _id: tx.userId },
+      { $inc: { balance: tx.amount } }
+    );
 
     return res.json({
       error: 0,
-      merchant_confirm_id: tx._id,
+      merchant_confirm_id: tx._id.toString(),
     });
   }
 
-  res.json({ error: -3 });
+  return res.json({ error: -3, error_note: "Unknown action" });
 };
