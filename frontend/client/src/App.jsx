@@ -29,6 +29,10 @@ import MyRouteDetails from "./components/profile/MyRouteDetails";
 import MyRoutes from "./components/profile/MyRoutes";
 import ChatMessenger from "./components/profile/ChatMessenger";
 import MyTransport from "./components/profile/MyTransport.jsx";
+import AddTransport from "./components/profile/AddTransport.jsx";
+import EditTransport from "./components/profile/EditTransport.jsx";
+import EditPlateNumber from "./components/profile/EditPlateNumber.jsx";
+import EditCarPhoto from "./components/profile/EditCarPhoto.jsx";
 import RoutesResults from "./pages/routes/RoutesResults";
 import RouteDetails from "./pages/routes/RouteDetails";
 import RouteBooking from "./pages/routes/RouteBooking";
@@ -116,6 +120,14 @@ function App() {
           <Route path="/:lang/profile/chat" element={<LangWrapper Component={ChatMessenger} />} />
           {/* Профиль — Транспорт*/}
           <Route path="/:lang/profile/transport" element={<LangWrapper Component={MyTransport} />} />
+          {/* Транспорт — Добавить*/}
+          <Route path="/:lang/profile/transport/add" element={<LangWrapper Component={AddTransport} />} />
+          {/* Транспорт — Редактировать*/}
+          <Route path="/:lang/profile/transport/:id/edit" element={<LangWrapper Component={EditTransport} />} />
+          {/* Транспорт — Добавить гос номер*/}
+          <Route path="/:lang/profile/transport/:id/plate" element={<LangWrapper Component={EditPlateNumber} />} />
+          {/* Транспорт — Добавить фото машины*/}
+          <Route path="/:lang/profile/transport/:id/photos" element={<LangWrapper Component={EditCarPhoto} />} />
           {/* Главная — Маршруты-результаты*/}
           <Route path="/:lang/routes" element={<LangWrapper Component={RoutesResults} />} />
           {/* Маршруты — Детали маршрута*/}

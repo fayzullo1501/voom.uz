@@ -8,6 +8,9 @@ import devRoutes from "./routes/dev.routes.js";
 import adminRoutes from "./routes/admin.routes.js";
 import balanceRoutes from "./routes/balance.routes.js";
 import paymentRoutes from "./routes/payment.routes.js";
+import carsRoutes from "./routes/cars.routes.js";
+import userCarsRoutes from "./routes/userCars.routes.js";
+
 
 
 
@@ -57,6 +60,10 @@ app.use("/api/balance", balanceRoutes);
  * PAYMENTS
  */
 app.use("/api/payment", paymentRoutes);
+app.use("/api/cars", carsRoutes);
+app.use("/api/profile/cars", userCarsRoutes);
+
+
 
 
 

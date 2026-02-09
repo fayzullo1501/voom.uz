@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-
 import Header from "../../components/layout/Header";
 import ProfileTopBar from "./ProfileTopBar";
 
 import avatarPlaceholder from "../../assets/avatar-placeholder.svg";
 import userVerifiedIcon from "../../assets/userverified.svg";
-import { LoaderCircle } from "lucide-react";
+import { LoaderCircle, Car } from "lucide-react";
 import { API_URL } from "../../config/api";
 
 /* ===== Универсальная зелёная галочка (ТОЛЬКО подтверждения) ===== */
@@ -17,6 +16,14 @@ const CheckIcon = () => (
     </svg>
   </div>
 );
+
+/* ===== ИКОНКА МАШИНЫ (есть авто) ===== */
+const CarFront = () => (
+  <div className="w-8 h-8 rounded-full bg-[#32BB78] flex items-center justify-center shrink-0">
+    <Car className="w-4 h-4 text-white" />
+  </div>
+);
+
 
 /* ===== СЕРАЯ ИКОНКА "+" (добавить) ===== */
 const PlusIcon = () => (
@@ -55,6 +62,7 @@ const ProfileMenu = () => {
 
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [cars, setCars] = useState([]);
 
   const defaultNameByLang = { ru: "Пользователь", uz: "Foydalanuvchi", en: "User" };
   const verifiedLabelByLang = { ru: "Проверенный пользователь", uz: "Tasdiqlangan foydalanuvchi", en: "Verified user" };
@@ -80,6 +88,13 @@ const ProfileMenu = () => {
       .then((data) => {
         setUser(data);
         setLoading(false);
+
+        fetch(`${API_URL}/api/profile/cars`, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+          .then((res) => res.json())
+          .then((carsData) => setCars(carsData))
+          .catch(() => {});
       })
       .catch(() => {
         setLoading(false); // 🔥 ВАЖНО
@@ -116,6 +131,20 @@ const ProfileMenu = () => {
 
 
 
+  const carsCount = cars.length;
+
+  const singleCarText =
+    carsCount === 1
+      ? `${cars[0].color?.nameRu || cars[0].customColor} ${cars[0].brand?.name || cars[0].customBrand} ${cars[0].model?.name || cars[0].customModel}`
+      : "";
+
+  const carsSubText =
+    carsCount === 0
+      ? "Добавить машину"
+      : carsCount === 1
+      ? singleCarText
+      : `Машин: ${carsCount}`;
+
 
   return (
     <>
@@ -140,15 +169,14 @@ const ProfileMenu = () => {
               </div>
 
               {isVerified ? (
-  <div className="mt-2 inline-flex items-center gap-2 bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-medium w-fit">
-    <span>{verifiedLabelByLang[lang] || verifiedLabelByLang.ru}</span>
-  </div>
-) : (
-  <div className="mt-2 inline-flex items-center gap-2 bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-sm font-medium w-fit">
-    <span>Не верифицирован</span>
-  </div>
-)}
-
+                <div className="mt-2 inline-flex items-center gap-2 bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-medium w-fit">
+                  <span>{verifiedLabelByLang[lang] || verifiedLabelByLang.ru}</span>
+                </div>
+              ) : (
+                <div className="mt-2 inline-flex items-center gap-2 bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-sm font-medium w-fit">
+                  <span>Не верифицирован</span>
+                </div>
+              )}
             </div>
           </div>
 
@@ -298,11 +326,21 @@ const ProfileMenu = () => {
 
           {/* ===== Машины ===== */}
           <div className="mt-8 mb-10">
-            <h3 className="font-bold text-[20px] mb-5">Машины</h3>
+            <h3 className="font-bold text-[20px] mb-2">Мои автомобили</h3>
 
-            <div onClick={() => navigate(`/${lang}/profile/transport`)} className="py-3 px-2 rounded-lg hover:bg-gray-100 cursor-pointer transition">
-              <div className="text-[18px] font-semibold leading-tight">Мои машины</div>
-              <div className="text-[15px] text-gray-500 mt-1">Управление транспортом</div>
+            <div
+              onClick={() =>
+                cars.length
+                  ? navigate(`/${lang}/profile/transport`)
+                  : navigate(`/${lang}/profile/transport/add`)
+              }
+              className="flex items-center gap-3 py-3 px-2 rounded-lg hover:bg-gray-100 cursor-pointer transition"
+            >
+              {cars.length ? <CarFront /> : <PlusIcon />}
+
+              <div className="text-[16px] text-gray-700 leading-tight">
+                {carsSubText}
+              </div>
             </div>
           </div>
         </div>
