@@ -10,6 +10,8 @@ import balanceRoutes from "./routes/balance.routes.js";
 import paymentRoutes from "./routes/payment.routes.js";
 import carsRoutes from "./routes/cars.routes.js";
 import userCarsRoutes from "./routes/userCars.routes.js";
+import cityRoutes from "./routes/city.routes.js";
+
 
 
 
@@ -60,8 +62,15 @@ app.use("/api/balance", balanceRoutes);
  * PAYMENTS
  */
 app.use("/api/payment", paymentRoutes);
+/**
+ * CARS (справочник транспортов)
+ */
 app.use("/api/cars", carsRoutes);
 app.use("/api/profile/cars", userCarsRoutes);
+/**
+ * CITIES (справочник городов)
+ */
+app.use("/api/cities", cityRoutes);
 
 
 
