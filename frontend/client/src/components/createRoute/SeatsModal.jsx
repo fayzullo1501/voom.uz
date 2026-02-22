@@ -9,12 +9,17 @@ const SeatsModal = ({ isOpen, onSave, onClose, initialValue }) => {
   const [back, setBack] = useState(0);
 
   useEffect(() => {
-    if (!initialValue) return;
+    if (!isOpen) return;
 
-    // ожидаем строку формата "1 | 2"
-    const parts = initialValue.split("|").map((x) => Number(x.trim()));
-    setFront(parts[0] || 0);
-    setBack(parts[1] || 0);
+    if (!initialValue) {
+      setFront(0);
+      setBack(0);
+      return;
+    }
+
+    setFront(initialValue.front || 0);
+    setBack(initialValue.back || 0);
+
   }, [initialValue, isOpen]);
 
   const inc = (val, set, max) => set(Math.min(val + 1, max));
@@ -145,11 +150,13 @@ const SeatsModal = ({ isOpen, onSave, onClose, initialValue }) => {
             {/* ===== SAVE BUTTON ===== */}
             <button
               onClick={handleSave}
-              className="
+              disabled={front === 0 && back === 0}
+              className={`
                 bg-[#32BB78] text-white rounded-xl
                 h-[52px] mt-6 px-6 text-[17px] font-semibold
                 hover:bg-[#2aa86e]
-              "
+                ${front === 0 && back === 0 ? "opacity-50 cursor-not-allowed" : ""}
+              `}
             >
               Сохранить
             </button>

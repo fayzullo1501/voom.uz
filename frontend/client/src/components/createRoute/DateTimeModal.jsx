@@ -4,38 +4,30 @@ import React, { useState, useEffect } from "react";
 const DateTimeModal = ({ isOpen, initialValue, onSave, onClose }) => {
   if (!isOpen) return null;
 
-  /* === INIT VALUES === */
-  let initDate = null;
-  let initTime = null;
+  const baseDate = initialValue ? new Date(initialValue) : new Date();
 
-  if (initialValue) {
-    const [d, t] = initialValue.split(" в ");
-    initDate = d;
-    initTime = t;
-  }
+  const [selectedDate, setSelectedDate] = useState(baseDate);
 
-  const [selectedDate, setSelectedDate] = useState(
-    initDate ? new Date(initDate) : new Date()
+  const [selectedTime, setSelectedTime] = useState(
+    baseDate
+      ? `${String(baseDate.getHours()).padStart(2, "0")}:${String(
+          baseDate.getMinutes()
+        ).padStart(2, "0")}`
+      : "00:00"
   );
-
-  const [selectedTime, setSelectedTime] = useState(initTime || "00:00");
 
   useEffect(() => {
     if (!isOpen) return;
 
-    if (!initialValue) {
-      // если нет значения — ставим текущую дату и 00:00
-      setSelectedDate(new Date());
-      setSelectedTime("00:00");
-      return;
-    }
+    const base = initialValue ? new Date(initialValue) : new Date();
 
-    // пример initialValue: "2025-02-15 в 14:30"
-    const [dateStr, timeStr] = initialValue.split(" в ");
+    setSelectedDate(base);
 
-    setSelectedDate(new Date(dateStr));
-    setSelectedTime(timeStr || "00:00");
-
+    setSelectedTime(
+      `${String(base.getHours()).padStart(2, "0")}:${String(
+        base.getMinutes()
+      ).padStart(2, "0")}`
+    );
   }, [isOpen, initialValue]);
 
   /* === MONTH CALCULATIONS === */
@@ -61,11 +53,17 @@ const DateTimeModal = ({ isOpen, initialValue, onSave, onClose }) => {
 
   /* === SAVE === */
   const handleSave = () => {
-    const yyyy = year;
-    const mm = String(month + 1).padStart(2, "0");
-    const dd = String(selectedDate.getDate()).padStart(2, "0");
+    const [hh, min] = selectedTime.split(":");
 
-    onSave(`${yyyy}-${mm}-${dd} в ${selectedTime}`);
+    const finalDate = new Date(
+      selectedDate.getFullYear(),
+      selectedDate.getMonth(),
+      selectedDate.getDate(),
+      Number(hh),
+      Number(min)
+    );
+
+    onSave(finalDate.toISOString());
     onClose();
   };
 

@@ -62,34 +62,45 @@ const Header = () => {
   }, []);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const loadUser = () => {
+      const token = localStorage.getItem("token");
 
-    if (!token) {
-      setUser(null);
-      setUserLoading(false);
-      return;
-    }
-
-    fetch(`${import.meta.env.VITE_API_URL || ""}/api/auth/me`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((res) => (res.ok ? res.json() : null))
-      .then((data) => {
-        if (data) {
-          setUser(data);
-          localStorage.setItem("user", JSON.stringify(data));
-        } else {
-          setUser(null);
-        }
-      })
-      .catch(() => {
+      if (!token) {
         setUser(null);
-      })
-      .finally(() => {
         setUserLoading(false);
-      });
+        return;
+      }
+
+      fetch(`${import.meta.env.VITE_API_URL}/api/auth/me`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((res) => (res.ok ? res.json() : null))
+        .then((data) => {
+          if (data) {
+            setUser(data);
+            localStorage.setItem("user", JSON.stringify(data));
+          } else {
+            setUser(null);
+          }
+        })
+        .catch(() => setUser(null))
+        .finally(() => setUserLoading(false));
+    };
+
+    loadUser();
+
+    // 🔥 слушаем изменения localStorage
+    const handleStorageChange = () => {
+      loadUser();
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
   }, []);
 
   const languages = [

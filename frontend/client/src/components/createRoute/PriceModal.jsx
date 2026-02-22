@@ -18,17 +18,28 @@ const PriceModal = ({ isOpen, onClose, onSave, initialValue }) => {
   const [backPrice, setBackPrice] = useState("");
 
   useEffect(() => {
-    if (!initialValue) return;
+    if (!isOpen) return;
 
-    const parts = initialValue.split("|").map((x) => x.trim());
-    setFrontPrice(formatMoney(parts[0] || ""));
-    setBackPrice(formatMoney(parts[1] || ""));
+    if (!initialValue) {
+      setFrontPrice("");
+      setBackPrice("");
+      return;
+    }
+
+    setFrontPrice(
+      initialValue.front ? formatMoney(initialValue.front) : ""
+    );
+
+    setBackPrice(
+      initialValue.back ? formatMoney(initialValue.back) : ""
+    );
+
   }, [initialValue, isOpen]);
 
   const handleSave = () => {
     onSave({
-      frontPrice: cleanNumber(frontPrice),
-      backPrice: cleanNumber(backPrice),
+      frontPrice: Number(cleanNumber(frontPrice)) || 0,
+      backPrice: Number(cleanNumber(backPrice)) || 0,
     });
     onClose();
   };
@@ -153,7 +164,13 @@ const PriceModal = ({ isOpen, onClose, onSave, initialValue }) => {
             {/* ===== SAVE ===== */}
             <button
               onClick={handleSave}
-              className=" bg-[#32BB78] text-white rounded-xl  h-[52px] mt-6 px-6 text-[17px] font-semibold hover:bg-[#2aa86e]"
+              disabled={!frontPrice && !backPrice}
+              className={`
+                bg-[#32BB78] text-white rounded-xl
+                h-[52px] mt-6 px-6 text-[17px] font-semibold
+                hover:bg-[#2aa86e]
+                ${!frontPrice && !backPrice ? "opacity-50 cursor-not-allowed" : ""}
+              `}
             >
               Сохранить
             </button>

@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { X, ArrowLeftRight } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Trans } from "react-i18next";
+import { useToast } from "../../components/ui/useToast";
 
 
 import logo from "../../assets/logo.svg";
@@ -13,7 +14,7 @@ import qrImg from "../../assets/crrouteqr.svg";
 import DateTimeModal from "../../components/createRoute/DateTimeModal";
 import SeatsModal from "../../components/createRoute/SeatsModal";
 import PriceModal from "../../components/createRoute/PriceModal";
-import CommentModal from "../../components/createRoute/CommentModal";
+import CityAutocompleteInput from "../../components/createRoute/CityAutocompleteInput";
 
 // -----------------------------
 // FLOATING TEXT FIELD
@@ -60,28 +61,25 @@ const FloatingButtonField = ({ value, label, onClick }) => {
       className="
         relative w-full h-[52px] bg-gray-100
         rounded-xl px-4 text-left 
+        flex items-center
         focus:outline-none
       "
     >
-      <div className="peer w-full h-full pt-3"></div>
-
-      <label
+      <span
         className={`
-          absolute left-4 text-gray-400 pointer-events-none
-          transition-all duration-200
+          absolute left-4 transition-all duration-200 text-gray-400
           ${hasValue ? "text-[11px] top-1" : "text-[16px] top-1/2 -translate-y-1/2"}
-          peer-focus:text-[11px] peer-focus:top-1
         `}
       >
         {label}
-      </label>
+      </span>
 
       {hasValue && (
         <span
           className="
-            absolute left-4 top-1/2 -translate-y-1/2 
-            text-[16px] text-gray-900 pt-3 
-            max-w-[85%] truncate text-ellipsis whitespace-nowrap
+            absolute left-4 top-1/2 -translate-y-1/2
+            text-[16px] text-gray-900
+            max-w-[85%] truncate
           "
         >
           {value}
@@ -98,33 +96,160 @@ const CreateRoute = () => {
   const navigate = useNavigate();
   const { lang } = useParams();
   const { t } = useTranslation("createRoute");
+  const { showToast } = useToast();
 
-  const [from, setFrom] = useState("");
-  const [to, setTo] = useState("");
+  const [fromCity, setFromCity] = useState(null);
+  const [toCity, setToCity] = useState(null);
 
-  const [dateTime, setDateTime] = useState("");
+  const [departureAt, setDepartureAt] = useState(null);
   const [dateModalOpen, setDateModalOpen] = useState(false);
 
-  const [seats, setSeats] = useState("");
-  const cleanNumber = (val) => val.replace(/\D/g, "");
-  const prepareSeatsForModal = (str) => {
-    if (!str) return "";
-    return str
-      .split("|")
-      .map((part) => cleanNumber(part.trim()))
-      .filter(Boolean)
-      .join(" | ");
-  };
+  const [seatsFront, setSeatsFront] = useState(0);
+  const [seatsBack, setSeatsBack] = useState(0);
 
   const [seatsModalOpen, setSeatsModalOpen] = useState(false);
 
-  const [price, setPrice] = useState("");
+  const [priceFront, setPriceFront] = useState(0);
+  const [priceBack, setPriceBack] = useState(0);
   const [priceModalOpen, setPriceModalOpen] = useState(false);
 
   const [comment, setComment] = useState("");
-  const [commentModalOpen, setCommentModalOpen] = useState(false);
+
+  const [cars, setCars] = useState([]);
+  const [selectedCar, setSelectedCar] = useState(null);
+  const [carsLoading, setCarsLoading] = useState(false);
+  const [carDropdownOpen, setCarDropdownOpen] = useState(false);
+  const carRef = useRef(null);
 
   const [agree, setAgree] = useState(false);
+  const [creating, setCreating] = useState(false);
+
+  useEffect(() => {
+    const loadCars = async () => {
+      try {
+        setCarsLoading(true);
+
+        const token = localStorage.getItem("token");
+
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/profile/cars`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!res.ok) {
+          setCars([]);
+          return;
+        }
+
+        const data = await res.json();
+
+        console.log("CARS FROM API:", data);
+
+        const activeCars = data || [];
+
+        setCars(activeCars);
+
+        // если только одна машина — выбрать автоматически
+        if (activeCars.length === 1) {
+          setSelectedCar(activeCars[0]);
+        }
+
+      } catch (err) {
+        console.error("Cars load error:", err);
+      } finally {
+        setCarsLoading(false);
+      }
+    };
+
+    loadCars();
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (carRef.current && !carRef.current.contains(e.target)) {
+        setCarDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  
+
+  const formatCarName = (car) => {
+    if (!car) return "";
+
+    const color = car.color?.nameRu || car.customColor || "";
+    const brand = car.brand?.name || car.customBrand || "";
+    const model = car.model?.name || car.customModel || "";
+    const plate = car.plateNumber || "";
+
+    return `${color} ${brand} ${model} (${plate})`
+      .replace(/\s+/g, " ")
+      .trim();
+  };
+
+  const handleSwapCities = () => {
+    if (!fromCity && !toCity) return;
+
+    const temp = fromCity;
+    setFromCity(toCity);
+    setToCity(temp);
+  };
+
+  const handleCreateRoute = async () => {
+    if (!selectedCar) {
+      showToast("Выберите машину", "error");
+      return;
+    }
+    if (creating) return;
+
+    try {
+      setCreating(true);
+
+      const token = localStorage.getItem("token");
+
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/profile/routes`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            carId: selectedCar?._id,
+            fromCityId: fromCity?._id,
+            toCityId: toCity?._id,
+            departureAt,
+            seatsFront,
+            seatsBack,
+            priceFront,
+            priceBack,
+            comment: comment.trim(),
+          }),
+        }
+      );
+
+      if (!res.ok) {
+        showToast("Ошибка создания маршрута", "error");
+        return;
+      }
+
+      showToast("Маршрут успешно создан", "success");
+
+      setTimeout(() => {
+        navigate(`/${lang}/profile/routes`);
+      }, 800);
+
+    } catch (err) {
+      showToast("Ошибка сервера", "error");
+    } finally {
+      setCreating(false);
+    }
+  };
 
   return (
     <div className="min-h-screen flex flex-col bg-white text-gray-900">
@@ -146,15 +271,12 @@ const CreateRoute = () => {
       </header>
 
       {/* MAIN */}
-      <main
-        className="flex items-center"
-        style={{ minHeight: "calc(100vh - 96px)" }}
-      >
-        <div className="container-wide w-full pb-6">
-          <div className="flex flex-col lg:flex-row justify-between w-full gap-6">
+      <main className="flex flex-1 items-center">
+        <div className="container-wide w-full">
+          <div className="flex flex-col lg:flex-row w-full gap-6 pb-8">
 
             {/* LEFT BLOCK */}
-            <div className="w-full lg:w-1/2 max-w-[600px] self-center">
+            <div className="w-full lg:w-1/2 lg:max-h-[calc(100vh-120px)] lg:overflow-y-auto lg:no-scrollbar">
 
               <h1 className="text-3xl font-bold mb-8">{t("title")}</h1>
 
@@ -164,48 +286,143 @@ const CreateRoute = () => {
                 <div className="flex flex-col gap-5 lg:hidden">
 
                   <div className="flex gap-3 items-center">
-                    <FloatingInput
-                      label={t("from")}
-                      value={from}
-                      onChange={(e) => setFrom(e.target.value)}
-                    />
+                     <CityAutocompleteInput
+                        label={t("from")}
+                        value={fromCity}
+                        onSelect={setFromCity}
+                      />
 
                     <button
                       type="button"
-                      className="w-[52px] h-[52px] rounded-xl bg-gray-100 flex items-center justify-center"
+                      onClick={handleSwapCities}
+                      className="w-[52px] h-[52px] rounded-xl bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition"
                     >
                       <ArrowLeftRight size={20} />
                     </button>
                   </div>
 
-                  <FloatingInput
+                  <CityAutocompleteInput
                     label={t("to")}
-                    value={to}
-                    onChange={(e) => setTo(e.target.value)}
+                    value={toCity}
+                    onSelect={setToCity}
                   />
 
                   <FloatingButtonField
                     label={t("dateTime")}
-                    value={dateTime}
+                    value={
+                      departureAt
+                        ? new Date(departureAt).toLocaleString()
+                        : ""
+                    }
                     onClick={() => setDateModalOpen(true)}
                   />
 
                   <FloatingButtonField
                     label={t("seats")}
-                    value={seats}
+                    value={
+                      seatsFront || seatsBack
+                        ? `${seatsFront > 0 ? `${seatsFront} перед` : ""}${
+                            seatsFront > 0 && seatsBack > 0 ? " | " : ""
+                          }${seatsBack > 0 ? `${seatsBack} зад` : ""}`
+                        : ""
+                    }
                     onClick={() => setSeatsModalOpen(true)}
                   />
 
                   <FloatingButtonField
                     label={t("price")}
-                    value={price}
+                    value={
+                      priceFront || priceBack
+                        ? `${priceFront > 0 ? `${priceFront} сум` : ""}${
+                            priceFront > 0 && priceBack > 0 ? " | " : ""
+                          }${priceBack > 0 ? `${priceBack} сум` : ""}`
+                        : ""
+                    }
                     onClick={() => setPriceModalOpen(true)}
                   />
 
-                  <FloatingButtonField
-                    label={t("comment")}
+                  <div ref={carRef} className="relative w-full">
+                    <button
+                      type="button"
+                      onClick={() => setCarDropdownOpen((prev) => !prev)}
+                      className="
+                        relative w-full h-[52px] bg-gray-100
+                        rounded-xl px-4 text-left
+                        flex items-center
+                        focus:outline-none
+                      "
+                    >
+                      <span
+                        className={`
+                          absolute left-4 transition-all duration-200 text-gray-400
+                          ${selectedCar ? "text-[11px] top-1" : "text-[16px] top-1/2 -translate-y-1/2"}
+                        `}
+                      >
+                        Выберите машину
+                      </span>
+
+                      {selectedCar && (
+                        <span
+                          className="
+                            absolute left-4 top-1/2 -translate-y-1/2
+                            text-[16px] text-gray-900
+                            max-w-[85%] truncate
+                          "
+                        >
+                          {formatCarName(selectedCar)}
+                        </span>
+                      )}
+                    </button>
+
+                    {carDropdownOpen && (
+                      <div className="
+                        absolute top-[56px] left-0 w-full
+                        bg-white border border-gray-200
+                        rounded-xl shadow-lg
+                        z-50 max-h-[250px] overflow-y-auto
+                      ">
+
+                        {carsLoading && (
+                          <div className="p-3 text-sm text-gray-500">
+                            Загрузка...
+                          </div>
+                        )}
+
+                        {!carsLoading && cars.length === 0 && (
+                          <div className="p-6 text-center text-sm text-gray-500">
+                            <div>У вас нет машин</div>
+                            <button
+                              onClick={() => navigate(`/${lang}/profile/transport/add`)}
+                              className="text-blue-600 underline mt-2"
+                            >
+                              добавьте машину
+                            </button>
+                          </div>
+                        )}
+
+                        {!carsLoading && cars.map((car) => (
+                          <div
+                            key={car._id}
+                            onClick={() => {
+                              setSelectedCar(car);
+                              setCarDropdownOpen(false);
+                            }}
+                            className="px-3 py-3 mx-3 my-3 rounded-lg cursor-pointer hover:bg-gray-100 transition text-sm"
+                          >
+                            {formatCarName(car)}
+                          </div>
+                        ))}
+
+                      </div>
+                    )}
+                  </div>
+
+                  <textarea
+                    placeholder="Комментарии"
                     value={comment}
-                    onClick={() => setCommentModalOpen(true)}
+                    maxLength={500}
+                    onChange={(e) => setComment(e.target.value)}
+                    className="w-full bg-gray-100 rounded-xl p-4 resize-y min-h-[120px] focus:outline-none"
                   />
 
                 </div>
@@ -214,55 +431,155 @@ const CreateRoute = () => {
                 <div className="hidden lg:flex flex-col gap-5">
 
                   <div className="flex gap-3 items-center w-full">
-                    <FloatingInput
+                    <CityAutocompleteInput
                       label={t("from")}
-                      value={from}
-                      onChange={(e) => setFrom(e.target.value)}
+                      value={fromCity}
+                      onSelect={setFromCity}
                     />
 
                     <button
                       type="button"
-                      className="min-w-[52px] min-h-[52px] rounded-xl bg-gray-100 flex items-center justify-center"
+                      onClick={handleSwapCities}
+                      className="min-w-[52px] min-h-[52px] rounded-xl bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition"
                     >
                       <ArrowLeftRight size={20} />
                     </button>
 
-                    <FloatingInput
+                    <CityAutocompleteInput
                       label={t("to")}
-                      value={to}
-                      onChange={(e) => setTo(e.target.value)}
+                      value={toCity}
+                      onSelect={setToCity}
                     />
                   </div>
 
                   <div className="flex gap-3">
                     <FloatingButtonField
                       label={t("dateTime")}
-                      value={dateTime}
+                      value={
+                        departureAt
+                          ? new Date(departureAt).toLocaleString()
+                          : ""
+                      }
                       onClick={() => setDateModalOpen(true)}
                     />
 
                     <FloatingButtonField
                       label={t("seats")}
-                      value={seats}
+                      value={
+                        seatsFront || seatsBack
+                          ? `${seatsFront > 0 ? `${seatsFront} перед` : ""}${
+                              seatsFront > 0 && seatsBack > 0 ? " | " : ""
+                            }${seatsBack > 0 ? `${seatsBack} зад` : ""}`
+                          : ""
+                      }
                       onClick={() => setSeatsModalOpen(true)}
                     />
                   </div>
 
                   <div className="flex gap-3">
+                    <div className="flex-1">
                     <FloatingButtonField
                       label={t("price")}
-                      value={price}
+                      value={
+                        priceFront || priceBack
+                          ? `${priceFront > 0 ? `${priceFront} сум` : ""}${
+                              priceFront > 0 && priceBack > 0 ? " | " : ""
+                            }${priceBack > 0 ? `${priceBack} сум` : ""}`
+                          : ""
+                      }
                       onClick={() => setPriceModalOpen(true)}
                     />
+                    </div>
+                    
+                    <div ref={carRef} className="relative flex-1">
+                      <button
+                        type="button"
+                        onClick={() => setCarDropdownOpen((prev) => !prev)}
+                        className="
+                          relative w-full h-[52px] bg-gray-100
+                          rounded-xl px-4 text-left
+                          focus:outline-none
+                        "
+                      >
+                        <span
+                          className={`
+                            absolute left-4 transition-all duration-200 text-gray-400
+                            ${selectedCar ? "text-[11px] top-1" : "text-[16px] top-1/2 -translate-y-1/2"}
+                          `}
+                        >
+                          Выберите машину
+                        </span>
 
-                    <FloatingButtonField
-                      label={t("comment")}
-                      value={comment}
-                      onClick={() => setCommentModalOpen(true)}
-                    />
+                        {selectedCar && (
+                          <span
+                            className="
+                              absolute left-4 top-1/2 -translate-y-1/2
+                              text-[16px] text-gray-900 pt-3
+                              max-w-[85%] truncate
+                            "
+                          >
+                            {formatCarName(selectedCar)}
+                          </span>
+                        )}
+                      </button>
+
+                      {/* DROPDOWN */}
+                      {carDropdownOpen && (
+                        <div className="
+                          absolute top-[56px] left-0 w-full
+                          bg-white border border-gray-200
+                          rounded-xl
+                          z-50 max-h-[250px] overflow-y-auto
+                        ">
+
+                          {carsLoading && (
+                            <div className="p-3 text-sm text-gray-500">
+                              Загрузка...
+                            </div>
+                          )}
+
+                          {!carsLoading && cars.length === 0 && (
+                            <div className="p-6 text-center text-sm text-gray-500">
+                              <div>У вас нет машин</div>
+                              <button
+                                onClick={() => navigate(`/${lang}/profile/transport/add`)}
+                                className="text-blue-600 underline mt-2"
+                              >
+                                добавьте машину
+                              </button>
+                            </div>
+                          )}
+
+                          {!carsLoading && cars.map((car) => (
+                            <div
+                              key={car._id}
+                              onClick={() => {
+                                setSelectedCar(car);
+                                setCarDropdownOpen(false);
+                              }}
+                              className="px-3 py-3 mx-3 my-3 rounded-lg cursor-pointer hover:bg-gray-100 transition text-sm"
+                            >
+                              {formatCarName(car)}
+                            </div>
+                          ))}
+
+                        </div>
+                      )}
+                    </div>
+                    
                   </div>
 
+                  <textarea
+                    placeholder="Комментарии"
+                    value={comment}
+                    maxLength={500}
+                    onChange={(e) => setComment(e.target.value)}
+                    className="w-full bg-gray-100 rounded-xl p-4 resize-y min-h-[120px] focus:outline-none"
+                  />
+
                 </div>
+
+                
 
                 {/* AGREEMENT */}
                 <label className="flex items-start gap-3 text-sm cursor-pointer">
@@ -279,7 +596,8 @@ const CreateRoute = () => {
 
                 {/* BUTTON */}
                 <button
-                  disabled={!agree}
+                  disabled={!agree || creating}
+                  onClick={handleCreateRoute}
                   className={`
                     w-full h-[54px] rounded-xl font-medium text-[16px]
                     text-white bg-[#32BB78]
@@ -287,7 +605,11 @@ const CreateRoute = () => {
                     ${!agree && "opacity-50 cursor-not-allowed"}
                   `}
                 >
-                  {t("createBtn")}
+                  {creating ? (
+                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mx-auto" />
+                  ) : (
+                    t("createBtn")
+                  )}
                 </button>
 
                 {/* WARNING */}
@@ -315,8 +637,9 @@ const CreateRoute = () => {
             </div>
 
             {/* RIGHT BLOCK */}
-            <div className="w-full lg:w-1/2 flex justify-center">
-              <div className="relative rounded-[32px] overflow-hidden shadow-lg w-full" style={{ maxWidth: "720px", height: "620px" }} >
+            <div className="w-full lg:w-1/2">
+              <div>
+              <div className="relative rounded-[32px] overflow-hidden shadow-lg w-full h-[600px]">
                 <img src={bgImg} alt="banner" className="w-full h-full object-cover" />
 
                 <div className="absolute left-6 right-6 bottom-6 bg-white rounded-2xl shadow-md p-6 flex flex-col sm:flex-row gap-4">
@@ -331,6 +654,7 @@ const CreateRoute = () => {
                   </div>
                 </div>
               </div>
+              </div>
             </div>
 
           </div>
@@ -340,40 +664,33 @@ const CreateRoute = () => {
       {/* MODALS */}
       <DateTimeModal
         isOpen={dateModalOpen}
-        initialValue={dateTime}
+        initialValue={departureAt}
         onClose={() => setDateModalOpen(false)}
-        onSave={(value) => setDateTime(value)}
+        onSave={(value) => {
+          // value должен быть ISO строкой или Date
+          const iso = new Date(value).toISOString();
+          setDepartureAt(iso);
+        }}
       />
 
       <SeatsModal
         isOpen={seatsModalOpen}
-        initialValue={prepareSeatsForModal(seats)}
+        initialValue={{ front: seatsFront, back: seatsBack }}
         onClose={() => setSeatsModalOpen(false)}
         onSave={({ front, back }) => {
-          const f = front > 0 ? `${front} ${front === 1 ? "место" : "места"}` : "";
-          const b = back > 0 ? `${back} ${back === 1 ? "место" : "места"}` : "";
-          const formatted = [f, b].filter(Boolean).join(" | ");
-          setSeats(formatted);
+          setSeatsFront(front);
+          setSeatsBack(back);
         }}
       />
 
       <PriceModal
         isOpen={priceModalOpen}
-        initialValue={price}
+        initialValue={{ front: priceFront, back: priceBack }}
         onClose={() => setPriceModalOpen(false)}
-        onSave={(value) => {
-          const front = value.frontPrice ? `${value.frontPrice} сум` : "";
-          const back = value.backPrice ? `${value.backPrice} сум` : "";
-          const formatted = [front, back].filter(Boolean).join(" | ");
-          setPrice(formatted);
+        onSave={({ frontPrice, backPrice }) => {
+          setPriceFront(frontPrice);
+          setPriceBack(backPrice);
         }}
-      />
-
-      <CommentModal
-        isOpen={commentModalOpen}
-        initialValue={comment}
-        onClose={() => setCommentModalOpen(false)}
-        onSave={(value) => setComment(value)}
       />
 
     </div>

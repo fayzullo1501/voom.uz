@@ -11,7 +11,7 @@ import paymentRoutes from "./routes/payment.routes.js";
 import carsRoutes from "./routes/cars.routes.js";
 import userCarsRoutes from "./routes/userCars.routes.js";
 import cityRoutes from "./routes/city.routes.js";
-
+import routeRoutes from "./routes/route.routes.js";
 
 
 
@@ -67,6 +67,11 @@ app.use("/api/payment", paymentRoutes);
  */
 app.use("/api/cars", carsRoutes);
 app.use("/api/profile/cars", userCarsRoutes);
+/**
+ * DRIVER ROUTES (создание маршрутов)
+ */
+app.use("/api/profile/routes", routeRoutes);
+app.use("/api/routes", routeRoutes);
 /**
  * CITIES (справочник городов)
  */

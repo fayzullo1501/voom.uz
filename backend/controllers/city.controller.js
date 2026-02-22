@@ -273,3 +273,18 @@ exports.importCitiesFromSource = async (req, res) => {
     });
   }
 };
+
+// GET /api/cities/:id
+exports.getCityById = async (req, res) => {
+  try {
+    const city = await City.findById(req.params.id);
+
+    if (!city) {
+      return res.status(404).json({ message: "Город не найден" });
+    }
+
+    res.json(city);
+  } catch (err) {
+    res.status(500).json({ message: "Ошибка сервера", error: err.message });
+  }
+};

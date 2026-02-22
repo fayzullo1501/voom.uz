@@ -38,7 +38,10 @@ const DatePickerModal = ({ isOpen, selectedDate, onSelect }) => {
   for (let i = 1; i < firstDay; i++) days.push(null);
   for (let d = 1; d <= daysInMonth; d++) days.push(d);
 
-  const canGoPrev = !isCurrentMonth;
+  const firstDayOfCurrentMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+  const firstDayOfViewingMonth = new Date(year, month, 1);
+
+  const canGoPrev = firstDayOfViewingMonth > firstDayOfCurrentMonth;
 
   return (
     <div className="fixed md:absolute z-50 bg-white rounded-2xl shadow-xl p-5 w-[340px] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 md:left-0 md:top-auto md:bottom-full md:translate-x-0 md:translate-y-0 md:mb-6">
@@ -69,7 +72,7 @@ const DatePickerModal = ({ isOpen, selectedDate, onSelect }) => {
           const dateObj = new Date(year, month, day);
           dateObj.setHours(0, 0, 0, 0);
 
-          const isPast = isCurrentMonth && dateObj < today;
+          const isPast = dateObj < today;
           const isToday = dateObj.getTime() === today.getTime();
           const isActive = activeDate && dateObj.getTime() === activeDate.getTime();
 

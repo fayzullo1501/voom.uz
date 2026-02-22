@@ -20,6 +20,9 @@ const env = {
   CLICK_MERCHANT_USER_ID: process.env.CLICK_MERCHANT_USER_ID,
   CLICK_SECRET_KEY: process.env.CLICK_SECRET_KEY,
   CLICK_CALLBACK_URL: process.env.CLICK_CALLBACK_URL,
+
+  // ===== GOOGLE MAPS =====
+  GOOGLE_MAPS_API_KEY: process.env.GOOGLE_MAPS_API_KEY,
 };
 
 export default env;

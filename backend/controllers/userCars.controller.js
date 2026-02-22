@@ -26,7 +26,7 @@ const updateCarStatus = (car) => {
  */
 export const createUserCar = async (req, res) => {
   try {
-    const userId = req.user.id;
+    const userId = req.user._id;
 
     const {
       brandId,
@@ -94,7 +94,7 @@ export const createUserCar = async (req, res) => {
  */
 export const getMyCars = async (req, res) => {
   try {
-    const cars = await UserCar.find({ user: req.user.id })
+    const cars = await UserCar.find({ user: req.user._id })
       .populate("brand", "name logo")
       .populate("model", "name")
       .populate("color", "nameRu nameUz nameEn hex")
@@ -115,7 +115,7 @@ export const getMyCars = async (req, res) => {
  */
 export const getMyCarById = async (req, res) => {
   try {
-    const car = await UserCar.findOne({ _id: req.params.id, user: req.user.id })
+    const car = await UserCar.findOne({ _id: req.params.id, user: req.user._id })
       .populate("brand", "name logo")
       .populate("model", "name")
       .populate("color", "nameRu nameUz nameEn hex");
@@ -139,7 +139,7 @@ export const updateMyCar = async (req, res) => {
   try {
     const { plateNumber, productionYear } = req.body;
 
-    const car = await UserCar.findOne({ _id: req.params.id, user: req.user.id });
+    const car = await UserCar.findOne({ _id: req.params.id, user: req.user._id });
     if (!car) return res.status(404).json({ message: "Transport not found" });
 
     if (plateNumber !== undefined) car.plateNumber = plateNumber || null;
@@ -162,7 +162,7 @@ export const updateMyCar = async (req, res) => {
  */
 export const uploadCarPhoto = async (req, res) => {
   try {
-    const car = await UserCar.findOne({ _id: req.params.id, user: req.user.id });
+    const car = await UserCar.findOne({ _id: req.params.id, user: req.user._id });
     if (!car) return res.status(404).json({ message: "Transport not found" });
 
     if (!req.file) {
@@ -206,7 +206,7 @@ export const uploadCarPhoto = async (req, res) => {
  */
 export const deleteCarPhoto = async (req, res) => {
   try {
-    const car = await UserCar.findOne({ _id: req.params.id, user: req.user.id });
+    const car = await UserCar.findOne({ _id: req.params.id, user: req.user._id });
     if (!car) return res.status(404).json({ message: "Transport not found" });
 
     const photo = car.photos.id(req.params.photoId);
@@ -237,7 +237,7 @@ export const deleteCarPhoto = async (req, res) => {
  */
 export const deleteMyCar = async (req, res) => {
   try {
-    const car = await UserCar.findOne({ _id: req.params.id, user: req.user.id });
+    const car = await UserCar.findOne({ _id: req.params.id, user: req.user._id });
     if (!car) return res.status(404).json({ message: "Transport not found" });
 
     for (const photo of car.photos) {

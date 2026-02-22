@@ -8,6 +8,7 @@ const router = Router();
 
 // 🔹 Публичный список городов + поиск + пагинация
 router.get("/", cityController.getCities);
+router.get("/:id", cityController.getCityById);
 
 // 🔹 Только admin
 router.post("/", auth, adminOnly, cityController.createCity);

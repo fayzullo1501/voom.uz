@@ -80,6 +80,7 @@ export const login = async (req, res) => {
  * ME
  */
 export const me = async (req, res) => {
+  res.set("Cache-Control", "no-store"); // 🔥 ОТКЛЮЧАЕМ КЭШ
   const user = await User.findById(req.user.id).select("-passwordHash");
   if (!user) {
     return res.status(404).json({ message: "user not found" });
@@ -90,6 +91,12 @@ export const me = async (req, res) => {
     user.emailVerified === true &&
     user.profilePhoto?.status === "approved" &&
     user.passport?.status === "approved";
+
+  // 🔥 КЛЮЧЕВОЕ ИСПРАВЛЕНИЕ
+  const safeProfilePhoto =
+    user.profilePhoto?.status === "approved"
+      ? user.profilePhoto
+      : { status: "empty", url: null };
 
   res.json({
     id: user._id,
@@ -102,9 +109,9 @@ export const me = async (req, res) => {
     about: user.about,
     phoneVerified: user.phoneVerified,
     emailVerified: user.emailVerified,
-    profilePhoto: user.profilePhoto,
+    profilePhoto: safeProfilePhoto, // ← вот это меняем
     passport: user.passport,
-    verified, // ✅ ВАЖНО
+    verified,
     createdAt: user.createdAt,
   });
 };

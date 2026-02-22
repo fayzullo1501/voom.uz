@@ -1,22 +1,57 @@
 // src/pages/routes/RouteDetails.jsx
-import React, { useState } from "react";
-import { Share2, ChevronLeft, ChevronRight, Star, Phone, Armchair } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { Share2, ChevronLeft, ChevronRight, Star, Phone, Armchair, Loader2 } from "lucide-react";
 import Header from "../../components/layout/Header";
 import Footer from "../../components/layout/Footer";
-import carImg1 from "../../assets/mycar1.jpg";
-import carImg2 from "../../assets/mycar2.jpg";
-import avatar from "../../assets/driverbookingtest.jpg";
-import chevroletLogo from "../../assets/chevrolet.png";
+import { useNavigate, useParams } from "react-router-dom";
 import uzFlag from "../../assets/flag-uz.svg";
 import userVerified from "../../assets/userverified.svg";
-import { useNavigate } from "react-router-dom";
+import avatarPlaceholder from "../../assets/avatar-placeholder.svg";
 
-const images = [carImg1, carImg2, carImg1, carImg2];
+const API_URL = import.meta.env.VITE_API_URL;
 
 const RouteDetails = () => {
-  const [active, setActive] = useState(0);
+  const { id } = useParams();
   const navigate = useNavigate();
 
+  const [route, setRoute] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [active, setActive] = useState(0);
+
+  useEffect(() => {
+    const fetchRoute = async () => {
+      try {
+        const res = await fetch(`${API_URL}/api/routes/${id}`);
+        if (!res.ok) throw new Error();
+
+        const data = await res.json();
+        setRoute(data);
+      } catch (err) {
+        console.error("Route load error", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchRoute();
+  }, [id]);
+
+  if (loading)
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <Loader2 className="w-10 h-10 text-[#000] animate-spin" />
+      </div>
+    );
+  if (!route) return <div className="p-10">Маршрут не найден</div>;
+
+  const plate = route.car?.plateNumber || "";
+  const regionCode = plate.slice(0, 2);
+  const restPlate = plate.slice(2).trim();
+
+  const isVerified =
+  route.driver?.passport?.status === "approved" &&
+  route.driver?.profilePhoto?.status === "approved" &&
+  route.driver?.phoneVerified === true;
 
   return (
     <div className="min-h-screen bg-white">
@@ -46,27 +81,27 @@ const RouteDetails = () => {
           <div>
             <div className="flex flex-col lg:flex-row gap-4">
               <div className="relative flex-1 rounded-2xl overflow-hidden">
-                <img src={images[active]} alt="" className="w-full h-[260px] lg:h-[420px] object-cover" />
+                <img src={route.car?.photos?.[active]?.url} className="w-full h-[260px] lg:h-[420px] object-cover" />
 
-                <button onClick={() => setActive(active === 0 ? images.length - 1 : active - 1)} className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 bg-black/30 text-white rounded-full flex items-center justify-center">
+                <button onClick={() => setActive(active === 0 ? route.car?.photos?.length - 1 : active - 1)} className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 bg-black/30 text-white rounded-full flex items-center justify-center">
                   <ChevronLeft size={18} />
                 </button>
 
-                <button onClick={() => setActive(active === images.length - 1 ? 0 : active + 1)} className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 bg-black/30 text-white rounded-full flex items-center justify-center">
+                <button onClick={() => setActive(active === route.car?.photos?.length - 1 ? 0 : active + 1)} className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 bg-black/30 text-white rounded-full flex items-center justify-center">
                   <ChevronRight size={18} />
                 </button>
 
                 <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-2">
-                  {images.map((_, i) => (
+                  {route.car?.photos?.map((_, i) => (
                     <div key={i} className={`w-2.5 h-2.5 rounded-full ${active === i ? "bg-white" : "bg-white/40"}`} />
                   ))}
                 </div>
               </div>
 
               <div className="flex lg:flex-col gap-3 overflow-x-auto lg:overflow-visible">
-                {images.map((img, i) => (
+                {route.car?.photos?.map((img, i) => (
                   <button key={i} onClick={() => setActive(i)} className="w-[90px] h-[70px] flex-shrink-0 rounded-xl overflow-hidden">
-                    <img src={img} alt="" className={`w-full h-full object-cover transition ${active === i ? "opacity-100" : "opacity-60"}`} />
+                    <img src={img.url} alt="" className={`w-full h-full object-cover transition ${active === i ? "opacity-100" : "opacity-60"}`} />
                   </button>
                 ))}
               </div>
@@ -75,9 +110,9 @@ const RouteDetails = () => {
             {/* DRIVER */}
             <div className="mt-8 border rounded-2xl p-5 border-gray-300">
               <div className="flex items-center gap-4">
-                <img src={avatar} alt="" className="w-14 h-14 rounded-full object-cover" />
+                <img src={ route.driver?.profilePhoto?.url ? route.driver.profilePhoto.url : avatarPlaceholder } alt="" className="w-14 h-14 rounded-full object-cover" />
                 <div>
-                  <div className="text-[16px] font-semibold">Fayzullo Abdulazizov</div>
+                  <div className="text-[16px] font-semibold">{route.driver?.firstName} {route.driver?.lastName}</div>
                   <div className="flex items-center gap-1 text-[14px] text-gray-500">
                     <Star size={14} className="fill-yellow-400 text-yellow-400" />
                     5.0 · 4 отзыва
@@ -86,24 +121,26 @@ const RouteDetails = () => {
               </div>
 
               <div className="mt-4 flex flex-col gap-2 text-[14px] text-gray-700">
-                <div className="flex items-center gap-2">
-                  <img src={userVerified} alt="" className="w-5 h-5" />
-                  <span>Профиль подтвержден</span>
-                </div>
+                {isVerified && (
+                  <div className="flex items-center gap-2">
+                    <img src={userVerified} alt="" className="w-5 h-5" />
+                    <span>Профиль подтвержден</span>
+                  </div>
+                )}
                 <div className="flex items-center gap-2">
                   <Phone size={16} />
-                  <span>+998 (99) 996-16-96</span>
+                  <span>{route.driver?.phone}</span>
                 </div>
               </div>
 
               <div className="mt-4 border-t pt-4 flex flex-col gap-2 text-[14px] text-gray-700 border-gray-300">
                 <div className="flex items-center gap-2">
                   <Armchair size={16} />
-                  <span>Переднее место — 150 000 сум (1 свободно)</span>
+                  <span>Переднее место — {route.priceFront.toLocaleString("ru-RU")} сум ({route.availableSeatsFront} свободно)</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Armchair size={16} />
-                  <span>Заднее место — 80 000 сум (2 свободно)</span>
+                  <span>Заднее место — {route.priceBack.toLocaleString("ru-RU")} сум ({route.availableSeatsBack} свободно)</span>
                 </div>
               </div>
             </div>
@@ -114,11 +151,10 @@ const RouteDetails = () => {
             <div className="lg:sticky lg:top-24">
               <div className=" border border-gray-300 rounded-2xl p-6">
                 <div className="text-[22px] font-bold mb-1">Маршрут</div>
-                <div className="text-[16px] text-gray-600 mb-6">Суббота, 12 августа</div>
-
+                <div className="text-[16px] text-gray-600 mb-6">{new Date(route.departureAt).toLocaleDateString("ru-RU", { weekday: "long", day: "numeric", month: "long", })}</div>
                 <div className="grid grid-cols-[auto_24px_1fr] gap-3">
                   <div className="flex flex-col gap-[38px] text-[15px] font-medium">
-                    <div>23:00</div>
+                    <div>{new Date(route.departureAt).toLocaleTimeString("ru-RU", { hour: "2-digit", minute: "2-digit", })}</div>
                     <div>03:00</div>
                   </div>
 
@@ -130,15 +166,15 @@ const RouteDetails = () => {
 
                   <div className="flex flex-col gap-4">
                     <div>
-                      <div className="text-[18px] font-bold">FERGHANA</div>
+                      <div className="text-[18px] font-bold">{route.fromCity?.nameRu}</div>
                       <div className="text-[14px] text-gray-500">
-                        Ферганская область, Узбекистан
+                        {route.fromCity?.region}
                       </div>
                     </div>
                     <div>
-                      <div className="text-[18px] font-bold">TASHKENT</div>
+                      <div className="text-[18px] font-bold">{route.toCity?.nameRu}</div>
                       <div className="text-[14px] text-gray-500">
-                        Ташкентская область, Узбекистан
+                        {route.toCity?.region}
                       </div>
                     </div>
                   </div>
@@ -147,12 +183,13 @@ const RouteDetails = () => {
                 <div className="mt-6 border-t pt-5 border-gray-300">
                   <div className="text-[22px] font-bold mb-3">Автомобиль</div>
                   <div className="flex items-center gap-3">
-                    <img src={chevroletLogo} alt="" className="w-12 h-10" />
+                    <img src={route.car?.brand?.logo?.url} alt="" className="w-12 h-10" />
                     <div>
                       <div className="text-[20px] font-semibold">
-                        Chevrolet Malibu 2 turbo
+                        {route.car?.brand?.name || route.car?.customBrand}{" "}
+                        {route.car?.model?.name || route.car?.customModel}
                       </div>
-                      <div className="text-[16px] text-gray-500">Черный</div>
+                      <div className="text-[16px] text-gray-500">{route.car?.color}</div>
                     </div>
                   </div>
                 </div>
@@ -161,11 +198,11 @@ const RouteDetails = () => {
                   <div className="text-[18px] font-bold">Номер машины</div>
                   <div className="inline-flex items-center border-2 border-black rounded-lg overflow-hidden bg-white max-w-full">
                     <div className="px-2 py-1 text-[14px] lg:px-3 lg:py-2 lg:text-[18px] font-semibold border-r-2 border-black">
-                      01
+                      {regionCode}
                     </div>
                     <div className="flex items-center gap-2 px-2 py-1 lg:gap-3 lg:px-3 lg:py-2">
                       <div className="text-[14px] lg:text-[18px] font-semibold tracking-widest">
-                        F 001 AA
+                        {restPlate}
                       </div>
                       <div className="flex flex-col items-center">
                         <img

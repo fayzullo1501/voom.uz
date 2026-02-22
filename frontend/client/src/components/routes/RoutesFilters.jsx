@@ -2,7 +2,38 @@
 import React from "react";
 import userVerified from "../../assets/userverified.svg";
 
-const RoutesFilters = ({ sort, setSort, timeFilters, toggleTime, verifiedOnly, setVerifiedOnly }) => {
+  const RoutesFilters = ({
+    routes,
+    sort,
+    setSort,
+    timeFilters,
+    toggleTime,
+    verifiedOnly,
+    setVerifiedOnly,
+    verifiedCount
+  }) => {
+
+  const timeCounts = {
+    before6: 0,
+    morning: 0,
+    day: 0,
+    after18: 0,
+  };
+
+  (routes || [])
+    .filter(route =>
+      verifiedOnly
+        ? route.driver?.passport?.status === "approved"
+        : true
+    )
+    .forEach((route) => {
+    const hour = new Date(route.departureAt).getHours();
+
+    if (hour < 6) timeCounts.before6++;
+    else if (hour < 12) timeCounts.morning++;
+    else if (hour < 18) timeCounts.day++;
+    else timeCounts.after18++;
+  });
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
@@ -29,11 +60,11 @@ const RoutesFilters = ({ sort, setSort, timeFilters, toggleTime, verifiedOnly, s
       <div className="text-[18px] font-semibold mb-4">Время выезда</div>
       <div className="space-y-4">
         {[
-          ["before6", "До 06:00", 1],
-          ["morning", "06:00 - 12:00", 12],
-          ["day", "12:00 - 18:00", 6],
-          ["after18", "После 18:00", 0],
-        ].map(([key, label, count]) => (
+          ["before6", "До 06:00"],
+          ["morning", "06:00 - 12:00"],
+          ["day", "12:00 - 18:00"],
+          ["after18", "После 18:00"],
+        ].map(([key, label]) => (
           <label key={key} className="flex items-center justify-between text-[15px] cursor-pointer">
             <div className="flex items-center gap-3">
               <input type="checkbox" checked={timeFilters[key]} onChange={() => toggleTime(key)} className="sr-only" />
@@ -46,7 +77,9 @@ const RoutesFilters = ({ sort, setSort, timeFilters, toggleTime, verifiedOnly, s
               </span>
               {label}
             </div>
-            <span className="text-gray-700">{count}</span>
+            <span className="text-gray-700">
+              {timeCounts[key]}
+            </span>
           </label>
         ))}
       </div>
@@ -67,7 +100,9 @@ const RoutesFilters = ({ sort, setSort, timeFilters, toggleTime, verifiedOnly, s
           Профиль подтвержден
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-gray-700">1</span>
+          <span className="text-gray-700">
+            {verifiedCount}
+          </span>
           <img src={userVerified} className="w-4 h-4" />
         </div>
       </label>
