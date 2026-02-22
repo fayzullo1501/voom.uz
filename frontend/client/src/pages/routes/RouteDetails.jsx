@@ -155,7 +155,14 @@ const RouteDetails = () => {
                 <div className="grid grid-cols-[auto_24px_1fr] gap-3">
                   <div className="flex flex-col gap-[38px] text-[15px] font-medium">
                     <div>{new Date(route.departureAt).toLocaleTimeString("ru-RU", { hour: "2-digit", minute: "2-digit", })}</div>
-                    <div>03:00</div>
+                    <div>
+                      {route.arrivalAt
+                        ? new Date(route.arrivalAt).toLocaleTimeString("ru-RU", {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })
+                        : "--:--"}
+                    </div>
                   </div>
 
                   <div className="flex flex-col items-center">
