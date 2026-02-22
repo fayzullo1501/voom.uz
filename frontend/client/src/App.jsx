@@ -131,9 +131,9 @@ function App() {
           {/* Главная — Маршруты-результаты*/}
           <Route path="/:lang/routes" element={<LangWrapper Component={RoutesResults} />} />
           {/* Маршруты — Детали маршрута*/}
-          <Route path=":lang/routes/:id" element={<RouteDetails />} />
+          <Route path="/:lang/routes/:id" element={<RouteDetails />} />
           {/* Маршруты — Бронирование маршрута*/}
-          <Route path="/:lang/routes/details/booking" element={<LangWrapper Component={RouteBooking} />} />
+          <Route path="/:lang/routes/:id/booking" element={<LangWrapper Component={RouteBooking} />} />
 
 
 

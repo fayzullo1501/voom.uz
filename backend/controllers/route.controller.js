@@ -268,7 +268,8 @@ export const searchRoutes = async (req, res) => {
         path: "car",
         populate: [
           { path: "brand", select: "name logo.url logo.key status" },
-          { path: "model", select: "name" }
+          { path: "model", select: "name" },
+          { path: "color", select: "nameRu hex" }
         ]
       })
       .populate("driver", "firstName lastName phone phoneVerified passport profilePhoto")
@@ -311,6 +312,7 @@ export const getRouteByIdPublic = async (req, res) => {
         populate: [
           { path: "brand", select: "name logo.url logo.key status" },
           { path: "model", select: "name" },
+          { path: "color", select: "nameRu hex" },
         ],
       })
       .populate(

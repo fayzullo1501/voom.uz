@@ -12,6 +12,7 @@ import carsRoutes from "./routes/cars.routes.js";
 import userCarsRoutes from "./routes/userCars.routes.js";
 import cityRoutes from "./routes/city.routes.js";
 import routeRoutes from "./routes/route.routes.js";
+import bookingRoutes from "./routes/booking.routes.js";
 
 
 
@@ -72,6 +73,10 @@ app.use("/api/profile/cars", userCarsRoutes);
  */
 app.use("/api/profile/routes", routeRoutes);
 app.use("/api/routes", routeRoutes);
+/**
+ * BOOKINGS
+ */
+app.use("/api/bookings", bookingRoutes);
 /**
  * CITIES (справочник городов)
  */

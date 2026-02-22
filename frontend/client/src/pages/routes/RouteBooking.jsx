@@ -1,5 +1,6 @@
 // src/pages/routes/RouteBooking.jsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import { ChevronLeft, Wallet } from "lucide-react";
 import Header from "../../components/layout/Header";
 import Footer from "../../components/layout/Footer";
@@ -9,9 +10,30 @@ import uzFlag from "../../assets/flag-uz.svg";
 
 
 const RouteBooking = () => {
+  const { id: routeId } = useParams();
+
   const [activeField, setActiveField] = useState("");
-  const [payType, setPayType] = useState("cash");
+  const [payType, setPayType] = useState("card");
+
+  const [route, setRoute] = useState(null);
+  const [loadingRoute, setLoadingRoute] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
+
+  const [useMyData, setUseMyData] = useState(true);
+
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+
+  const [seatType, setSeatType] = useState(null);
+  const [seatsCount, setSeatsCount] = useState(null);
+  const [bookWholeCar, setBookWholeCar] = useState(false);
+
+  const [seatDropdownOpen, setSeatDropdownOpen] = useState(false);
+  const [countDropdownOpen, setCountDropdownOpen] = useState(false);
+
+  const [pickupLocation, setPickupLocation] = useState("");
+  const [dropoffLocation, setDropoffLocation] = useState("");
 
   const formatPhone = (value) => {
     const digits = value.replace(/\D/g, "").slice(0, 9);
@@ -24,6 +46,137 @@ const RouteBooking = () => {
 
     return result;
   };
+
+  useEffect(() => {
+    const fetchRoute = async () => {
+      try {
+        const res = await fetch(
+          `${import.meta.env.VITE_API_URL}/api/routes/${routeId}`
+        );
+        const data = await res.json();
+        setRoute(data);
+      } catch (err) {
+        console.error("route load error", err);
+      } finally {
+        setLoadingRoute(false);
+      }
+    };
+
+    fetchRoute();
+  }, [routeId]);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) return;
+
+        const res = await fetch(
+          `${import.meta.env.VITE_API_URL}/api/auth/me`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        const user = await res.json();
+
+        if (useMyData && user) {
+          setName(`${user.firstName || ""} ${user.lastName || ""}`.trim());
+          setEmail(user.email || "");
+          setPhone(formatPhone(user.phone || ""));
+        }
+      } catch (err) {
+        console.error("user load error", err);
+      }
+    };
+
+    fetchUser();
+  }, [useMyData]);
+
+
+  const handleBooking = async () => {
+    try {
+      setSubmitting(true);
+
+      const token = localStorage.getItem("token");
+
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/bookings`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            routeId,
+            passengerName: name,
+            passengerEmail: email,
+            passengerPhone: phone.replace(/\s/g, ""),
+            pickupLocation,
+            dropoffLocation,
+            seatType: bookWholeCar ? "whole" : seatType,
+            seatsCount: bookWholeCar
+              ? Number(route.availableSeatsFront) +
+                Number(route.availableSeatsBack)
+              : seatsCount,
+            paymentType: "card",
+          }),
+        }
+      );
+
+      if (!res.ok) {
+        const err = await res.json();
+        alert(err.message || "Ошибка бронирования");
+        return;
+      }
+
+      alert("Бронирование успешно создано");
+    } catch (err) {
+      console.error(err);
+      alert("Ошибка сервера");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const formatDate = (dateString) => {
+    if (!dateString) return "";
+
+    const date = new Date(dateString);
+
+    return date.toLocaleDateString("ru-RU", {
+      weekday: "long",
+      day: "numeric",
+      month: "long",
+    });
+  };
+
+  const formatTime = (dateString) => {
+    if (!dateString) return "";
+
+    const date = new Date(dateString);
+
+    return date.toLocaleTimeString("ru-RU", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
+  
+    const totalPrice =
+      route && !loadingRoute
+        ? bookWholeCar
+          ? (Number(route?.priceFront ?? 0) * Number(route?.availableSeatsFront ?? 0)) +
+            (Number(route?.priceBack ?? 0) * Number(route?.availableSeatsBack ?? 0))
+          : seatType && seatsCount
+            ? (seatType === "front"
+                ? Number(route?.priceFront ?? 0)
+                : Number(route?.priceBack ?? 0)
+              ) * Number(seatsCount)
+            : null
+        : null;
 
   return (
     <div className="min-h-screen bg-white">
@@ -56,6 +209,8 @@ const RouteBooking = () => {
 
             <div className="flex flex-col gap-4">
               <input
+                value={name}
+                onChange={(e) => setName(e.target.value)}
                 onFocus={() => setActiveField("name")}
                 placeholder="Ваше Имя, Фамилия"
                 className={`w-full h-[54px] rounded-xl px-4 text-[15px] outline-none border transition ${
@@ -66,12 +221,26 @@ const RouteBooking = () => {
               />
 
               <label className="flex items-center gap-3 text-[15px] text-gray-600">
-                <input type="checkbox" className="w-5 h-5 rounded-md" />
-                Заказать другому человеку
+                <input
+                  type="checkbox"
+                  checked={useMyData}
+                  onChange={(e) => {
+                    setUseMyData(e.target.checked);
+                    if (!e.target.checked) {
+                      setName("");
+                      setEmail("");
+                      setPhone("");
+                    }
+                  }}
+                  className="w-5 h-5 rounded-md"
+                />
+                Мои данные
               </label>
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 <input
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   onFocus={() => setActiveField("email")}
                   placeholder="Эл. почта (не обязательно)"
                   className={`h-[54px] rounded-xl px-4 border outline-none transition ${
@@ -125,15 +294,124 @@ const RouteBooking = () => {
                 />
               </div>
 
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                <button className="h-[54px] rounded-xl px-4 border border-gray-300 flex justify-between items-center">
-                  Переднее место
-                  <span>›</span>
-                </button>
-                <button className="h-[54px] rounded-xl px-4 border border-gray-300 flex justify-between items-center">
-                  Выберите кол-во мест
-                  <span>›</span>
-                </button>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 relative">
+
+                {/* ВЫБОР РЯДА */}
+                <div className="relative">
+                  <button
+                    onClick={() => setSeatDropdownOpen(!seatDropdownOpen)}
+                    disabled={bookWholeCar}
+                    className={`w-full h-[54px] rounded-xl px-4 border flex justify-between items-center ${
+                      bookWholeCar ? "bg-gray-100 text-gray-400" : "border-gray-300"
+                    }`}
+                  >
+                    {seatType
+                      ? seatType === "front"
+                        ? "Передний ряд"
+                        : "Задний ряд"
+                      : "Выберите ряд"}
+                    <span>›</span>
+                  </button>
+
+                  {seatDropdownOpen && route && (
+                    <div className="absolute z-10 mt-2 w-full bg-white border border-gray-300 rounded-xl shadow">
+                      {/* FRONT */}
+                      <button
+                        disabled={route.availableSeatsFront <= 0}
+                        onClick={() => {
+                          setSeatType("front");
+                          setSeatsCount(null);
+                          setSeatDropdownOpen(false);
+                        }}
+                        className={`w-full px-4 py-3 text-left ${
+                          route.availableSeatsFront <= 0
+                            ? "text-gray-400 bg-gray-100 cursor-not-allowed"
+                            : "hover:bg-gray-50"
+                        }`}
+                      >
+                        Передний ряд ({route.availableSeatsFront} мест)
+                      </button>
+
+                      {/* BACK */}
+                      <button
+                        disabled={route.availableSeatsBack <= 0}
+                        onClick={() => {
+                          setSeatType("back");
+                          setSeatsCount(null);
+                          setSeatDropdownOpen(false);
+                        }}
+                        className={`w-full px-4 py-3 text-left ${
+                          route.availableSeatsBack <= 0
+                            ? "text-gray-400 bg-gray-100 cursor-not-allowed"
+                            : "hover:bg-gray-50"
+                        }`}
+                      >
+                        Задний ряд ({route.availableSeatsBack} мест)
+                      </button>
+                    </div>
+                  )}
+                </div>
+
+                {/* ВЫБОР КОЛИЧЕСТВА */}
+                <div className="relative">
+                  <button
+                    disabled={!seatType || bookWholeCar}
+                    onClick={() => seatType && setCountDropdownOpen(!countDropdownOpen)}
+                    className={`w-full h-[54px] rounded-xl px-4 border flex justify-between items-center ${
+                      !seatType || bookWholeCar
+                      ? "bg-gray-100 text-gray-400"
+                      : "border-gray-300"
+                    }`}
+                  >
+                    {seatsCount ? `${seatsCount} мест` : "Кол-во мест"}
+                    <span>›</span>
+                  </button>
+
+                  {countDropdownOpen && seatType && route && (
+                    <div className="absolute z-10 mt-2 w-full bg-white border border-gray-300 rounded-xl shadow">
+                      {Array.from({
+                        length:
+                          seatType === "front"
+                            ? route.availableSeatsFront
+                            : route.availableSeatsBack,
+                      }).map((_, i) => (
+                        <button
+                          key={i}
+                          onClick={() => {
+                            setSeatsCount(i + 1);
+                            setCountDropdownOpen(false);
+                          }}
+                          className="w-full px-4 py-3 text-left hover:bg-gray-50"
+                        >
+                          {i + 1}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                <label className="flex items-center gap-3 text-[15px] text-gray-700">
+                  <input
+                    type="checkbox"
+                    checked={bookWholeCar}
+                    onChange={(e) => {
+                      const checked = e.target.checked;
+                      setBookWholeCar(checked);
+
+                      if (checked && route) {
+                        setSeatType(null);
+                        setSeatsCount(
+                          Number(route.availableSeatsFront) +
+                          Number(route.availableSeatsBack)
+                        );
+                      } else {
+                        setSeatsCount(null);
+                      }
+                    }}
+                    className="w-5 h-5 rounded-md"
+                  />
+                  Забронировать весь автомобиль
+                </label>
               </div>
 
               <textarea
@@ -199,37 +477,59 @@ const RouteBooking = () => {
               </div>
 
               <div className="border border-gray-300 rounded-xl p-4">
-                <div className="font-semibold mb-3 text-[22px]">
-                  Суббота, 12 Августа
-                </div>
-
-                <div className="grid grid-cols-[auto_24px_1fr] gap-3">
-                  <div className="flex flex-col gap-[38px] text-[15px] font-medium">
-                    <div>23:00</div>
-                    <div>03:00</div>
-                  </div>
-
-                  <div className="flex flex-col items-center">
-                    <div className="w-4 h-4 rounded-full border-2 border-black bg-white" />
-                    <div className="w-[2px] h-[52px] bg-black" />
-                    <div className="w-4 h-4 rounded-full border-2 border-black bg-white" />
-                  </div>
-
-                  <div className="flex flex-col gap-4">
-                    <div>
-                      <div className="text-[18px] font-bold">FERGHANA</div>
-                      <div className="text-[14px] text-gray-500">
-                        Ферганская область, Узбекистан
+                  {route && (
+                    <>
+                      <div className="font-semibold mb-3 text-[22px]">
+                        {formatDate(route.departureAt)}
                       </div>
-                    </div>
-                    <div>
-                      <div className="text-[18px] font-bold">TASHKENT</div>
-                      <div className="text-[14px] text-gray-500">
-                        Ташкентская область, Узбекистан
+
+                      <div className="grid grid-cols-[auto_24px_1fr] gap-3">
+                        <div className="flex flex-col gap-[38px] text-[15px] font-medium">
+                          <div>
+                            {new Date(route.departureAt).toLocaleTimeString("ru-RU", {
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            })}
+                          </div>
+
+                          <div>
+                            {route.arrivalAt
+                              ? new Date(route.arrivalAt).toLocaleTimeString("ru-RU", {
+                                  hour: "2-digit",
+                                  minute: "2-digit",
+                                })
+                              : "--:--"}
+                          </div>
+                        </div>
+
+                        <div className="flex flex-col items-center">
+                          <div className="w-4 h-4 rounded-full border-2 border-black bg-white" />
+                          <div className="w-[2px] h-[52px] bg-black" />
+                          <div className="w-4 h-4 rounded-full border-2 border-black bg-white" />
+                        </div>
+
+                        <div className="flex flex-col gap-4">
+                          <div>
+                            <div className="text-[18px] font-bold">
+                              {route.fromCity?.nameRu}
+                            </div>
+                            <div className="text-[14px] text-gray-500">
+                              {route.fromCity?.region}
+                            </div>
+                          </div>
+
+                          <div>
+                            <div className="text-[18px] font-bold">
+                              {route.toCity?.nameRu}
+                            </div>
+                            <div className="text-[14px] text-gray-500">
+                              {route.toCity?.region}
+                            </div>
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  </div>
-                </div>
+                    </>
+                  )}
               </div>
 
               <div className="mt-4 border border-gray-300 rounded-xl p-4">
@@ -238,12 +538,20 @@ const RouteBooking = () => {
                 </div>
                 <div className="flex mt-6 border-t pt-5 border-gray-300 justify-between text-[18px]">
                   <span>Всего</span>
-                  <span className="font-bold">132 000 сум</span>
+                  <span className="font-bold">
+                    {totalPrice
+                      ? `${totalPrice.toLocaleString("ru-RU")} сум`
+                      : "—"}
+                  </span>
                 </div>
               </div>
 
-              <button className="w-full h-[56px] mt-4 bg-[#32BB78] text-white rounded-xl text-[17px] font-semibold hover:bg-[#2aa86e] transition">
-                Забронировать
+              <button
+                disabled={submitting}
+                onClick={handleBooking}
+                className="w-full h-[56px] mt-4 bg-[#32BB78] text-white rounded-xl text-[17px] font-semibold hover:bg-[#2aa86e] transition"
+              >
+                {submitting ? "Загрузка..." : "Забронировать"}
               </button>
             </div>
           </div>

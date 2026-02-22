@@ -11,7 +11,7 @@ import avatarPlaceholder from "../../assets/avatar-placeholder.svg";
 const API_URL = import.meta.env.VITE_API_URL;
 
 const RouteDetails = () => {
-  const { id } = useParams();
+  const { id, lang } = useParams();
   const navigate = useNavigate();
 
   const [route, setRoute] = useState(null);
@@ -49,9 +49,44 @@ const RouteDetails = () => {
   const restPlate = plate.slice(2).trim();
 
   const isVerified =
-  route.driver?.passport?.status === "approved" &&
-  route.driver?.profilePhoto?.status === "approved" &&
-  route.driver?.phoneVerified === true;
+    route.driver?.passport?.status === "approved" &&
+    route.driver?.profilePhoto?.status === "approved" &&
+    route.driver?.phoneVerified === true;
+
+  const formatPhone = (phone) => {
+    if (!phone) return "";
+
+    // убираем всё кроме цифр
+    const digits = phone.replace(/\D/g, "");
+
+    // если номер уже с 998
+    const normalized = digits.startsWith("998")
+      ? digits.slice(3)
+      : digits;
+
+    // ожидаем 9 цифр
+    if (normalized.length !== 9) return `+998 ${normalized}`;
+
+    return `+998 ${normalized.slice(0, 2)} ${normalized.slice(2, 5)} ${normalized.slice(5, 7)} ${normalized.slice(7, 9)}`;
+  };
+
+  const handleShare = async () => {
+    const shareUrl = window.location.origin + window.location.pathname;
+
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: "Voom",
+          url: shareUrl,
+        });
+      } else {
+        await navigator.clipboard.writeText(shareUrl);
+        alert("Ссылка скопирована");
+      }
+    } catch (err) {
+      console.error("Share error:", err);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-white">
@@ -69,7 +104,7 @@ const RouteDetails = () => {
             Детали маршрута
           </div>
 
-          <button className="absolute right-0 flex items-center px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition lg:static lg:ml-auto">
+          <button onClick={handleShare} className="absolute right-0 flex items-center px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition lg:static lg:ml-auto" >
             <Share2 size={18} />
             <span className="hidden lg:inline ml-2 text-[15px] font-medium">Поделиться</span>
           </button>
@@ -129,7 +164,12 @@ const RouteDetails = () => {
                 )}
                 <div className="flex items-center gap-2">
                   <Phone size={16} />
-                  <span>{route.driver?.phone}</span>
+                  <a
+                    href={`tel:+998${route.driver?.phone?.replace(/\D/g, "").slice(-9)}`}
+                    className="font-medium tracking-wide hover:text-black transition"
+                  >
+                    {formatPhone(route.driver?.phone)}
+                  </a>
                 </div>
               </div>
 
@@ -196,7 +236,7 @@ const RouteDetails = () => {
                         {route.car?.brand?.name || route.car?.customBrand}{" "}
                         {route.car?.model?.name || route.car?.customModel}
                       </div>
-                      <div className="text-[16px] text-gray-500">{route.car?.color}</div>
+                      <div className="text-[16px] text-gray-500">{route.car?.color?.nameRu}</div>
                     </div>
                   </div>
                 </div>
@@ -227,7 +267,7 @@ const RouteDetails = () => {
               </div>
 
               <button
-                onClick={() => navigate("booking")}
+                onClick={() => navigate(`/${lang}/routes/${id}/booking`)}
                 className="w-full h-[56px] mt-4 bg-[#32BB78] text-white rounded-xl text-[17px] font-semibold hover:bg-[#2aa86e] transition"
               >
                 Продолжить
