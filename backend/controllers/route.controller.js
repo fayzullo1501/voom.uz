@@ -50,7 +50,6 @@ export const createRoute = async (req, res) => {
     const car = await UserCar.findOne({
       _id: carId,
       user: userId,
-      status: "active",
     });
 
     if (!car) {
@@ -248,9 +247,16 @@ export const searchRoutes = async (req, res) => {
       return res.status(400).json({ message: "missing_params" });
     }
 
-    const start = new Date(date);
-    const end = new Date(date);
-    end.setHours(23, 59, 59, 999);
+    // Узбекистан UTC+5
+    const tzOffset = 5 * 60; // минуты
+
+    // создаём локальную полночь
+    const localStart = new Date(`${date}T00:00:00`);
+    const localEnd = new Date(`${date}T23:59:59.999`);
+
+    // переводим в UTC
+    const start = new Date(localStart.getTime() - tzOffset * 60 * 1000);
+    const end = new Date(localEnd.getTime() - tzOffset * 60 * 1000);
 
     const routes = await Route.find({
       fromCity: from,

@@ -71,7 +71,7 @@ const RouteDetails = () => {
   };
 
   const handleShare = async () => {
-    const shareUrl = window.location.origin + window.location.pathname;
+    const shareUrl = `${API_URL}/api/routes/${id}/share`;
 
     try {
       if (navigator.share) {

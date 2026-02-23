@@ -119,7 +119,8 @@ const CreateRoute = () => {
   const [selectedCar, setSelectedCar] = useState(null);
   const [carsLoading, setCarsLoading] = useState(false);
   const [carDropdownOpen, setCarDropdownOpen] = useState(false);
-  const carRef = useRef(null);
+  const mobileCarRef = useRef(null);
+  const desktopCarRef = useRef(null);
 
   const [agree, setAgree] = useState(false);
   const [creating, setCreating] = useState(false);
@@ -167,9 +168,17 @@ const CreateRoute = () => {
 
   useEffect(() => {
     const handleClickOutside = (e) => {
-      if (carRef.current && !carRef.current.contains(e.target)) {
-        setCarDropdownOpen(false);
-      }
+      if (
+        mobileCarRef.current &&
+        mobileCarRef.current.contains(e.target)
+      ) return;
+
+      if (
+        desktopCarRef.current &&
+        desktopCarRef.current.contains(e.target)
+      ) return;
+
+      setCarDropdownOpen(false);
     };
 
     document.addEventListener("mousedown", handleClickOutside);
@@ -341,7 +350,7 @@ const CreateRoute = () => {
                     onClick={() => setPriceModalOpen(true)}
                   />
 
-                  <div ref={carRef} className="relative w-full">
+                  <div ref={mobileCarRef} className="relative w-full">
                     <button
                       type="button"
                       onClick={() => setCarDropdownOpen((prev) => !prev)}
@@ -491,7 +500,7 @@ const CreateRoute = () => {
                     />
                     </div>
                     
-                    <div ref={carRef} className="relative flex-1">
+                    <div ref={desktopCarRef} className="relative flex-1">
                       <button
                         type="button"
                         onClick={() => setCarDropdownOpen((prev) => !prev)}
@@ -667,9 +676,7 @@ const CreateRoute = () => {
         initialValue={departureAt}
         onClose={() => setDateModalOpen(false)}
         onSave={(value) => {
-          // value должен быть ISO строкой или Date
-          const iso = new Date(value).toISOString();
-          setDepartureAt(iso);
+          setDepartureAt(value);
         }}
       />
 

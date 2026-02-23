@@ -2,18 +2,15 @@ import React, { useState, useEffect } from "react";
 
 
 const DateTimeModal = ({ isOpen, initialValue, onSave, onClose }) => {
-  if (!isOpen) return null;
 
   const baseDate = initialValue ? new Date(initialValue) : new Date();
 
   const [selectedDate, setSelectedDate] = useState(baseDate);
 
   const [selectedTime, setSelectedTime] = useState(
-    baseDate
-      ? `${String(baseDate.getHours()).padStart(2, "0")}:${String(
-          baseDate.getMinutes()
-        ).padStart(2, "0")}`
-      : "00:00"
+    `${String(baseDate.getHours()).padStart(2, "0")}:${String(
+      baseDate.getMinutes()
+    ).padStart(2, "0")}`
   );
 
   useEffect(() => {
@@ -29,6 +26,9 @@ const DateTimeModal = ({ isOpen, initialValue, onSave, onClose }) => {
       ).padStart(2, "0")}`
     );
   }, [isOpen, initialValue]);
+
+  // ✅ ВОТ ЭТО ОБЯЗАТЕЛЬНО
+  if (!isOpen) return null;
 
   /* === MONTH CALCULATIONS === */
   const year = selectedDate.getFullYear();
@@ -63,7 +63,7 @@ const DateTimeModal = ({ isOpen, initialValue, onSave, onClose }) => {
       Number(min)
     );
 
-    onSave(finalDate.toISOString());
+    onSave(finalDate);
     onClose();
   };
 
