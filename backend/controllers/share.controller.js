@@ -13,14 +13,23 @@ export const getRouteSharePage = async (req, res) => {
       return res.status(404).send("Not found");
     }
 
-    const shareUrl = `${process.env.FRONTEND_URL}/ru/routes/${route._id}`;
-    const imageUrl = `${process.env.API_URL}/api/share-image/${route._id}`;
+    const { lang } = req.params;
+
+    const safeLang = ["ru", "uz", "en"].includes(lang) ? lang : "ru";
+
+    const shareUrl = `${process.env.FRONTEND_URL}/${safeLang}/routes/${route._id}`;
+    const imageUrl = route.car?.photos?.[0]?.url
+    ? route.car.photos[0].url.startsWith("http")
+        ? route.car.photos[0].url
+        : `${process.env.API_URL}${route.car.photos[0].url}`
+    : `${process.env.FRONTEND_URL}/default-share.jpg`;
 
     const date = new Date(route.departureAt).toLocaleString("ru-RU", {
-      day: "numeric",
-      month: "long",
-      hour: "2-digit",
-      minute: "2-digit",
+    timeZone: "Asia/Tashkent",
+    day: "numeric",
+    month: "long",
+    hour: "2-digit",
+    minute: "2-digit",
     });
 
     const html = `
