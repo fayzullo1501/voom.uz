@@ -1,13 +1,6 @@
-// controllers/booking.controller.js
 import Booking from "../models/Booking.js";
 import Route from "../models/Route.js";
 
-/**
- * ===============================
- * POST /api/bookings
- * create booking
- * ===============================
- */
 export const createBooking = async (req, res) => {
   try {
     const userId = req.user._id;
@@ -22,6 +15,8 @@ export const createBooking = async (req, res) => {
       seatType,
       seatsCount,
       paymentType,
+      message,
+      bookWholeCar, // 👈 ДОБАВИЛИ
     } = req.body;
 
     // ===== BASIC VALIDATION =====
@@ -30,19 +25,17 @@ export const createBooking = async (req, res) => {
       !passengerName ||
       !passengerPhone ||
       !pickupLocation ||
-      !seatType ||
-      !seatsCount ||
       !paymentType
     ) {
       return res.status(400).json({ message: "required_fields_missing" });
     }
 
-    if (!["front", "back"].includes(seatType)) {
-      return res.status(400).json({ message: "invalid_seat_type" });
+    if (!["cash", "card"].includes(paymentType)) {
+      return res.status(400).json({ message: "invalid_payment_type" });
     }
 
-    if (paymentType !== "card") {
-      return res.status(400).json({ message: "invalid_payment_type" });
+    if (!pickupLocation.address) {
+      return res.status(400).json({ message: "pickup_required" });
     }
 
     // ===== FIND ROUTE =====
@@ -55,35 +48,67 @@ export const createBooking = async (req, res) => {
       return res.status(404).json({ message: "route_not_found" });
     }
 
-    // ===== DRIVER CANNOT BOOK OWN ROUTE =====
     if (route.driver.toString() === userId.toString()) {
       return res.status(400).json({ message: "cannot_book_own_route" });
     }
 
-    const seatsRequested = Number(seatsCount);
+    let seatsRequested;
+    let pricePerSeat = null;
+    let totalPrice = 0;
+    let finalSeatType = null;
 
-    if (seatsRequested <= 0) {
-      return res.status(400).json({ message: "invalid_seats_count" });
-    }
+    // ==============================
+    // WHOLE CAR LOGIC
+    // ==============================
+    if (bookWholeCar) {
+      const totalFront = route.availableSeatsFront;
+      const totalBack = route.availableSeatsBack;
 
-    // ===== CHECK AVAILABLE SEATS =====
-    if (seatType === "front") {
-      if (route.availableSeatsFront < seatsRequested) {
-        return res.status(400).json({ message: "not_enough_front_seats" });
+      seatsRequested = totalFront + totalBack;
+
+      if (seatsRequested <= 0) {
+        return res.status(400).json({ message: "no_seats_available" });
       }
+
+      totalPrice =
+        totalFront * route.priceFront +
+        totalBack * route.priceBack;
+
+      pricePerSeat = null;
+      finalSeatType = "whole"; // 🔥 ВОТ ЭТО ГЛАВНОЕ
     }
 
-    if (seatType === "back") {
-      if (route.availableSeatsBack < seatsRequested) {
-        return res.status(400).json({ message: "not_enough_back_seats" });
+    // ==============================
+    // NORMAL SEAT LOGIC
+    // ==============================
+    else {
+      if (!["front", "back"].includes(seatType)) {
+        return res.status(400).json({ message: "invalid_seat_type" });
       }
+
+      seatsRequested = Number(seatsCount);
+
+      if (seatsRequested <= 0) {
+        return res.status(400).json({ message: "invalid_seats_count" });
+      }
+
+      if (seatType === "front") {
+        if (route.availableSeatsFront < seatsRequested) {
+          return res.status(400).json({ message: "not_enough_front_seats" });
+        }
+        pricePerSeat = route.priceFront;
+      }
+
+      if (seatType === "back") {
+        if (route.availableSeatsBack < seatsRequested) {
+          return res.status(400).json({ message: "not_enough_back_seats" });
+        }
+        pricePerSeat = route.priceBack;
+      }
+
+      totalPrice = pricePerSeat * seatsRequested;
+      finalSeatType = seatType;
     }
-
-    // ===== PRICE CALCULATION =====
-    const pricePerSeat =
-      seatType === "front" ? route.priceFront : route.priceBack;
-
-    const totalPrice = pricePerSeat * seatsRequested;
 
     // ===== CREATE BOOKING =====
     const booking = await Booking.create({
@@ -94,17 +119,23 @@ export const createBooking = async (req, res) => {
       passengerName,
       passengerEmail: passengerEmail || null,
       passengerPhone,
+      message: message || "",
 
       pickupLocation,
-      dropoffLocation: dropoffLocation || "",
+      dropoffLocation: dropoffLocation || {
+        address: "",
+        lat: null,
+        lng: null,
+      },
 
-      seatType,
+      seatType: finalSeatType,
       seatsCount: seatsRequested,
 
       pricePerSeat,
       totalPrice,
 
       paymentType,
+      status: "pending",
     });
 
     return res.status(201).json(booking);

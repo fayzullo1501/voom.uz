@@ -42,21 +42,28 @@ const bookingSchema = new mongoose.Schema(
       match: /^\d{9}$/,
     },
 
-    pickupLocation: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-
-    dropoffLocation: {
+    message: {
       type: String,
       default: "",
       trim: true,
+      maxlength: 500,
+    },
+
+    pickupLocation: {
+      address: { type: String, required: true },
+      lat: { type: Number, default: null },
+      lng: { type: Number, default: null },
+    },
+
+    dropoffLocation: {
+      address: { type: String, default: "" },
+      lat: { type: Number, default: null },
+      lng: { type: Number, default: null },
     },
 
     seatType: {
       type: String,
-      enum: ["front", "back"],
+      enum: ["front", "back", "whole"],
       required: true,
     },
 
@@ -68,7 +75,7 @@ const bookingSchema = new mongoose.Schema(
 
     pricePerSeat: {
       type: Number,
-      required: true,
+      default: null,
       min: 0,
     },
 
@@ -80,7 +87,7 @@ const bookingSchema = new mongoose.Schema(
 
     paymentType: {
       type: String,
-      enum: ["card"],
+      enum: ["cash", "card"],
       required: true,
     },
 

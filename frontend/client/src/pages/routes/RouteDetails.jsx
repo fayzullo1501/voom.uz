@@ -17,6 +17,9 @@ const RouteDetails = () => {
   const [route, setRoute] = useState(null);
   const [loading, setLoading] = useState(true);
   const [active, setActive] = useState(0);
+  const [touchStartX, setTouchStartX] = useState(null);
+  const [isAnimating, setIsAnimating] = useState(false);
+  const [driverPhotoOpen, setDriverPhotoOpen] = useState(false);
 
   useEffect(() => {
     const fetchRoute = async () => {
@@ -70,6 +73,32 @@ const RouteDetails = () => {
     return `+998 ${normalized.slice(0, 2)} ${normalized.slice(2, 5)} ${normalized.slice(5, 7)} ${normalized.slice(7, 9)}`;
   };
 
+  const handleTouchStart = (e) => {
+    setTouchStartX(e.touches[0].clientX);
+  };
+
+  const handleTouchEnd = (e) => {
+    if (touchStartX === null) return;
+
+    const diff = touchStartX - e.changedTouches[0].clientX;
+    const photosLength = route.car?.photos?.length || 0;
+
+    if (photosLength <= 1) return;
+
+    const swipeThreshold = 50; // минимальная дистанция свайпа
+
+    if (diff > swipeThreshold) {
+      // свайп влево → следующая
+      setIsAnimating(true);
+      setTimeout(() => { setActive((prev) => (prev === photosLength - 1 ? 0 : prev + 1)); setIsAnimating(false); }, 150);
+    } else if (diff < -swipeThreshold) {
+      // свайп вправо → предыдущая
+      setActive((prev) => (prev === 0 ? photosLength - 1 : prev - 1));
+    }
+
+    setTouchStartX(null);
+  };
+
   const handleShare = async () => {
     const shareUrl = `${API_URL}/api/routes/${lang}/${id}/share`;
 
@@ -115,10 +144,10 @@ const RouteDetails = () => {
           {/* LEFT */}
           <div>
             <div className="flex flex-col lg:flex-row gap-4">
-              <div className="relative flex-1 rounded-2xl overflow-hidden">
-                <img src={route.car?.photos?.[active]?.url} className="w-full h-[260px] lg:h-[420px] object-cover" />
+              <div className="relative flex-1 rounded-2xl overflow-hidden" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
+                <img src={route.car?.photos?.[active]?.url} className={`w-full h-[260px] lg:h-[420px] object-cover transition-opacity duration-300 ${isAnimating ? "opacity-0" : "opacity-100"}`}/>
 
-                <button onClick={() => setActive(active === 0 ? route.car?.photos?.length - 1 : active - 1)} className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 bg-black/30 text-white rounded-full flex items-center justify-center">
+                <button onClick={() => { setIsAnimating(true); setTimeout(() => { setActive(active === 0 ? route.car?.photos?.length - 1 : active - 1); setIsAnimating(false); }, 150); }} className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 bg-black/30 text-white rounded-full flex items-center justify-center">
                   <ChevronLeft size={18} />
                 </button>
 
@@ -145,7 +174,7 @@ const RouteDetails = () => {
             {/* DRIVER */}
             <div className="mt-8 border rounded-2xl p-5 border-gray-300">
               <div className="flex items-center gap-4">
-                <img src={ route.driver?.profilePhoto?.url ? route.driver.profilePhoto.url : avatarPlaceholder } alt="" className="w-14 h-14 rounded-full object-cover" />
+                <img src={ route.driver?.profilePhoto?.url ? route.driver.profilePhoto.url : avatarPlaceholder } alt="" onClick={() => setDriverPhotoOpen(true)} className="w-14 h-14 rounded-full object-cover cursor-pointer hover:opacity-90 transition" />
                 <div>
                   <div className="text-[16px] font-semibold">{route.driver?.firstName} {route.driver?.lastName}</div>
                   <div className="flex items-center gap-1 text-[14px] text-gray-500">
@@ -243,12 +272,12 @@ const RouteDetails = () => {
 
                 <div className="mt-6 flex items-center justify-between gap-4">
                   <div className="text-[18px] font-bold">Номер машины</div>
-                  <div className="inline-flex items-center border-2 border-black rounded-lg overflow-hidden bg-white max-w-full">
-                    <div className="px-2 py-1 text-[14px] lg:px-3 lg:py-2 lg:text-[18px] font-semibold border-r-2 border-black">
+                  <div className="inline-flex items-center border-2 border-black rounded-lg overflow-visible bg-white w-[120px] lg:w-[190px] shrink-0">
+                    <div className="px-2 py-1 text-[10px] lg:px-3 lg:py-2 lg:text-[18px] font-semibold border-r-2 border-black">
                       {regionCode}
                     </div>
-                    <div className="flex items-center gap-2 px-2 py-1 lg:gap-3 lg:px-3 lg:py-2">
-                      <div className="text-[14px] lg:text-[18px] font-semibold tracking-widest">
+                    <div className="flex items-center gap-2 px-2 py-1 lg:gap-3 lg:px-3 lg:py-2 w-full justify-between">
+                      <div className="text-[10px] lg:text-[18px] font-semibold tracking-widest">
                         {restPlate}
                       </div>
                       <div className="flex flex-col items-center">
@@ -276,6 +305,34 @@ const RouteDetails = () => {
           </div>
         </div>
       </div>
+      {driverPhotoOpen && (
+        <div
+          className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4"
+          onClick={() => setDriverPhotoOpen(false)}
+        >
+          <div className="relative max-w-[90vw] max-h-[90vh]">
+            
+            {/* Кнопка X */}
+            <button
+              onClick={() => setDriverPhotoOpen(false)}
+              className="absolute top-3 right-3 w-9 h-9 bg-black/60 text-white rounded-full flex items-center justify-center z-10"
+            >
+              ✕
+            </button>
+
+            <img
+              src={
+                route.driver?.profilePhoto?.url
+                  ? route.driver.profilePhoto.url
+                  : avatarPlaceholder
+              }
+              alt=""
+              className="max-w-full max-h-[90vh] rounded-2xl object-contain"
+              onClick={(e) => e.stopPropagation()}
+            />
+          </div>
+        </div>
+      )}
       <Footer />
     </div>
   );
