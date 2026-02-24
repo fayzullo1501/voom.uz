@@ -53,6 +53,8 @@ const MyRouteDetails = () => {
   useEffect(() => {
     if (!route?.polyline) return;
 
+    console.log("POLYLINE FROM API:", route?.polyline);
+
     const waitForGoogle = setInterval(() => {
       if (window.google && window.google.maps && window.google.maps.geometry) {
 
