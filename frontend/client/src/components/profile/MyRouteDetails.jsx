@@ -1,10 +1,9 @@
 // src/components/profile/MyRouteDetails.jsx
 import React, { useEffect, useRef, useState } from "react";
-import { ChevronLeft, Maximize2, X, Check, X as XIcon, MoreVertical } from "lucide-react";
+import { ChevronLeft, Maximize2, X, Check, X as XIcon, MoreVertical, Loader2 } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import { API_URL } from "../../config/api";
 import avatar from "../../assets/driverbookingtest.jpg";
-import carAvatar from "../../assets/carbookingtest.jpg";
 import uzFlag from "../../assets/flag-uz.svg";
 
 const MyRouteDetails = () => {
@@ -14,6 +13,7 @@ const MyRouteDetails = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const [route, setRoute] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [mapOpen, setMapOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef(null);
@@ -78,6 +78,8 @@ const MyRouteDetails = () => {
   useEffect(() => {
     const fetchRoute = async () => {
       try {
+        setLoading(true);
+
         const res = await fetch(
           `${API_URL}/api/routes/${id}`,
           {
@@ -94,6 +96,8 @@ const MyRouteDetails = () => {
         }
       } catch (err) {
         console.error("Failed to load route", err);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -270,6 +274,20 @@ const MyRouteDetails = () => {
 
   const formattedEarned = earnedAmount.toLocaleString("ru-RU");
 
+  if (loading)
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <Loader2 className="w-10 h-10 text-black animate-spin" />
+      </div>
+    );
+
+  if (!route)
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        Маршрут не найден
+      </div>
+    );
+  
   return (
     <div className="min-h-screen bg-white flex flex-col">
       <header>

@@ -60,13 +60,23 @@ const MyRoutes = () => {
     });
   };
 
-  const formatPrice = (route) => {
-    const minPrice = Math.min(route.priceFront, route.priceBack);
-    return `${minPrice.toLocaleString()} сум`;
+  const getTotalEarned = (route) => {
+    if (!route.bookings) return "0 сум";
+
+    const total = route.bookings
+      .filter((b) => b.status === "accepted")
+      .reduce((sum, b) => sum + (b.totalPrice || 0), 0);
+
+    return `${total.toLocaleString()} сум`;
   };
 
-  const totalSeats = (route) =>
-    route.availableSeatsFront + route.availableSeatsBack;
+  const getAcceptedPassengers = (route) => {
+    if (!route.bookings) return 0;
+
+    return route.bookings
+      .filter((b) => b.status === "accepted")
+      .reduce((sum, b) => sum + (b.seatsCount || 0), 0);
+  };
 
   return (
     <div className="min-h-screen bg-white px-4 sm:px-6 pb-10 flex flex-col">
@@ -188,7 +198,7 @@ const MyRoutes = () => {
                           alt="Сумма"
                           className="w-5 h-5 opacity-70"
                         />
-                        {formatPrice(route)}
+                        {getTotalEarned(route)}
                       </div>
 
                       <div className="flex items-center gap-2 text-sm text-gray-600">
@@ -197,7 +207,7 @@ const MyRoutes = () => {
                           alt="Места"
                           className="w-5 h-5 opacity-60"
                         />
-                        {totalSeats(route)} мест
+                        {getAcceptedPassengers(route)} пассажиров
                       </div>
                     </div>
                   </div>

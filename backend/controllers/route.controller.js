@@ -188,6 +188,10 @@ export const getMyRoutes = async (req, res) => {
       .populate("car")
       .populate("fromCity", "nameRu region")
       .populate("toCity", "nameRu region")
+      .populate({
+        path: "bookings",
+        select: "status seatsCount totalPrice",
+      })
       .sort({ departureAt: -1 });
 
     return res.json(routes);
