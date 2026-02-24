@@ -16,6 +16,7 @@ const MyRouteDetails = () => {
   const [mapOpen, setMapOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef(null);
+  const mapRef = useRef(null);
 
   useEffect(() => {
     const onClick = (e) => {
@@ -64,9 +65,10 @@ const MyRouteDetails = () => {
           window.google.maps.geometry.encoding.decodePath(route.polyline);
 
         if (!decodedPath || decodedPath.length === 0) return;
+        if (!mapRef.current) return;
 
         const map = new window.google.maps.Map(
-          document.getElementById("route-map"),
+          mapRef.current,
           {
             zoom: 8,
             center: decodedPath[0],
@@ -131,7 +133,7 @@ const MyRouteDetails = () => {
                 <Maximize2 size={18} />
               </button>
               <div
-                id="route-map"
+                ref={mapRef}
                 className="w-full h-[260px] sm:h-[340px] lg:h-[420px]"
               />
             </div>
