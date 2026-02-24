@@ -209,15 +209,30 @@ export const getMyRouteById = async (req, res) => {
       _id: req.params.id,
       driver: req.user._id,
     })
-      .populate("car")
-      .populate("fromCity", "nameRu")
-      .populate("toCity", "nameRu");
+      .populate({
+        path: "car",
+        populate: [
+          { path: "brand", select: "name logo.url logo.key status" },
+          { path: "model", select: "name" },
+          { path: "color", select: "nameRu hex" }
+        ]
+      })
+      .populate("fromCity", "nameRu region")
+      .populate("toCity", "nameRu region")
+      .populate({
+        path: "bookings",
+        populate: {
+          path: "passenger",
+          select: "firstName lastName phone profilePhoto",
+        },
+      });
 
     if (!route) {
       return res.status(404).json({ message: "route_not_found" });
     }
 
     return res.json(route);
+
   } catch (error) {
     console.error("getMyRouteById error:", error);
     return res.status(500).json({ message: "Internal server error" });

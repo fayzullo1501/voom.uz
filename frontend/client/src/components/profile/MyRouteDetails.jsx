@@ -8,8 +8,9 @@ import carAvatar from "../../assets/carbookingtest.jpg";
 import uzFlag from "../../assets/flag-uz.svg";
 
 const MyRouteDetails = () => {
-
   
+  const GOOGLE_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+
   const navigate = useNavigate();
   const { id } = useParams();
   const [route, setRoute] = useState(null);
@@ -17,6 +18,54 @@ const MyRouteDetails = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef(null);
   const mapRef = useRef(null);
+  const modalMapRef = useRef(null);
+
+  const handleAccept = async (bookingId) => {
+    try {
+      await fetch(`${API_URL}/api/bookings/${bookingId}/accept`, {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+
+      window.location.reload();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleReject = async (bookingId) => {
+    try {
+      await fetch(`${API_URL}/api/bookings/${bookingId}/reject`, {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+
+      window.location.reload();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleRouteStatusChange = async (newStatus) => {
+    try {
+      await fetch(`${API_URL}/api/routes/${id}/status`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({ status: newStatus }),
+      });
+
+      window.location.reload();
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   useEffect(() => {
     const onClick = (e) => {
@@ -30,7 +79,7 @@ const MyRouteDetails = () => {
     const fetchRoute = async () => {
       try {
         const res = await fetch(
-          `${API_URL}/api/profile/routes/${id}`,
+          `${API_URL}/api/routes/${id}`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -52,48 +101,174 @@ const MyRouteDetails = () => {
   }, [id]);
 
   useEffect(() => {
+    console.log("ROUTE:", route);
+      console.log("POLYLINE:", route?.polyline);
+      console.log("GOOGLE KEY:", GOOGLE_KEY);
+      console.log("window.google:", window.google);
+
     if (!route?.polyline) return;
 
-    console.log("POLYLINE FROM API:", route?.polyline);
+    console.log("INIT MAP STARTED");
+    console.log("geometry:", window.google?.maps?.geometry);
 
-    const waitForGoogle = setInterval(() => {
-      if (window.google && window.google.maps && window.google.maps.geometry) {
+    const initMap = () => {
+      if (!window.google?.maps?.geometry) return;
 
-        clearInterval(waitForGoogle);
+      const decodedPath =
+        window.google.maps.geometry.encoding.decodePath(route.polyline);
 
-        const decodedPath =
-          window.google.maps.geometry.encoding.decodePath(route.polyline);
+      console.log("DECODED PATH:", decodedPath);
 
-        if (!decodedPath || decodedPath.length === 0) return;
-        if (!mapRef.current) return;
+      if (!decodedPath.length || !mapRef.current) return;
 
-        const map = new window.google.maps.Map(
-          mapRef.current,
-          {
-            zoom: 8,
-            center: decodedPath[0],
-            mapTypeControl: false,
-          }
-        );
+      const map = new window.google.maps.Map(mapRef.current, {
+        mapTypeControl: false,
+        fullscreenControl: false,   // убрать стандартную кнопку
+        streetViewControl: false,   // убрать человечка
+        zoomControl: true,          // оставить зум
+      });
 
-        const polyline = new window.google.maps.Polyline({
-          path: decodedPath,
-          strokeColor: "#000000",
-          strokeOpacity: 1.0,
-          strokeWeight: 4,
-        });
+      const polyline = new window.google.maps.Polyline({
+        path: decodedPath,
+        strokeColor: "#2563EB",
+        strokeOpacity: 0.95,
+        strokeWeight: 8,      // было 6 → стало 8
+        geodesic: true,
+      });
 
-        polyline.setMap(map);
+      polyline.setMap(map);
 
-        const bounds = new window.google.maps.LatLngBounds();
-        decodedPath.forEach((point) => bounds.extend(point));
-        map.fitBounds(bounds);
-      }
-    }, 200);
+      // ===== START MARKER (A)
+      new window.google.maps.Marker({
+        position: decodedPath[0],
+        map: map,
+        label: {
+          text: "A",
+          color: "#ffffff",
+          fontWeight: "bold",
+        },
+        icon: {
+          path: window.google.maps.SymbolPath.CIRCLE,
+          scale: 10,
+          fillColor: "#2563EB",
+          fillOpacity: 1,
+          strokeColor: "#ffffff",
+          strokeWeight: 2,
+        },
+      });
 
-    return () => clearInterval(waitForGoogle);
+      // ===== END MARKER (B)
+      new window.google.maps.Marker({
+        position: decodedPath[decodedPath.length - 1],
+        map: map,
+        label: {
+          text: "B",
+          color: "#ffffff",
+          fontWeight: "bold",
+        },
+        icon: {
+          path: window.google.maps.SymbolPath.CIRCLE,
+          scale: 10,
+          fillColor: "#2563EB",
+          fillOpacity: 1,
+          strokeColor: "#ffffff",
+          strokeWeight: 2,
+        },
+      });
 
+      const bounds = new window.google.maps.LatLngBounds();
+      decodedPath.forEach((p) => bounds.extend(p));
+
+      map.fitBounds(bounds, 30);
+    };
+
+    if (!window.google) {
+      const script = document.createElement("script");
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_KEY}&libraries=geometry`;
+      script.async = true;
+      script.onload = initMap;
+      document.head.appendChild(script);
+    } else {
+      initMap();
+    }
   }, [route]);
+
+  useEffect(() => {
+    if (!mapOpen || !route?.polyline) return;
+    if (!window.google?.maps?.geometry) return;
+    if (!modalMapRef.current) return;
+
+    const decodedPath =
+      window.google.maps.geometry.encoding.decodePath(route.polyline);
+
+    if (!decodedPath.length) return;
+
+    const map = new window.google.maps.Map(modalMapRef.current, {
+      mapTypeControl: false,
+      fullscreenControl: false,
+      streetViewControl: false,
+      zoomControl: true,
+    });
+
+    const polyline = new window.google.maps.Polyline({
+      path: decodedPath,
+      strokeColor: "#2563EB",
+      strokeOpacity: 0.95,
+      strokeWeight: 8,
+      geodesic: true,
+    });
+
+    polyline.setMap(map);
+
+    // A marker
+    new window.google.maps.Marker({
+      position: decodedPath[0],
+      map,
+      label: { text: "A", color: "#fff", fontWeight: "bold" },
+      icon: {
+        path: window.google.maps.SymbolPath.CIRCLE,
+        scale: 12,
+        fillColor: "#2563EB",
+        fillOpacity: 1,
+        strokeColor: "#ffffff",
+        strokeWeight: 2,
+      },
+    });
+
+    // B marker
+    new window.google.maps.Marker({
+      position: decodedPath[decodedPath.length - 1],
+      map,
+      label: { text: "B", color: "#fff", fontWeight: "bold" },
+      icon: {
+        path: window.google.maps.SymbolPath.CIRCLE,
+        scale: 12,
+        fillColor: "#2563EB",
+        fillOpacity: 1,
+        strokeColor: "#ffffff",
+        strokeWeight: 2,
+      },
+    });
+
+    const bounds = new window.google.maps.LatLngBounds();
+    decodedPath.forEach((p) => bounds.extend(p));
+
+    map.fitBounds(bounds);
+
+  }, [mapOpen, route]);
+
+  const plate = route?.car?.plateNumber || "";
+  const regionCode = plate.slice(0, 2);
+  const restPlate = plate.slice(2).trim();
+
+  const earnedAmount =
+    route?.bookings
+      ?.filter((b) => b.status === "accepted")
+      ?.reduce((total, booking) => {
+        return total + (booking.totalPrice || 0);
+      }, 0) || 0;
+
+  const formattedEarned = earnedAmount.toLocaleString("ru-RU");
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
@@ -113,11 +288,26 @@ const MyRouteDetails = () => {
                 <ChevronLeft size={24} />
               </button>
               <div className="flex items-center gap-2 text-[20px] sm:text-[24px] font-semibold">
-                <span>FERGHANA – TASHKENT</span>
-                <span className="text-gray-500 text-[16px] sm:text-[18px] font-normal">в 13.01.2026</span>
+                <span> {route ? `${route.fromCity?.nameRu?.toUpperCase()} – ${route.toCity?.nameRu?.toUpperCase()}` : ""} </span>
+                <span className="text-gray-500 text-[16px] sm:text-[18px] font-normal"> {route ? `в ${new Date(route.departureAt).toLocaleDateString("ru-RU")}` : ""} </span>
               </div>
             </div>
-            <div className="text-[24px] font-medium text-green-600">Активный</div>
+            <div
+              className={`text-[24px] font-medium ${
+                route?.status === "active"
+                  ? "text-green-600"
+                  : route?.status === "completed"
+                  ? "text-gray-500"
+                  : route?.status === "cancelled"
+                  ? "text-red-600"
+                  : "text-yellow-600"
+              }`}
+            >
+              {route?.status === "active" && "Активный"}
+              {route?.status === "completed" && "Завершён"}
+              {route?.status === "cancelled" && "Отменён"}
+              {route?.status === "in_progress" && "В пути"}
+            </div>
           </div>
         </div>
       </div>
@@ -134,7 +324,7 @@ const MyRouteDetails = () => {
               </button>
               <div
                 ref={mapRef}
-                className="w-full h-[260px] sm:h-[340px] lg:h-[420px]"
+                className="w-full h-[320px] sm:h-[380px] lg:h-[460px]"
               />
             </div>
 
@@ -142,48 +332,75 @@ const MyRouteDetails = () => {
               <div className="text-[32px] font-bold mb-6">Пассажиры</div>
 
               <div className="space-y-2">
-                {/* WAITING */}
-                <div className="group flex items-center justify-between px-4 py-4 rounded-xl hover:bg-gray-200 transition">
-                  <div className="flex items-center gap-4">
-                    <img src={avatar} className="w-14 h-14 rounded-full object-cover" />
-                    <div>
-                      <div className="font-semibold text-[18px]">Fayzullo Abdulazizov</div>
-                      <div className="text-[15px] text-gray-400 blur-[6px] select-none">+998 99 999-99-99</div>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <button className="w-12 h-12 rounded-xl flex items-center justify-center transition group-hover:bg-white hover:bg-white">
-                      <Check size={26} className="text-green-600" />
-                    </button>
-                    <button className="w-12 h-12 rounded-xl flex items-center justify-center transition group-hover:bg-white hover:bg-white">
-                      <XIcon size={26} className="text-red-600" />
-                    </button>
-                  </div>
-                </div>
+                {route?.bookings?.length === 0 && (
+                  <div className="text-gray-400">Бронирований пока нет</div>
+                )}
 
-                {/* ACCEPTED */}
-                <div className="group flex items-center justify-between px-4 py-4 rounded-xl hover:bg-gray-200 transition relative">
-                  <div className="flex items-center gap-4">
-                    <img src={avatar} className="w-14 h-14 rounded-full object-cover" />
-                    <div>
-                      <div className="font-semibold text-[18px]">Jasur Sharipov</div>
-                      <div className="text-[15px] text-gray-600">+998 99 996-16-96</div>
-                    </div>
-                  </div>
+                {route?.bookings?.map((booking) => {
+                  const passenger = booking.passenger;
 
-                  <div className="flex items-center gap-3 relative" ref={menuRef}>
-                    <span className="text-green-600 font-medium">Принят</span>
-                    <button onClick={() => setMenuOpen(!menuOpen)} className="w-12 h-12 rounded-xl flex items-center justify-center transition group-hover:bg-white hover:bg-white">
-                      <MoreVertical size={22} />
-                    </button>
+                  return (
+                    <div
+                      key={booking._id}
+                      className="group flex items-center justify-between px-4 py-4 rounded-xl hover:bg-gray-200 transition"
+                    >
+                      <div className="flex items-center gap-4">
+                        <img
+                          src={passenger?.profilePhoto?.url || avatar}
+                          className="w-14 h-14 rounded-full object-cover"
+                        />
 
-                    {menuOpen && (
-                      <div className="absolute right-0 top-14 bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden z-20 min-w-[160px]">
-                        <button className="w-full text-left px-4 py-3 text-[15px] hover:bg-gray-100 transition">Отменить</button>
+                        <div>
+                          <div className="font-semibold text-[18px]">
+                            {passenger?.firstName} {passenger?.lastName}
+                          </div>
+
+                          <div
+                            className={`text-[15px] ${
+                              booking.status === "accepted"
+                                ? "text-gray-600"
+                                : "text-gray-400 blur-[6px] select-none"
+                            }`}
+                          >
+                            {passenger?.phone}
+                          </div>
+
+                          <div className="text-sm text-gray-500 mt-1">
+                            {booking.seatType === "whole"
+                              ? "Вся машина"
+                              : `${booking.seatType === "front" ? "Переднее" : "Заднее"} × ${
+                                  booking.seatsCount
+                                }`}
+                          </div>
+                        </div>
                       </div>
-                    )}
-                  </div>
-                </div>
+
+                      <div className="flex items-center gap-3">
+                        {booking.status === "pending" && (
+                          <>
+                            <button
+                              onClick={() => handleAccept(booking._id)}
+                              className="w-12 h-12 rounded-xl flex items-center justify-center hover:bg-white"
+                            >
+                              <Check size={26} className="text-green-600" />
+                            </button>
+
+                            <button
+                              onClick={() => handleReject(booking._id)}
+                              className="w-12 h-12 rounded-xl flex items-center justify-center hover:bg-white"
+                            >
+                              <XIcon size={26} className="text-red-600" />
+                            </button>
+                          </>
+                        )}
+
+                        {booking.status === "accepted" && (
+                          <span className="text-green-600 font-medium">Принят</span>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           </div>
@@ -194,27 +411,62 @@ const MyRouteDetails = () => {
               <div className="text-[22px] sm:text-[26px] font-bold mb-4">Ваш маршрут</div>
 
               <div className="border border-gray-300 rounded-2xl p-4 mb-4">
-                <div className="font-semibold mb-3 text-[20px]">Суббота, 12 Августа</div>
+                <div className="font-semibold mb-3 text-[20px]">
+                  {route
+                    ? new Date(route.departureAt).toLocaleDateString("ru-RU", {
+                        weekday: "long",
+                        day: "numeric",
+                        month: "long",
+                      })
+                    : ""}
+                </div>
 
                 <div className="grid grid-cols-[auto_24px_1fr] gap-3">
                   <div className="flex flex-col gap-[38px] text-[14px] font-medium">
-                    <div>23:00</div>
-                    <div>03:00</div>
+                    <div>
+                      {route
+                        ? new Date(route.departureAt).toLocaleTimeString("ru-RU", {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })
+                        : ""}
+                    </div>
+
+                    <div>
+                      {route
+                        ? new Date(route.arrivalAt).toLocaleTimeString("ru-RU", {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })
+                        : ""}
+                    </div>
                   </div>
                   <div className="flex flex-col items-center">
                     <div className="w-4 h-4 rounded-full border-2 border-black" />
                     <div className="w-[2px] h-[52px] bg-black" />
                     <div className="w-4 h-4 rounded-full border-2 border-black" />
                   </div>
-                  <div className="flex flex-col gap-4">
-                    <div>
-                      <div className="font-bold">TASHKENT</div>
-                      <div className="text-xs text-gray-500">Ташкент, Узбекистан</div>
+                  <div className="flex flex-col gap-6">
+                    {/* FROM */}
+                    <div className="flex flex-col">
+                      <div className="font-bold">
+                        {route?.fromCity?.nameRu?.toUpperCase()}
+                      </div>
+                      <div className="text-xs text-gray-500">
+                        {route?.fromCity?.region}
+                      </div>
                     </div>
-                    <div>
-                      <div className="font-bold">FERGHANA</div>
-                      <div className="text-xs text-gray-500">Ферганская область, Узбекистан</div>
+
+                    {/* TO */}
+                    <div className="flex flex-col">
+                      <div className="font-bold">
+                        {route?.toCity?.nameRu?.toUpperCase()}
+                      </div>
+                      <div className="text-xs text-gray-500">
+                        {route?.toCity?.region}
+                      </div>
                     </div>
+
                   </div>
                 </div>
               </div>
@@ -223,20 +475,39 @@ const MyRouteDetails = () => {
                 <div className="font-semibold mb-3 text-[20px]">Автомобиль</div>
 
                 <div className="flex items-center gap-3">
-                  <img src={carAvatar} className="w-12 h-12 rounded-full object-cover" />
-                  <div>
-                    <div className="font-semibold">Chevrolet Malibu 2 turbo</div>
-                    <div className="text-sm text-gray-500">Черный</div>
+                  <img
+                    src={route?.car?.brand?.logo?.url}
+                    alt=""
+                    className="w-12 h-10 object-contain"
+                  />
+
+                  <div className="flex flex-col">
+                    <div className="font-semibold text-[18px]">
+                      {route?.car?.brand?.name || route?.car?.customBrand}{" "}
+                      {route?.car?.model?.name || route?.car?.customModel}
+                    </div>
+
+                    <div className="text-sm text-gray-500">
+                      {route?.car?.color?.nameRu}
+                    </div>
                   </div>
                 </div>
 
-                <div className="mt-3 inline-flex items-center border-2 border-black rounded-lg overflow-hidden bg-white">
-                  <div className="px-2 py-1 text-[14px] font-semibold border-r-2 border-black">01</div>
+                <div className="mt-3 inline-flex items-center border-2 border-black rounded-lg overflow-visible bg-white">
+                  <div className="px-2 py-1 text-[14px] font-semibold border-r-2 border-black">
+                    {regionCode}
+                  </div>
+
                   <div className="flex items-center gap-2 px-2 py-1">
-                    <div className="text-[14px] font-semibold tracking-widest">F 001 AA</div>
+                    <div className="text-[14px] font-semibold tracking-widest">
+                      {restPlate}
+                    </div>
+
                     <div className="flex flex-col items-center">
                       <img src={uzFlag} className="w-4 h-[10px] mb-[2px]" />
-                      <div className="text-[10px] font-semibold text-blue-600 leading-none">UZ</div>
+                      <div className="text-[10px] font-semibold text-blue-600 leading-none">
+                        UZ
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -246,17 +517,38 @@ const MyRouteDetails = () => {
                 <div className="font-semibold text-[22px] mb-4">Сумма за поездку</div>
                 <div className="flex justify-between border-t border-gray-300 pt-4">
                   <span>Всего</span>
-                  <span className="font-bold">300 000 сум</span>
+                  <span className="font-bold">
+                    {formattedEarned} сум
+                  </span>
                 </div>
               </div>
 
-              <button className="w-full h-[56px] bg-[#32BB78] text-white rounded-xl font-semibold hover:bg-[#2aa86e] transition mb-3">
-                Поехали
-              </button>
+              {route?.status === "active" && (
+                <>
+                  <button
+                    onClick={() => handleRouteStatusChange("in_progress")}
+                    className="w-full h-[56px] bg-yellow-500 text-white rounded-xl font-semibold hover:bg-yellow-600 transition mb-3"
+                  >
+                    Поехали
+                  </button>
 
-              <div className="text-center text-red-600 font-medium cursor-pointer hover:underline">
-                Отменить маршрут
-              </div>
+                  <div
+                    onClick={() => handleRouteStatusChange("cancelled")}
+                    className="text-center text-red-600 font-medium cursor-pointer hover:underline"
+                  >
+                    Отменить маршрут
+                  </div>
+                </>
+              )}
+
+              {route?.status === "in_progress" && (
+                <button
+                  onClick={() => handleRouteStatusChange("completed")}
+                  className="w-full h-[56px] bg-[#32BB78] text-white rounded-xl font-semibold hover:bg-[#2aa86e] transition mb-3"
+                >
+                  Завершить маршрут
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -271,9 +563,10 @@ const MyRouteDetails = () => {
                 <X size={20} />
               </button>
             </div>
-            <div className="h-[420px] sm:h-[520px]">
-              <iframe className="w-full h-full" src="https://www.google.com/maps?q=Fergana%20Uzbekistan%20to%20Tashkent%20Uzbekistan&output=embed" />
-            </div>
+            <div
+              ref={modalMapRef}
+              className="w-full h-[420px] sm:h-[520px]"
+            />
           </div>
         </div>
       )}

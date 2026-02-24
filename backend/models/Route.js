@@ -111,6 +111,13 @@ const routeSchema = new mongoose.Schema(
       default: "active",
       index: true,
     },
+
+    bookings: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Booking",
+      },
+    ],
   },
   { timestamps: true }
 );
