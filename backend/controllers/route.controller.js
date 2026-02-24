@@ -74,6 +74,8 @@ export const createRoute = async (req, res) => {
     let polyline = "";
 
     try {
+      console.log("GOOGLE KEY:", env.GOOGLE_MAPS_API_KEY);
+
       const response = await axios.get(
         "https://maps.googleapis.com/maps/api/directions/json",
         {
@@ -87,7 +89,12 @@ export const createRoute = async (req, res) => {
       );
 
       console.log("GOOGLE STATUS:", response.data.status);
+      console.log("GOOGLE ERROR:", response.data.error_message);
       console.log("GOOGLE ROUTES LENGTH:", response.data.routes?.length);
+
+      if (response.data.status !== "OK") {
+        console.log("GOOGLE FULL RESPONSE:", response.data);
+      }
 
       const routeData = response.data.routes?.[0];
       const leg = routeData?.legs?.[0];
@@ -102,7 +109,6 @@ export const createRoute = async (req, res) => {
           );
         }
 
-        // 🔥 ВОТ ГЛАВНОЕ
         polyline = routeData.overview_polyline?.points || "";
       }
     } catch (err) {
