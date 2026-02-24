@@ -56,7 +56,7 @@ const RouteBooking = () => {
     const fetchRoute = async () => {
       try {
         const res = await fetch(
-          `${import.meta.env.VITE_API_URL}/api/routes/${routeId}`
+          `${import.meta.env.VITE_API_URL}/api/routes/public/${routeId}`
         );
         const data = await res.json();
         setRoute(data);

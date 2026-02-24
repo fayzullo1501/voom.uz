@@ -115,7 +115,7 @@ function App() {
           {/* Профиль — Мои Маршруты */}
           <Route path="/:lang/profile/routes" element={<LangWrapper Component={MyRoutes} />} />
           {/* Профиль — Мои Маршруты - Детали*/}
-          <Route path="/:lang/profile/routes/details" element={<MyRouteDetails />} />
+          <Route path="/:lang/profile/routes/:id" element={<MyRouteDetails />} />
           {/* Профиль — Чат */}
           <Route path="/:lang/profile/chat" element={<LangWrapper Component={ChatMessenger} />} />
           {/* Профиль — Транспорт*/}

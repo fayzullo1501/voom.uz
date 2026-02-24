@@ -25,7 +25,6 @@ export const createRoute = async (req, res) => {
       priceFront,
       priceBack,
       comment,
-      polyline,
     } = req.body;
 
     // ===== BASIC VALIDATION =====
@@ -72,34 +71,42 @@ export const createRoute = async (req, res) => {
     let distanceMeters = null;
     let durationSeconds = null;
 
+    let polyline = "";
+
     try {
       const response = await axios.get(
-        "https://maps.googleapis.com/maps/api/distancematrix/json",
+        "https://maps.googleapis.com/maps/api/directions/json",
         {
           params: {
-            origins: `${fromCity.lat},${fromCity.lon}`,
-            destinations: `${toCity.lat},${toCity.lon}`,
+            origin: `${fromCity.lat},${fromCity.lon}`,
+            destination: `${toCity.lat},${toCity.lon}`,
+            mode: "driving",
             key: env.GOOGLE_MAPS_API_KEY,
           },
         }
       );
 
-      console.log("Google response:", response.data);
-      
-      const element = response.data.rows?.[0]?.elements?.[0];
+      console.log("GOOGLE STATUS:", response.data.status);
+      console.log("GOOGLE ROUTES LENGTH:", response.data.routes?.length);
 
-      if (element?.status === "OK") {
-        distanceMeters = element.distance?.value;
-        durationSeconds = element.duration?.value;
+      const routeData = response.data.routes?.[0];
+      const leg = routeData?.legs?.[0];
+
+      if (routeData && leg) {
+        distanceMeters = leg.distance?.value;
+        durationSeconds = leg.duration?.value;
 
         if (durationSeconds) {
           arrivalDate = new Date(
             departureDate.getTime() + durationSeconds * 1000
           );
         }
+
+        // 🔥 ВОТ ГЛАВНОЕ
+        polyline = routeData.overview_polyline?.points || "";
       }
     } catch (err) {
-      console.error("Google Distance Matrix error:", err.message);
+      console.error("Google Directions error:", err.message);
     }
 
     // ===== CREATE ROUTE =====
@@ -153,10 +160,28 @@ export const createRoute = async (req, res) => {
  */
 export const getMyRoutes = async (req, res) => {
   try {
-    const routes = await Route.find({ driver: req.user._id })
+    const { type = "active" } = req.query;
+
+    let filter = { driver: req.user._id };
+
+    if (type === "active") {
+      filter = {
+        ...filter,
+        status: { $in: ["active", "in_progress"] },
+      };
+    }
+
+    if (type === "archive") {
+      filter = {
+        ...filter,
+        status: { $in: ["completed", "cancelled"] },
+      };
+    }
+
+    const routes = await Route.find(filter)
       .populate("car")
-      .populate("fromCity", "nameRu")
-      .populate("toCity", "nameRu")
+      .populate("fromCity", "nameRu region")
+      .populate("toCity", "nameRu region")
       .sort({ departureAt: -1 });
 
     return res.json(routes);
@@ -221,6 +246,23 @@ export const updateRouteStatus = async (req, res) => {
 
     if (!route) {
       return res.status(404).json({ message: "route_not_found" });
+    }
+
+    const currentStatus = route.status;
+
+    // ===== STATE MACHINE =====
+
+    const validTransitions = {
+      active: ["in_progress", "cancelled"],
+      in_progress: ["completed"],
+      completed: [],
+      cancelled: [],
+    };
+
+    if (!validTransitions[currentStatus].includes(status)) {
+      return res.status(400).json({
+        message: "invalid_status_transition",
+      });
     }
 
     route.status = status;

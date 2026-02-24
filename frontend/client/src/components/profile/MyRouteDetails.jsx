@@ -1,13 +1,18 @@
 // src/components/profile/MyRouteDetails.jsx
 import React, { useEffect, useRef, useState } from "react";
 import { ChevronLeft, Maximize2, X, Check, X as XIcon, MoreVertical } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { API_URL } from "../../config/api";
 import avatar from "../../assets/driverbookingtest.jpg";
 import carAvatar from "../../assets/carbookingtest.jpg";
 import uzFlag from "../../assets/flag-uz.svg";
 
 const MyRouteDetails = () => {
+
+  
   const navigate = useNavigate();
+  const { id } = useParams();
+  const [route, setRoute] = useState(null);
   const [mapOpen, setMapOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef(null);
@@ -19,6 +24,72 @@ const MyRouteDetails = () => {
     document.addEventListener("mousedown", onClick);
     return () => document.removeEventListener("mousedown", onClick);
   }, []);
+
+  useEffect(() => {
+    const fetchRoute = async () => {
+      try {
+        const res = await fetch(
+          `${API_URL}/api/profile/routes/${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+
+        const data = await res.json();
+
+        if (res.ok) {
+          setRoute(data);
+        }
+      } catch (err) {
+        console.error("Failed to load route", err);
+      }
+    };
+
+    fetchRoute();
+  }, [id]);
+
+  useEffect(() => {
+    if (!route?.polyline) return;
+
+    const waitForGoogle = setInterval(() => {
+      if (window.google && window.google.maps && window.google.maps.geometry) {
+
+        clearInterval(waitForGoogle);
+
+        const decodedPath =
+          window.google.maps.geometry.encoding.decodePath(route.polyline);
+
+        if (!decodedPath || decodedPath.length === 0) return;
+
+        const map = new window.google.maps.Map(
+          document.getElementById("route-map"),
+          {
+            zoom: 8,
+            center: decodedPath[0],
+            mapTypeControl: false,
+          }
+        );
+
+        const polyline = new window.google.maps.Polyline({
+          path: decodedPath,
+          strokeColor: "#000000",
+          strokeOpacity: 1.0,
+          strokeWeight: 4,
+        });
+
+        polyline.setMap(map);
+
+        const bounds = new window.google.maps.LatLngBounds();
+        decodedPath.forEach((point) => bounds.extend(point));
+        map.fitBounds(bounds);
+      }
+    }, 200);
+
+    return () => clearInterval(waitForGoogle);
+
+  }, [route]);
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
@@ -57,9 +128,10 @@ const MyRouteDetails = () => {
               <button onClick={() => setMapOpen(true)} className="absolute right-3 top-3 z-10 w-10 h-10 rounded-xl bg-white border border-gray-200 flex items-center justify-center hover:bg-gray-100 transition">
                 <Maximize2 size={18} />
               </button>
-              <div className="w-full h-[260px] sm:h-[340px] lg:h-[420px]">
-                <iframe className="w-full h-full" src="https://www.google.com/maps?q=Fergana%20Uzbekistan%20to%20Tashkent%20Uzbekistan&output=embed" />
-              </div>
+              <div
+                id="route-map"
+                className="w-full h-[260px] sm:h-[340px] lg:h-[420px]"
+              />
             </div>
 
             <div className="mt-10">

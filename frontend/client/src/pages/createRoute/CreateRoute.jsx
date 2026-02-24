@@ -221,7 +221,7 @@ const CreateRoute = () => {
       const token = localStorage.getItem("token");
 
       const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/profile/routes`,
+        `${import.meta.env.VITE_API_URL}/api/routes`,
         {
           method: "POST",
           headers: {

@@ -24,7 +24,7 @@ const RouteDetails = () => {
   useEffect(() => {
     const fetchRoute = async () => {
       try {
-        const res = await fetch(`${API_URL}/api/routes/${id}`);
+        const res = await fetch(`${API_URL}/api/routes/public/${id}`);
         if (!res.ok) throw new Error();
 
         const data = await res.json();

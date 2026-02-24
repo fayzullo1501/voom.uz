@@ -71,7 +71,6 @@ app.use("/api/profile/cars", userCarsRoutes);
 /**
  * DRIVER ROUTES (создание маршрутов)
  */
-app.use("/api/profile/routes", routeRoutes);
 app.use("/api/routes", routeRoutes);
 /**
  * BOOKINGS
