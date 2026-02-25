@@ -7,23 +7,30 @@ import { API_URL } from "../../config/api";
 import { useToast } from "../ui/useToast";
 
 /* ===== ВСПОМОГАТЕЛЬНАЯ ФУНКЦИЯ ОБРЕЗКИ ===== */
-const getCroppedImage = async (imageSrc, crop, zoom, rotation) => {
+const getCroppedImage = async (imageSrc, croppedAreaPixels) => {
   const image = new Image();
   image.src = imageSrc;
-  await new Promise((res) => (image.onload = res));
+  await new Promise((resolve) => {
+    image.onload = resolve;
+  });
 
   const canvas = document.createElement("canvas");
   const ctx = canvas.getContext("2d");
 
-  const size = Math.min(image.width, image.height);
-  canvas.width = size;
-  canvas.height = size;
+  canvas.width = croppedAreaPixels.width;
+  canvas.height = croppedAreaPixels.height;
 
-  ctx.translate(size / 2, size / 2);
-  ctx.rotate((rotation * Math.PI) / 180);
-  ctx.scale(zoom, zoom);
-  ctx.translate(-image.width / 2, -image.height / 2);
-  ctx.drawImage(image, 0, 0);
+  ctx.drawImage(
+    image,
+    croppedAreaPixels.x,
+    croppedAreaPixels.y,
+    croppedAreaPixels.width,
+    croppedAreaPixels.height,
+    0,
+    0,
+    croppedAreaPixels.width,
+    croppedAreaPixels.height
+  );
 
   return new Promise((resolve) => {
     canvas.toBlob((blob) => resolve(blob), "image/jpeg", 0.9);
@@ -40,6 +47,7 @@ const ProfilePhotoEditor = () => {
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
   const [rotation, setRotation] = useState(0);
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
   const [loading, setLoading] = useState(false);
 
   /* ===== ЕСЛИ ФОТО НЕТ — РЕДИРЕКТ (ТОЛЬКО В useEffect) ===== */
@@ -54,7 +62,9 @@ const ProfilePhotoEditor = () => {
     try {
       setLoading(true);
 
-      const blob = await getCroppedImage(imageSrc, crop, zoom, rotation);
+      if (!croppedAreaPixels) return;
+
+      const blob = await getCroppedImage(imageSrc, croppedAreaPixels);
 
       const formData = new FormData();
       formData.append("file", blob, "avatar.jpg");
@@ -79,7 +89,7 @@ const ProfilePhotoEditor = () => {
     } finally {
       setLoading(false);
     }
-  }, [imageSrc, crop, zoom, rotation, navigate, lang, showToast]);
+  }, [imageSrc, croppedAreaPixels, navigate, lang, showToast]);
 
   if (!imageSrc) return null;
 
@@ -114,6 +124,9 @@ const ProfilePhotoEditor = () => {
           showGrid={false}
           onCropChange={setCrop}
           onZoomChange={setZoom}
+          onCropComplete={(croppedArea, croppedAreaPixels) =>
+            setCroppedAreaPixels(croppedAreaPixels)
+          }
         />
       </div>
 
