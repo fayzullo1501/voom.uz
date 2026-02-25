@@ -1,6 +1,6 @@
 // src/pages/profile/MyTransport.jsx
 import React, { useEffect, useState } from "react";
-import { X, ChevronRight, Calendar } from "lucide-react";
+import { X, ChevronRight, Calendar, Loader2 } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import { API_URL } from "../../config/api";
 import uzFlag from "../../assets/uz-flag.svg";
@@ -32,7 +32,11 @@ const MyTransport = () => {
 
       <h1 className="text-[32px] sm:text-[36px] font-semibold text-center mt-4">Мои автомобили</h1>
 
-      {loading && <div className="mt-10 text-center text-gray-500">Загрузка...</div>}
+      {loading && (
+        <div className="mt-16 flex justify-center">
+          <Loader2 className="w-8 h-8 text-black animate-spin" />
+        </div>
+      )}
 
       {!loading && cars.length === 0 && <div className="mt-10 text-center text-gray-500">У вас пока нет добавленного транспорта</div>}
 

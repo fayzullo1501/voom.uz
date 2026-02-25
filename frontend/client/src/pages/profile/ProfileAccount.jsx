@@ -3,15 +3,20 @@ import { useNavigate, useParams } from "react-router-dom";
 import Header from "../../components/layout/Header";
 import ProfileTopBar from "./ProfileTopBar";
 import axios from "../../services/axios";
-import { Loader2 } from "lucide-react";
 
 
 const ProfileAccount = () => {
   const navigate = useNavigate();
   const { lang } = useParams();
 
-  const [balance, setBalance] = useState(0);
-  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate(`/${lang}/login`);
+    }
+  }, [lang, navigate]);
+
+  const [balance, setBalance] = useState(null);
 
   useEffect(() => {
     const loadBalance = async () => {
@@ -20,8 +25,6 @@ const ProfileAccount = () => {
         setBalance(data.balance || 0);
       } catch (err) {
         console.error("Failed to load balance", err);
-      } finally {
-        setLoading(false);
       }
     };
 
@@ -33,17 +36,8 @@ const ProfileAccount = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
 
-    window.location.href = `/${lang}/login`;
+    navigate(`/${lang}/login`, { replace: true });
   };
-  
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-white">
-        <Loader2 className="w-10 h-10 text-black animate-spin" />
-      </div>
-    );
-  }
-  
   return (
     <>
       <Header />
@@ -67,7 +61,11 @@ const ProfileAccount = () => {
               </div>
               <span className="flex-1 text-[16px] font-medium">Баланс</span>
               <span className="text-black font-medium">
-                {balance.toLocaleString("ru-RU")} UZS
+                {balance === null ? (
+                  <span className="text-gray-400">Загрузка...</span>
+                ) : (
+                  `${balance.toLocaleString("ru-RU")} UZS`
+                )}
               </span>
             </div>
 

@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { UserProvider } from "./context/UserContext";
 import { Routes, Route, Navigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
@@ -62,6 +63,7 @@ function LangWrapper({ Component }) {
 function App() {
   return (
     <div className="min-h-screen flex flex-col bg-white text-gray-900">
+      <UserProvider>
       <main className="flex-1">
         <Routes>
 
@@ -144,6 +146,7 @@ function App() {
 
         </Routes>
       </main>
+      </UserProvider>
     </div>
   );
 }

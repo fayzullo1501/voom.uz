@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { X } from "lucide-react";
+import { X, Loader2 } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useToast } from "../../components/ui/useToast";
 import uzFlag from "../../assets/uz-flag.svg";
 import { API_URL } from "../../config/api";
+import { useUser } from "../../context/UserContext";
 
 const formatDateToInput = (date) => {
   if (!date) return "";
@@ -49,6 +50,7 @@ const EditProfileInfo = () => {
   const { lang } = useParams();
   const { t } = useTranslation("profile");
   const { showToast } = useToast();
+  const { user, refreshUser } = useUser();
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -63,39 +65,30 @@ const EditProfileInfo = () => {
   const [initialState, setInitialState] = useState(null);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      navigate(`/${lang}/login`);
-      return;
-    }
+    if (!user) return;
 
-    fetch(`${API_URL}/api/auth/me`, {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        const formattedBirthDate = data.birthDate ? formatDateToInput(data.birthDate) : "";
+    const formattedBirthDate = user.birthDate
+      ? formatDateToInput(user.birthDate)
+      : "";
 
-        setFirstName(data.firstName || "");
-        setLastName(data.lastName || "");
-        setBirthDate(formattedBirthDate);
-        setAbout(data.about || "");
-        setPhone(data.phone || "");
-        setEmail(data.email);
+    setFirstName(user.firstName || "");
+    setLastName(user.lastName || "");
+    setBirthDate(formattedBirthDate);
+    setAbout(user.about || "");
+    setPhone(user.phone || "");
+    setEmail(user.email || "");
 
-        setInitialState({
-          firstName: data.firstName || "",
-          lastName: data.lastName || "",
-          birthDate: formattedBirthDate,
-          about: data.about || "",
-          email: data.email || "",
-          phone: data.phone || "",
-        });
+    setInitialState({
+      firstName: user.firstName || "",
+      lastName: user.lastName || "",
+      birthDate: formattedBirthDate,
+      about: user.about || "",
+      email: user.email || "",
+      phone: user.phone || "",
+    });
 
-
-        setLoading(false);
-      });
-  }, [lang, navigate]);
+    setLoading(false);
+  }, [user]);
 
   const hasChanges =
     initialState &&
@@ -145,6 +138,7 @@ const EditProfileInfo = () => {
         return;
       }
 
+      await refreshUser();
       showToast(t("edit.success"), "success");
       navigate(-1);
     } catch {
@@ -153,7 +147,13 @@ const EditProfileInfo = () => {
     }
   };
 
-  if (loading) return null;
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <Loader2 className="w-10 h-10 text-black animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-white px-6 pt-6 pb-10">

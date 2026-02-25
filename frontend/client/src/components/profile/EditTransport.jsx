@@ -85,7 +85,11 @@ const EditTransport = () => {
   };
 
   if (loading) {
-    return <div className="min-h-screen flex items-center justify-center text-gray-500">Загрузка...</div>;
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <Loader2 className="w-10 h-10 text-black animate-spin" />
+      </div>
+    );
   }
 
   const brandName = car.brand?.name || car.customBrand || "—";

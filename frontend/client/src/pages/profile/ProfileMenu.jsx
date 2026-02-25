@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Header from "../../components/layout/Header";
 import ProfileTopBar from "./ProfileTopBar";
+import { useUser } from "../../context/UserContext";
 
 import avatarPlaceholder from "../../assets/avatar-placeholder.svg";
-import { LoaderCircle, Car, Loader2 } from "lucide-react";
-import { API_URL } from "../../config/api";
+import { LoaderCircle, Car, Loader2, CaseSensitive, Route, Tickets, Bell  } from "lucide-react";
 
 /* ===== Универсальная зелёная галочка (ТОЛЬКО подтверждения) ===== */
 const CheckIcon = () => (
@@ -23,6 +23,33 @@ const CarFront = () => (
   </div>
 );
 
+/* ===== ИКОНКА РЕДАКТИРОВАНИЯ ПРОФИЛЯ ===== */
+const EditProfileIcon = () => (
+  <div className="w-8 h-8 rounded-full bg-[#32BB78] flex items-center justify-center shrink-0">
+    <CaseSensitive className="w-4 h-4 text-white" />
+  </div>
+);
+
+/* ===== ИКОНКА МОИ МАРШРУТЫ ===== */
+const MyRoutesIcon = () => (
+  <div className="w-8 h-8 rounded-full bg-[#32BB78] flex items-center justify-center shrink-0">
+    <Route className="w-4 h-4 text-white" />
+  </div>
+);
+
+/* ===== ИКОНКА УВЕДОМЛЕНИЯ ===== */
+const NotificationsIcon = () => (
+  <div className="w-8 h-8 rounded-full bg-[#32BB78] flex items-center justify-center shrink-0">
+    <Bell className="w-4 h-4 text-white" />
+  </div>
+);
+
+/* ===== ИКОНКА МОИ БРОНИ ===== */
+const MyBookingsIcon = () => (
+  <div className="w-8 h-8 rounded-full bg-[#32BB78] flex items-center justify-center shrink-0">
+    <Tickets className="w-4 h-4 text-white" />
+  </div>
+);
 
 /* ===== СЕРАЯ ИКОНКА "+" (добавить) ===== */
 const PlusIcon = () => (
@@ -54,54 +81,21 @@ const RejectedIcon = () => (
   </div>
 );
 
-
-const ProfileMenu = () => {
+  const ProfileMenu = () => {
   const navigate = useNavigate();
   const { lang } = useParams();
 
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [cars, setCars] = useState([]);
+  const { user, cars, loading } = useUser();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate(`/${lang}/login`);
+    }
+  }, [lang, navigate]);
 
   const defaultNameByLang = { ru: "Пользователь", uz: "Foydalanuvchi", en: "User" };
   const verifiedLabelByLang = { ru: "Проверенный пользователь", uz: "Tasdiqlangan foydalanuvchi", en: "Verified user" };
-
-  /* ===== Проверка авторизации + загрузка профиля ===== */
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-
-    if (!token) {
-      navigate(`/${lang}/login`);
-      return;
-    }
-
-    fetch(`${API_URL}/api/auth/me`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((res) => {
-        if (!res.ok) throw new Error("unauthorized");
-        return res.json();
-      })
-      .then((data) => {
-        setUser(data);
-        setLoading(false);
-
-        fetch(`${API_URL}/api/profile/cars`, {
-          headers: { Authorization: `Bearer ${token}` },
-        })
-          .then((res) => res.json())
-          .then((carsData) => setCars(carsData))
-          .catch(() => {});
-      })
-      .catch(() => {
-        setLoading(false); // 🔥 ВАЖНО
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
-        navigate(`/${lang}/login`, { replace: true });
-      });
-  }, [lang, navigate]);
 
   if (loading) {
     return (
@@ -144,7 +138,6 @@ const ProfileMenu = () => {
       ? singleCarText
       : `Машин: ${carsCount}`;
 
-
   return (
     <>
       <Header />
@@ -180,9 +173,15 @@ const ProfileMenu = () => {
           </div>
 
           {/* ===== Редактировать профиль ===== */}
-          <button onClick={() => navigate(`/${lang}/profile/edit`)} className="mt-8 w-full text-left text-[16px] text-gray-700 py-3 px-3 rounded-lg transition hover:bg-gray-100">
-            Редактировать информацию о себе
-          </button>
+          <div
+            onClick={() => navigate(`/${lang}/profile/edit`)}
+            className="mt-8 flex items-center gap-3 py-3 px-2 rounded-lg hover:bg-gray-100 cursor-pointer transition"
+          >
+            <EditProfileIcon />
+            <span className="text-[16px] font-medium text-gray-700">
+              Редактировать информацию о себе
+            </span>
+          </div>
 
           <div className="mt-8 border-t border-gray-300" />
 
@@ -306,18 +305,18 @@ const ProfileMenu = () => {
             <h3 className="font-bold text-[20px] mb-5">Маршруты и брони</h3>
 
             <div onClick={() => navigate(`/${lang}/profile/bookings`)} className="flex items-center gap-3 py-3 px-2 rounded-lg hover:bg-gray-100 cursor-pointer transition">
-              <CheckIcon />
+              <MyBookingsIcon />
               <span className="text-[16px] font-medium">Мои бронирования</span>
             </div>
 
             <div onClick={() => navigate(`/${lang}/profile/routes`)} className="flex items-center gap-3 py-3 px-2 rounded-lg hover:bg-gray-100 cursor-pointer transition">
-              <CheckIcon />
+              <MyRoutesIcon />
               <span className="text-[16px] font-medium">Мои маршруты</span>
             </div>
 
-            <div onClick={() => navigate(`/${lang}/profile/chat`)} className="flex items-center gap-3 py-3 px-2 rounded-lg hover:bg-gray-100 cursor-pointer transition">
-              <CheckIcon />
-              <span className="text-[16px] font-medium">Чат мессенджер</span>
+            <div onClick={() => navigate(`/${lang}/profile/notifications`)} className="flex items-center gap-3 py-3 px-2 rounded-lg hover:bg-gray-100 cursor-pointer transition">
+              <NotificationsIcon />
+              <span className="text-[16px] font-medium">Уведомления</span>
             </div>
           </div>
 
