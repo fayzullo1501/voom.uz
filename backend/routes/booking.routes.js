@@ -4,6 +4,9 @@ import {
   createBooking,
   acceptBooking,
   rejectBooking,
+  getMyBookings,
+  getBookingById,
+  leaveReview,
 } from "../controllers/booking.controller.js";
 
 const router = express.Router();
@@ -16,5 +19,11 @@ router.patch("/:id/accept", auth, acceptBooking);
 
 // PATCH /api/bookings/:id/reject
 router.patch("/:id/reject", auth, rejectBooking);
+
+// GET /api/bookings/my?type=active|archive
+router.get("/my", auth, getMyBookings);
+router.get("/:id", auth, getBookingById);
+// POST /api/bookings/:id/review
+router.post("/:id/review", auth, leaveReview);
 
 export default router;

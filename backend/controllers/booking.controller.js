@@ -283,3 +283,168 @@ export const rejectBooking = async (req, res) => {
     return res.status(500).json({ message: "internal_server_error" });
   }
 };
+
+// ===== Мои бронирования (для пассажира) =====
+export const getMyBookings = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const { type } = req.query;
+
+    const now = new Date();
+
+    // Загружаем брони пользователя
+    const bookings = await Booking.find({
+      passenger: userId,
+    })
+      .populate({
+        path: "route",
+        populate: [
+          { path: "fromCity", select: "region" },
+          { path: "toCity", select: "region" },
+        ],
+      })
+      .sort({ createdAt: -1 });
+
+    if (!bookings) {
+      return res.json([]);
+    }
+
+    // Фильтрация
+    const filtered = bookings.filter((b) => {
+      if (!b.route) return false;
+
+      const route = b.route;
+
+      const isPast =
+        route.departureAt < now ||
+        ["completed", "cancelled"].includes(route.status) ||
+        ["rejected", "cancelled"].includes(b.status);
+
+      if (type === "archive") return isPast;
+      return !isPast;
+    });
+
+    return res.json(filtered);
+
+  } catch (error) {
+    console.error("getMyBookings error:", error);
+    return res.status(500).json({ message: "internal_server_error" });
+  }
+};
+
+// ===== Получить одну бронь =====
+export const getBookingById = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const { id } = req.params;
+
+    const booking = await Booking.findById(id)
+      .populate({
+        path: "route",
+        populate: [
+          { path: "fromCity" },
+          { path: "toCity" },
+          { path: "driver", select: ` firstName lastName phone profilePhoto phoneVerified emailVerified passport rating reviewsCount`  },
+          { 
+            path: "car",
+            populate: [
+              { path: "brand" },
+              { path: "model" },
+              { path: "color" }
+            ]
+          },
+        ],
+      });
+
+    if (!booking) {
+      return res.status(404).json({ message: "booking_not_found" });
+    }
+
+    // Защита: пассажир может смотреть только свою бронь
+    if (booking.passenger?.toString() !== userId.toString()) {
+      return res.status(403).json({ message: "not_allowed" });
+    }
+
+    return res.json(booking);
+
+  } catch (error) {
+    console.error("getBookingById error:", error);
+    return res.status(500).json({ message: "internal_server_error" });
+  }
+};
+
+// ===== Оставить отзыв =====
+export const leaveReview = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const { id } = req.params;
+    const { rating, comment } = req.body;
+
+    // Проверка рейтинга
+    if (!rating || rating < 1 || rating > 5) {
+      return res.status(400).json({ message: "invalid_rating" });
+    }
+
+    const booking = await Booking.findById(id).populate("route");
+
+    if (!booking) {
+      return res.status(404).json({ message: "booking_not_found" });
+    }
+
+    // Только владелец брони
+    if (booking.passenger.toString() !== userId.toString()) {
+      return res.status(403).json({ message: "not_allowed" });
+    }
+
+    // Маршрут должен быть завершён
+    if (booking.route.status !== "completed") {
+      return res.status(400).json({ message: "route_not_completed" });
+    }
+
+    // Отзыв можно оставить только один раз
+    if (booking.review?.rating) {
+      return res.status(400).json({ message: "review_already_exists" });
+    }
+
+    // Сохраняем отзыв
+    booking.review = {
+      rating,
+      comment: comment || "",
+      createdAt: new Date(),
+    };
+
+    await booking.save();
+
+    // ===== Обновляем рейтинг водителя =====
+    const driverId = booking.driver;
+
+    const driverBookings = await Booking.find({
+      driver: driverId,
+      "review.rating": { $ne: null },
+    });
+
+    const totalReviews = driverBookings.length;
+
+    const totalRating = driverBookings.reduce(
+      (sum, b) => sum + b.review.rating,
+      0
+    );
+
+    const avgRating =
+      totalReviews > 0 ? totalRating / totalReviews : 0;
+
+    // обновляем User
+    await import("../models/User.js").then(async ({ default: User }) => {
+      await User.findByIdAndUpdate(driverId, {
+        rating: avgRating,
+        reviewsCount: totalReviews,
+      });
+    });
+
+    return res.json({ message: "review_saved" });
+
+  } catch (error) {
+    console.error("leaveReview error:", error);
+    return res.status(500).json({ message: "internal_server_error" });
+  }
+};

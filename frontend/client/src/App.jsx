@@ -111,7 +111,7 @@ function App() {
           {/* Профиль — Мои бронирования */}
           <Route path="/:lang/profile/bookings" element={<LangWrapper Component={MyBookings} />} />
           {/* Профиль — Мои бронирования - Детали*/}
-          <Route path="/:lang/profile/bookings/details" element={<MyBookingDetails />} />
+          <Route path="/:lang/profile/bookings/:id" element={<MyBookingDetails />} />
           {/* Профиль — Мои Маршруты */}
           <Route path="/:lang/profile/routes" element={<LangWrapper Component={MyRoutes} />} />
           {/* Профиль — Мои Маршруты - Детали*/}

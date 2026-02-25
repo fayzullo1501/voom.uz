@@ -1,43 +1,64 @@
-import React, { useState } from "react";
-import { X, Filter } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { X, Loader2 } from "lucide-react";
+import { useNavigate, useParams } from "react-router-dom";
 import walletIcon from "../../assets/icons/wallet.svg";
 import userIcon from "../../assets/icons/user.svg";
-import carAvatar from "../../assets/carbookingtest.jpg";
-import driverAvatar from "../../assets/driverbookingtest.jpg";
-import { useNavigate, useParams } from "react-router-dom";
-
-
+import { API_URL } from "../../config/api";
 
 const MyBookings = () => {
   const navigate = useNavigate();
+  const { lang } = useParams();
+
   const [tab, setTab] = useState("active");
-const { lang } = useParams();
+  const [bookings, setBookings] = useState([]);
+  const [loading, setLoading] = useState(false);
 
+  const token = localStorage.getItem("token");
 
-  const bookings = [
-    {
-      id: 1,
-      from: "FERGHANA",
-      fromSub: "Ферганская область, Узбекистан",
-      to: "TASHKENT",
-      toSub: "Ташкентская область, Узбекистан",
-      dateFrom: "Август 20, 2025 • 21:00",
-      dateTo: "Август 21, 2025 • 03:00",
-      price: "120 000 сум",
-      passengers: "2 пассажира",
-    },
-    {
-      id: 2,
-      from: "TASHKENT",
-      fromSub: "Ташкентская область, Узбекистан",
-      to: "FERGHANA",
-      toSub: "Ферганская область, Узбекистан",
-      dateFrom: "Июнь 10, 2025 • 21:00",
-      dateTo: "Июнь 11, 2025 • 03:00",
-      price: "80 000 сум",
-      passengers: "1 пассажир",
-    },
-  ];
+  const fetchBookings = async (type) => {
+    try {
+      setLoading(true);
+
+      const res = await fetch(
+        `${API_URL}/api/bookings/my?type=${type}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setBookings([]);
+        return;
+      }
+
+      setBookings(data);
+    } catch (error) {
+      console.error("Failed to load bookings", error);
+      setBookings([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchBookings(tab);
+  }, [tab]);
+
+  const formatDate = (date) => {
+    const d = new Date(date);
+    return d.toLocaleString("ru-RU", {
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
 
   return (
     <div className="min-h-screen bg-white px-4 sm:px-6 pb-10 flex flex-col">
@@ -61,36 +82,30 @@ const { lang } = useParams();
       </h1>
 
       {/* ===== Tabs ===== */}
-      <div className="flex justify-center mb-6">
+      <div className="flex justify-center mb-8">
         <div className="w-full max-w-[760px] relative">
-
           <div className="absolute bottom-0 left-0 right-0 h-px bg-gray-200" />
-
-          <div className="flex gap-6 sm:gap-8">
+          <div className="flex gap-8">
             {[
               { id: "active", label: "Активные" },
-              { id: "past", label: "Прошедшие" },
-              { id: "canceled", label: "Отменённые" },
+              { id: "archive", label: "Архив" },
             ].map((item) => (
               <button
                 key={item.id}
                 onClick={() => setTab(item.id)}
-                className={`
-                  relative pb-3 text-[15px] sm:text-[16px] transition
-                  ${tab === item.id
+                className={`relative pb-3 text-[16px] transition ${
+                  tab === item.id
                     ? "text-black font-medium"
-                    : "text-gray-400 hover:text-gray-600"}
-                `}
+                    : "text-gray-400 hover:text-gray-600"
+                }`}
               >
                 {item.label}
-
                 {tab === item.id && (
                   <span className="absolute left-0 right-0 bottom-0 h-[2px] bg-black rounded-full" />
                 )}
               </button>
             ))}
           </div>
-
         </div>
       </div>
 
@@ -98,77 +113,92 @@ const { lang } = useParams();
       <div className="flex justify-center">
         <div className="w-full max-w-[760px]">
 
-          {/* ===== Filter ===== */}
-          <button className="flex items-center gap-2 mb-4 px-3 py-2 border border-gray-200 rounded-lg text-sm text-gray-600 hover:bg-gray-50 transition">
-            <Filter size={16} className="text-gray-400" />
-            Добавить фильтр
-          </button>
+          {loading && (
+            <div className="flex justify-center py-20">
+              <Loader2 className="w-6 h-6 animate-spin text-gray-500" />
+            </div>
+          )}
 
-          {/* ===== Booking cards ===== */}
-          <div className="flex flex-col gap-4">
-            {bookings.map((b) => (
-              <div
-                key={b.id}
-                onClick={() => navigate(`/${lang}/profile/bookings/details`)}
-                className="border border-gray-200 rounded-2xl px-4 sm:px-6 py-4 sm:py-5 hover:bg-gray-50 transition cursor-pointer"
-              >
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 md:gap-6">
+          {!loading && bookings.length === 0 && (
+            <div className="text-center text-gray-500 py-20">
+              Бронирований пока нет
+            </div>
+          )}
 
-                  {/* ===== Route ===== */}
-                  <div className="flex flex-col md:flex-row md:items-center gap-4 md:gap-6 flex-1">
-                    <div>
-                      <div className="text-[18px] sm:text-[20px] font-semibold">{b.from}</div>
-                      <div className="text-xs text-gray-500">{b.fromSub}</div>
-                      <div className="text-xs text-gray-500 mt-1">{b.dateFrom}</div>
-                    </div>
+          {!loading && bookings.length > 0 && (
+            <div className="flex flex-col gap-4">
+              {bookings.map((booking) => (
+                <div
+                  key={booking._id}
+                  onClick={() =>
+                    navigate(`/${lang}/profile/bookings/${booking._id}`)
+                  }
+                  className="border border-gray-200 rounded-2xl px-4 sm:px-6 py-5 hover:bg-gray-50 transition cursor-pointer"
+                >
+                  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
 
-                    <span className="text-xl font-medium hidden md:block">→</span>
-                    <span className="text-xl text-gray-400 md:hidden">↓</span>
-
-                    <div>
-                      <div className="text-[18px] sm:text-[20px] font-semibold">{b.to}</div>
-                      <div className="text-xs text-gray-500">{b.toSub}</div>
-                      <div className="text-xs text-gray-500 mt-1">{b.dateTo}</div>
-                    </div>
-                  </div>
-
-                  {/* ===== Divider ===== */}
-                  <div className="hidden md:block w-px h-16 bg-gray-200" />
-                  <div className="md:hidden h-px bg-gray-200 my-2" />
-
-                  {/* ===== Info ===== */}
-                  <div className="flex flex-row md:flex-col gap-4 md:gap-2 md:min-w-[150px] justify-between md:justify-start">
-                    <div className="flex items-center gap-2 text-sm font-medium">
-                      <img src={walletIcon} alt="Сумма" className="w-5 h-5 opacity-70" />
-                      {b.price}
-                    </div>
-
-                    <div className="flex items-center gap-2 text-sm text-gray-600">
-                      <img src={userIcon} alt="Пассажиры" className="w-5 h-5 opacity-60" />
-                      {b.passengers}
-                    </div>
-                  </div>
-
-                  {/* ===== Divider ===== */}
-                  <div className="hidden md:block w-px h-16 bg-gray-200" />
-                  <div className="md:hidden h-px bg-gray-200 my-2" />
-                  
-                  <div className="flex flex-col gap-3">
-                      <div className="flex items-center gap-3">
-                        <img src={carAvatar} alt="Авто" className="w-10 h-10 rounded-full object-cover" />
-                        <span className="text-sm font-medium text-gray-800">Chevrolet Malibu</span>
+                    {/* ===== Route Info ===== */}
+                    <div className="flex flex-col md:flex-row md:items-center gap-6 flex-1">
+                      <div>
+                        <div className="text-[20px] font-semibold uppercase">
+                          {booking.route?.fromName}
+                        </div>
+                        <div className="text-xs text-gray-500">
+                          {booking.route?.fromCity?.region}, Узбекистан
+                        </div>
+                        <div className="text-xs text-gray-500 mt-1">
+                          {formatDate(booking.route?.departureAt)}
+                        </div>
                       </div>
 
-                      <div className="flex items-center gap-3">
-                        <img src={driverAvatar} alt="Водитель" className="w-10 h-10 rounded-full object-cover" />
-                        <span className="text-sm text-gray-700">Fayzullo Abdulazizov</span>
+                      <span className="hidden md:block text-xl">→</span>
+                      <span className="md:hidden text-gray-400 text-xl">↓</span>
+
+                      <div>
+                        <div className="text-[20px] font-semibold uppercase">
+                          {booking.route?.toName}
+                        </div>
+                        <div className="text-xs text-gray-500">
+                          {booking.route?.toCity?.region}, Узбекистан
+                        </div>
+                        <div className="text-xs text-gray-500 mt-1">
+                          {booking.route?.arrivalAt
+                            ? formatDate(booking.route?.arrivalAt)
+                            : "—"}
+                        </div>
                       </div>
                     </div>
 
+                    {/* ===== Divider ===== */}
+                    <div className="hidden md:block w-px h-16 bg-gray-200" />
+                    <div className="md:hidden h-px bg-gray-200" />
+
+                    {/* ===== Right Info ===== */}
+                    <div className="flex flex-row md:flex-col gap-4 md:gap-2 md:min-w-[170px] justify-between md:justify-start">
+                      <div className="flex items-center gap-2 text-sm font-medium">
+                        <img
+                          src={walletIcon}
+                          alt="Оплачено"
+                          className="w-5 h-5 opacity-70"
+                        />
+                        {(booking.totalPrice || 0).toLocaleString()} сум
+                      </div>
+
+                      <div className="flex items-center gap-2 text-sm text-gray-600">
+                        <img
+                          src={userIcon}
+                          alt="Места"
+                          className="w-5 h-5 opacity-60"
+                        />
+                        {booking.seatsCount || 0} пассажиров
+                      </div>
+                    </div>
+
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
 
         </div>
       </div>
