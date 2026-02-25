@@ -4,8 +4,7 @@ import Header from "../../components/layout/Header";
 import ProfileTopBar from "./ProfileTopBar";
 
 import avatarPlaceholder from "../../assets/avatar-placeholder.svg";
-import userVerifiedIcon from "../../assets/userverified.svg";
-import { LoaderCircle, Car } from "lucide-react";
+import { LoaderCircle, Car, Loader2 } from "lucide-react";
 import { API_URL } from "../../config/api";
 
 /* ===== Универсальная зелёная галочка (ТОЛЬКО подтверждения) ===== */
@@ -106,8 +105,8 @@ const ProfileMenu = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        Загрузка...
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <Loader2 className="w-10 h-10 text-black animate-spin" />
       </div>
     );
   }

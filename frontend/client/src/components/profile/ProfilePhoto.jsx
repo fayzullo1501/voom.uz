@@ -45,7 +45,7 @@ const ProfilePhoto = () => {
         Фото профиля
       </h1>
 
-      <input ref={fileInputRef} type="file" accept="image/*" capture="user" className="hidden" onChange={(e) => { const file = e.target.files?.[0]; if (file) handleFile(file); e.target.value = ""; }} />
+      <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={(e) => { const file = e.target.files?.[0]; if (file) handleFile(file); e.target.value = ""; }} />
 
       <div className="flex-1 flex flex-col items-center justify-center text-center px-2">
         <div className="w-48 h-48 sm:w-56 sm:h-56 rounded-full border-2 border-dashed border-gray-300 mb-10 bg-gray-100 flex items-center justify-center">

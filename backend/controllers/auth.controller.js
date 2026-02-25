@@ -92,11 +92,6 @@ export const me = async (req, res) => {
     user.profilePhoto?.status === "approved" &&
     user.passport?.status === "approved";
 
-  // 🔥 КЛЮЧЕВОЕ ИСПРАВЛЕНИЕ
-  const safeProfilePhoto =
-    user.profilePhoto?.status === "approved"
-      ? user.profilePhoto
-      : { status: "empty", url: null };
 
   res.json({
     id: user._id,
@@ -109,7 +104,7 @@ export const me = async (req, res) => {
     about: user.about,
     phoneVerified: user.phoneVerified,
     emailVerified: user.emailVerified,
-    profilePhoto: safeProfilePhoto, // ← вот это меняем
+    profilePhoto: user.profilePhoto,
     passport: user.passport,
     verified,
     createdAt: user.createdAt,

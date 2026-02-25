@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import Header from "../../components/layout/Header";
 import ProfileTopBar from "./ProfileTopBar";
 import axios from "../../services/axios";
+import { Loader2 } from "lucide-react";
 
 
 const ProfileAccount = () => {
@@ -10,6 +11,7 @@ const ProfileAccount = () => {
   const { lang } = useParams();
 
   const [balance, setBalance] = useState(0);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const loadBalance = async () => {
@@ -18,6 +20,8 @@ const ProfileAccount = () => {
         setBalance(data.balance || 0);
       } catch (err) {
         console.error("Failed to load balance", err);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -31,6 +35,15 @@ const ProfileAccount = () => {
 
     window.location.href = `/${lang}/login`;
   };
+  
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <Loader2 className="w-10 h-10 text-black animate-spin" />
+      </div>
+    );
+  }
+  
   return (
     <>
       <Header />
