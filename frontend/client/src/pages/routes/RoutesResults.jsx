@@ -87,6 +87,19 @@ const RoutesResults = () => {
   const formatPrice = (num) =>
     new Intl.NumberFormat("ru-RU").format(num);
 
+  
+  const formatPhone = (phone) => {
+    if (!phone) return "";
+
+    const digits = phone.replace(/\D/g, "").slice(0, 9);
+
+    const p1 = digits.slice(0, 2);
+    const p2 = digits.slice(2, 5);
+    const p3 = digits.slice(5, 7);
+    const p4 = digits.slice(7, 9);
+
+    return `+998 ${[p1, p2, p3, p4].filter(Boolean).join(" ")}`;
+  };
   // ================= FILTER + SORT LOGIC =================
 
   const getMinPrice = (route) =>
@@ -424,7 +437,7 @@ const RoutesResults = () => {
                           {route.driver?.lastName}
                         </div>
                         <div className="text-[14px]">
-                          {route.driver?.phone}
+                          {formatPhone(route.driver?.phone)}
                         </div>
                       </div>
                     </div>

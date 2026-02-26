@@ -5,6 +5,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import { API_URL } from "../../config/api";
 import UserProfileTab from "../../components/users/UserProfileTab";
 import UserFilesTab from "../../components/users/UserFilesTab";
+import UserCarsTab from "../../components/users/UserCarsTab";
+import UserRoutesTab from "../../components/users/UserRoutesTab";
+import UserBookingsTab from "../../components/users/UserBookingsTab"; // 👈 ДОБАВИТЬ
 
 const tabs = [
   { key: "profile", label: "Персональные данные", icon: User },
@@ -138,11 +141,10 @@ const UserDetails = () => {
           <UserProfileTab user={user} />
         ) : activeTab === "files" ? (
           <UserFilesTab
-            userId={user._id}          // 🔥 ВАЖНО
+            userId={user._id}
             files={user.files || []}
             loading={false}
             onRefresh={() => {
-              // повторно загрузить пользователя
               fetch(`${API_URL}/api/admin/users/${id}`, {
                 headers: {
                   Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -152,6 +154,21 @@ const UserDetails = () => {
                 .then((data) => setUser(data));
             }}
           />
+          ) : activeTab === "routes" ? (   // 👈 ДОБАВИТЬ ЭТОТ БЛОК
+          <UserRoutesTab
+            routes={user.routes || []}
+            loading={false}
+          />
+          ) : activeTab === "bookings" ? (   // 👈 ВСТАВИТЬ ЭТОТ БЛОК
+          <UserBookingsTab
+            bookings={user.bookings || []}
+            loading={false}
+          />
+          ) : activeTab === "cars" ? (
+            <UserCarsTab
+              cars={user.cars || []}
+              loading={false}
+            />
         ) : (
           <Loader />
         )}

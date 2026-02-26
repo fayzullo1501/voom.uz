@@ -1,7 +1,9 @@
 import User from "../models/User.js";
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
-
+import UserCar from "../models/UserCar.js";
+import Route from "../models/Route.js";  
+import Booking from "../models/Booking.js";
 /**
  * ===============================
  * HELPERS
@@ -263,9 +265,18 @@ export const getUserById = async (req, res) => {
       return res.status(403).json({ message: "Forbidden" });
     }
 
-    const user = await User.findById(req.params.id)
+    const userId = req.params.id;
+
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({ message: "Invalid ID" });
+    }
+
+    /* ===============================
+       USER
+    =============================== */
+    const user = await User.findById(userId)
       .select(
-        "_id firstName lastName birthDate about phone email role phoneVerified passport profilePhoto createdAt"
+        "_id firstName lastName birthDate about phone email role phoneVerified passport profilePhoto rating reviewsCount createdAt"
       )
       .lean();
 
@@ -273,14 +284,142 @@ export const getUserById = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    res.json({
+    /* ===============================
+       CARS
+    =============================== */
+    const cars = await UserCar.find({ user: userId })
+      .populate("brand", "name logo")
+      .populate("model", "name")
+      .populate("color", "nameRu nameUz nameEn hex")
+      .sort({ createdAt: -1 })
+      .lean();
+
+    /* ===============================
+       ROUTES (как водитель)
+    =============================== */
+    const routesRaw = await Route.find({ driver: userId })
+    .populate("fromCity", "nameRu")
+    .populate("toCity", "nameRu")
+    .populate({
+      path: "car",
+      populate: [
+        { path: "brand", select: "name logo" },
+        { path: "model", select: "name" },     // 👈 ВОТ ЭТО ГЛАВНОЕ
+        { path: "color", select: "nameRu hex" }
+      ]
+    })
+    .sort({ departureAt: -1 })
+    .lean();
+
+    const routes = [];
+
+    for (const route of routesRaw) {
+      const acceptedBookings = await Booking.find({
+        route: route._id,
+        status: "accepted",
+      })
+        .populate(
+          "passenger",
+          "firstName lastName phone profilePhoto"
+        )
+        .lean();
+
+      const confirmedPassengers = acceptedBookings
+        .filter((b) => b.passenger)
+        .map((b) => ({
+          _id: b.passenger._id,
+          firstName: b.passenger.firstName,
+          lastName: b.passenger.lastName,
+          phone: b.passenger.phone,
+          profilePhoto: b.passenger.profilePhoto,
+        }));
+
+      routes.push({
+        ...route,
+        confirmedPassengers,
+      });
+    }
+
+    /* ===============================
+       BOOKINGS (как пассажир)
+    =============================== */
+    const bookingsRaw = await Booking.find({ passenger: userId })
+      .populate({
+        path: "route",
+        populate: [
+          { path: "fromCity", select: "nameRu" },
+          { path: "toCity", select: "nameRu" },
+          {
+            path: "driver",
+            select:
+              "firstName lastName phone profilePhoto rating reviewsCount",
+          },
+          {
+            path: "car",
+            populate: [
+              { path: "brand", select: "name logo" },
+              { path: "model", select: "name" },
+              { path: "color", select: "nameRu hex" },
+            ],
+          },
+        ],
+      })
+      .sort({ createdAt: -1 })
+      .lean();
+
+    const bookings = [];
+
+    for (const booking of bookingsRaw) {
+      const routeId = booking.route?._id;
+
+      let confirmedPassengers = [];
+
+      if (routeId) {
+        const acceptedBookings = await Booking.find({
+          route: routeId,
+          status: "accepted",
+        })
+          .populate(
+            "passenger",
+            "firstName lastName phone profilePhoto"
+          )
+          .lean();
+
+        confirmedPassengers = acceptedBookings
+          .filter((b) => b.passenger)
+          .map((b) => ({
+            _id: b.passenger._id,
+            firstName: b.passenger.firstName,
+            lastName: b.passenger.lastName,
+            phone: b.passenger.phone,
+            profilePhoto: b.passenger.profilePhoto,
+            seatType: b.seatType,
+            seatsCount: b.seatsCount,
+            totalPrice: b.totalPrice,
+          }));
+      }
+
+      bookings.push({
+        ...booking,
+        confirmedPassengers,
+      });
+    }
+
+    /* ===============================
+       RESPONSE
+    =============================== */
+    return res.json({
       ...user,
       verified: calcVerified(user),
       files: buildUserFiles(user),
+      cars,
+      routes,
+      bookings,
     });
+
   } catch (err) {
     console.error("ADMIN GET USER ERROR:", err);
-    res.status(500).json({ message: "Server error" });
+    return res.status(500).json({ message: "Server error" });
   }
 };
 

@@ -1,6 +1,5 @@
 import React from "react";
 import faykhanur from "../../assets/partners/faykhanur.png";
-import sqb from "../../assets/partners/sqb.png";
 import enlight from "../../assets/partners/enlight.png";
 import manera from "../../assets/partners/manera.png";
 import soulcraft from "../../assets/partners/soulcraft.png";
@@ -8,7 +7,6 @@ import soulcraft from "../../assets/partners/soulcraft.png";
 const Partners = () => {
   const partners = [
     { id: 1, logo: faykhanur, name: "Faykhanur Enterprises" },
-    { id: 2, logo: sqb, name: "SQB Bank" },
     { id: 3, logo: enlight, name: "Enlight" },
     { id: 4, logo: manera, name: "Manera" },
     { id: 5, logo: soulcraft, name: "SoulCraft" },
