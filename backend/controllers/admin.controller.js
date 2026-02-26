@@ -4,6 +4,7 @@ import bcrypt from "bcryptjs";
 import UserCar from "../models/UserCar.js";
 import Route from "../models/Route.js";  
 import Booking from "../models/Booking.js";
+import Transaction from "../models/Transaction.js";
 /**
  * ===============================
  * HELPERS
@@ -562,5 +563,173 @@ export const rejectPassport = async (req, res) => {
   } catch (err) {
     console.error("REJECT PASSPORT ERROR:", err);
     res.status(500).json({ message: "reject_failed" });
+  }
+};
+
+
+/* ===============================
+   GET /admin/stats
+   Dashboard statistics
+=============================== */
+export const getAdminStats = async (req, res) => {
+  try {
+    if (req.user.role !== "admin") {
+      return res.status(403).json({ message: "Forbidden" });
+    }
+
+    const usersCount = await User.countDocuments({
+      role: { $ne: "admin" },
+    });
+
+    const routesCount = await Route.countDocuments();
+
+    // 💰 ОБЩИЙ БАЛАНС СИСТЕМЫ
+    const balanceAgg = await User.aggregate([
+      {
+        $group: {
+          _id: null,
+          totalBalance: { $sum: "$balance" },
+        },
+      },
+    ]);
+
+    // 💰 Суммы по агрегаторам (только успешные пополнения)
+    const providersAgg = await Transaction.aggregate([
+      {
+        $match: {
+          type: "topup",
+          status: "success",
+        },
+      },
+      {
+        $group: {
+          _id: "$provider",
+          total: { $sum: "$amount" },
+        },
+      },
+    ]);
+
+    // Преобразуем в удобный объект
+    const providers = {
+      click: 0,
+      payme: 0,
+      test: 0,
+      internal: 0,
+    };
+
+    providersAgg.forEach((item) => {
+      providers[item._id] = item.total;
+    });
+
+    const totalBalance =
+      balanceAgg.length > 0 ? balanceAgg[0].totalBalance : 0;
+
+    // 📊 Маршруты по месяцам (текущий год)
+    const now = new Date();
+    const startOfYear = new Date(now.getFullYear(), 0, 1);
+    const endOfYear = new Date(now.getFullYear(), 11, 31, 23, 59, 59);
+
+    const routesByMonthAgg = await Route.aggregate([
+      {
+        $match: {
+          createdAt: {
+            $gte: startOfYear,
+            $lte: endOfYear,
+          },
+        },
+      },
+      {
+        $group: {
+          _id: { $month: "$createdAt" },
+          count: { $sum: 1 },
+        },
+      },
+    ]);
+
+    // Создаем массив из 12 месяцев
+    const routesByMonth = Array.from({ length: 12 }, (_, i) => {
+      const found = routesByMonthAgg.find((m) => m._id === i + 1);
+      return found ? found.count : 0;
+    });
+
+    // ===== ГОД-К-ГОДУ СРАВНЕНИЕ =====
+    const currentYear = new Date().getFullYear();
+
+    const startCurrentYear = new Date(currentYear, 0, 1);
+    const endCurrentYear = new Date(currentYear, 11, 31, 23, 59, 59);
+
+    const startLastYear = new Date(currentYear - 1, 0, 1);
+    const endLastYear = new Date(currentYear - 1, 11, 31, 23, 59, 59);
+
+    // 👤 Пользователи
+    const usersCurrentYear = await User.countDocuments({
+      createdAt: { $gte: startCurrentYear, $lte: endCurrentYear },
+    });
+
+    const usersLastYear = await User.countDocuments({
+      createdAt: { $gte: startLastYear, $lte: endLastYear },
+    });
+
+    // 🚗 Маршруты
+    const routesCurrentYear = await Route.countDocuments({
+      createdAt: { $gte: startCurrentYear, $lte: endCurrentYear },
+    });
+
+    const routesLastYear = await Route.countDocuments({
+      createdAt: { $gte: startLastYear, $lte: endLastYear },
+    });
+
+    // 💰 Доход (по успешным пополнениям)
+    const revenueCurrentYearAgg = await Transaction.aggregate([
+      {
+        $match: {
+          type: "topup",
+          status: "success",
+          createdAt: { $gte: startCurrentYear, $lte: endCurrentYear },
+        },
+      },
+      { $group: { _id: null, total: { $sum: "$amount" } } },
+    ]);
+
+    const revenueLastYearAgg = await Transaction.aggregate([
+      {
+        $match: {
+          type: "topup",
+          status: "success",
+          createdAt: { $gte: startLastYear, $lte: endLastYear },
+        },
+      },
+      { $group: { _id: null, total: { $sum: "$amount" } } },
+    ]);
+
+    const revenueCurrentYear =
+      revenueCurrentYearAgg.length > 0 ? revenueCurrentYearAgg[0].total : 0;
+
+    const revenueLastYear =
+      revenueLastYearAgg.length > 0 ? revenueLastYearAgg[0].total : 0;
+
+    // ===== Функция расчета процента =====
+    const calcGrowth = (current, last) => {
+      if (last === 0) return current > 0 ? 100 : 0;
+      return Number((((current - last) / last) * 100).toFixed(1));
+    };
+
+    const growth = {
+      users: calcGrowth(usersCurrentYear, usersLastYear),
+      routes: calcGrowth(routesCurrentYear, routesLastYear),
+      revenue: calcGrowth(revenueCurrentYear, revenueLastYear),
+    };
+    
+      res.json({
+      usersCount,
+      routesCount,
+      totalBalance, 
+      providers,
+      routesByMonth,
+      growth,
+    });
+  } catch (err) {
+    console.error("ADMIN STATS ERROR:", err);
+    res.status(500).json({ message: "Server error" });
   }
 };

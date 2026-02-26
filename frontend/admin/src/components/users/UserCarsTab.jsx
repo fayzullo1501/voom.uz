@@ -103,7 +103,7 @@ const UserCarsTab = ({ cars, loading }) => {
           <tbody>
             {cars?.length ? (
               cars.map((car) => (
-                <tr key={car._id} className="border-t">
+                <tr key={car._id} className="border-t border-gray-300">
                   <td className="px-4 py-3 text-gray-500">
                     {car._id.slice(-6)}
                   </td>

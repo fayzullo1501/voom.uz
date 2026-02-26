@@ -9,6 +9,7 @@ import {
   rejectProfilePhoto,
   approvePassport,
   rejectPassport,
+  getAdminStats,
 } from "../controllers/admin.controller.js";
 import auth from "../middlewares/auth.middleware.js";
 import brandsRoutes from "./brands.routes.js";
@@ -29,6 +30,6 @@ router.post("/users/:id/passport/reject", auth, rejectPassport);
 router.use("/brands", brandsRoutes);
 router.use("/models", carModelsRoutes);
 router.use("/colors", carColorsRoutes);
-
+router.get("/stats", auth, getAdminStats);
 
 export default router;

@@ -6,22 +6,85 @@ import clickLogo from "../assets/click.svg";
 import paymeLogo from "../assets/payme.svg";
 import uzFlag from "../assets/flag-uz.svg";
 
-const chartData = [
-  { name: "Январь", value: 120 },
-  { name: "Февраль", value: 220 },
-  { name: "Март", value: 260 },
-  { name: "Апрель", value: 180 },
-  { name: "Май", value: 210 },
-  { name: "Июнь", value: 90 },
-  { name: "Июль", value: 170 },
-  { name: "Август", value: 300 },
-  { name: "Сентябрь", value: 230 },
-  { name: "Октябрь", value: 200 },
-  { name: "Ноябрь", value: 140 },
-  { name: "Декабрь", value: 190 },
-];
+import { useEffect, useState } from "react";
+
+const API_URL = import.meta.env.VITE_API_URL;
+
 
 const Dashboard = () => {
+  const [usersCount, setUsersCount] = useState(0);
+  const [routesCount, setRoutesCount] = useState(0);
+  const [totalBalance, setTotalBalance] = useState(0);
+  const [providers, setProviders] = useState({
+    click: 0,
+    payme: 0,
+    test: 0,
+    internal: 0,
+  });
+  const [loadingUsers, setLoadingUsers] = useState(true);
+  const [routesByMonth, setRoutesByMonth] = useState([]);
+  const [growth, setGrowth] = useState({
+    users: 0,
+    routes: 0,
+    revenue: 0,
+  });
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const token = localStorage.getItem("token");
+
+        const res = await fetch(`${API_URL}/api/admin/stats`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        const data = await res.json();
+
+        setUsersCount(data.usersCount || 0);
+        setRoutesCount(data.routesCount || 0);
+        setTotalBalance(data.totalBalance || 0);
+        setProviders(data.providers || {
+          click: 0,
+          payme: 0,
+          test: 0,
+          internal: 0,
+        });
+        setRoutesByMonth(data.routesByMonth || []);
+        setGrowth(data.growth || {
+          users: 0,
+          routes: 0,
+          revenue: 0,
+        });
+      } catch (err) {
+        console.error("Dashboard stats error:", err);
+      } finally {
+        setLoadingUsers(false);
+      }
+    };
+
+    fetchStats();
+  }, []);
+
+  const months = [
+    "Янв", "Фев", "Мар", "Апр", "Май", "Июн",
+    "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек"
+  ];
+
+  const chartData = months.map((month, index) => ({
+    name: month,
+    value: routesByMonth[index] || 0,
+  }));
+
+  const today = new Date();
+
+  const formattedDate = today.toLocaleDateString("ru-RU", {
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+  });
+  
   return (
     <>
       <PageHeader title="Статистика" />
@@ -36,8 +99,8 @@ const Dashboard = () => {
 
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2 h-[40px] px-4 rounded-xl border border-gray-300 text-[14px] bg-white">
-              <Calendar size={16} />
-              12 Января 2026
+             <Calendar size={16} />
+            {formattedDate}
             </div>
             <button className="flex items-center gap-2 h-[40px] px-4 rounded-xl bg-black text-white text-[14px] font-medium hover:bg-gray-800 transition">
               <Download size={16} />
@@ -64,10 +127,15 @@ const Dashboard = () => {
                   </div>
                 </div>
 
-                <div className="text-[26px] font-semibold">123 240 590.00 сум</div>
+                <div className="text-[26px] font-semibold">
+                  {loadingUsers
+                    ? "..."
+                    : `${totalBalance.toLocaleString("ru-RU")} сум`}
+                </div>
 
                 <div className="inline-flex items-center gap-1 mt-2 px-3 py-1 rounded-full bg-green-100 text-green-700 text-[13px] font-medium">
-                  +3.2%
+                  {growth.revenue >= 0 ? "+" : ""}
+                  {growth.revenue}%
                   <span className="text-gray-600 font-normal">чем прошлый год</span>
                 </div>
 
@@ -87,7 +155,11 @@ const Dashboard = () => {
                     </button>
 
                     <img src={clickLogo} alt="Click" className="h-[26px] mb-2" />
-                    <div className="text-[18px] font-semibold">100 120 590 сум</div>
+                    <div className="text-[18px] font-semibold">
+                      {loadingUsers
+                        ? "..."
+                        : `${(providers.click || 0).toLocaleString("ru-RU")} сум`}
+                    </div>
                     <div className="text-[13px] text-green-600">Активный</div>
                   </div>
 
@@ -97,7 +169,11 @@ const Dashboard = () => {
                     </button>
 
                     <img src={paymeLogo} alt="Payme" className="h-[26px] mb-2" />
-                    <div className="text-[18px] font-semibold">23 120 000 сум</div>
+                    <div className="text-[18px] font-semibold">
+                      {loadingUsers
+                        ? "..."
+                        : `${(providers.payme || 0).toLocaleString("ru-RU")} сум`}
+                    </div>
                     <div className="text-[13px] text-green-600">Активный</div>
                   </div>
                 </div>
@@ -117,9 +193,12 @@ const Dashboard = () => {
                   </div>
                   <MoreHorizontal size={18} className="text-gray-400" />
                 </div>
-                <div className="text-[26px] font-semibold">1 000 123</div>
+                <div className="text-[26px] font-semibold">
+                  {loadingUsers ? "..." : usersCount.toLocaleString("ru-RU")}
+                </div>
                 <div className="inline-flex items-center gap-1 mt-2 px-3 py-1 rounded-full bg-green-100 text-green-700 text-[13px] font-medium">
-                  +3.2%
+                  {growth.users >= 0 ? "+" : ""}
+                  {growth.users}%
                   <span className="text-gray-600 font-normal">чем прошлый год</span>
                 </div>
               </div>
@@ -132,9 +211,12 @@ const Dashboard = () => {
                   </div>
                   <MoreHorizontal size={18} className="text-gray-400" />
                 </div>
-                <div className="text-[26px] font-semibold">1 000 123</div>
+                <div className="text-[26px] font-semibold">
+                  {loadingUsers ? "..." : routesCount.toLocaleString("ru-RU")}
+                </div>
                 <div className="inline-flex items-center gap-1 mt-2 px-3 py-1 rounded-full bg-green-100 text-green-700 text-[13px] font-medium">
-                  +3.2%
+                  {growth.routes >= 0 ? "+" : ""}
+                  {growth.routes}%
                   <span className="text-gray-600 font-normal">чем прошлый год</span>
                 </div>
               </div>

@@ -15,8 +15,8 @@ const Loader = () => (
 const StatusBadge = ({ status }) => {
   const map = {
     active: "bg-green-100 text-green-700",
-    in_progress: "bg-blue-100 text-blue-700",
-    completed: "bg-gray-200 text-gray-700",
+    in_progress: "bg-yellow-100 text-yellow-700",
+    completed: "bg-green-500 text-white",
     cancelled: "bg-red-100 text-red-700",
   };
 
@@ -165,7 +165,7 @@ const UserRoutesTab = ({ routes, loading }) => {
           <tbody>
             {routes?.length ? (
               routes.map((route) => (
-                <tr key={route._id} className="border-t">
+                <tr key={route._id} className="border-t border-gray-300">
                   <td className="px-4 py-3 text-gray-500">
                     {route._id.slice(-6)}
                   </td>

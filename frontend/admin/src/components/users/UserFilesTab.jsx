@@ -116,7 +116,7 @@ const UserFilesTab = ({ userId, files, loading, onRefresh }) => {
           <tbody>
             {files?.length ? (
               files.map((f, i) => (
-                <tr key={f._id} className="border-t">
+                <tr key={f._id} className="border-t border-gray-300">
                   <td className="px-4 py-3">{i + 1}</td>
                   <td className="px-4 py-3">{f.name}</td>
 
