@@ -11,13 +11,15 @@ import flagEn from "../../assets/en-flag.svg";
 import menuIcon from "../../assets/menu.svg";
 import closeIcon from "../../assets/close.svg";
 import avatarPlaceholder from "../../assets/avatar-placeholder.svg";
+import { useUser } from "../../context/UserContext";
 
 const Header = () => {
+  const { user, loading } = useUser();
   const navigate = useNavigate();
   const { t, i18n } = useTranslation("layout");
   const { lang } = useParams();
 
-  const currentLang = lang || i18n.language || "ru";
+  const currentLang = lang ?? "ru";
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -29,18 +31,14 @@ const Header = () => {
   const [langOpen, setLangOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const [mobileProfileOpen, setMobileProfileOpen] = useState(false);
-  const [user, setUser] = useState(null);
-  const [userLoading, setUserLoading] = useState(true);
 
 
-  const token = localStorage.getItem("token");
-  const isAuth = !!token;
+  const isAuth = !!user;
 
-  const displayName = userLoading
-  ? t("header.profile.loading")
-  : !isAuth
-    ? t("header.profile.login")
-    : user?.firstName?.trim() || t("header.profile.defaultName");
+  const displayName =
+    !isAuth
+      ? t("header.profile.login")
+      : user?.firstName?.trim() || t("header.profile.defaultName");
 
 
   const avatarSrc =
@@ -61,48 +59,6 @@ const Header = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  useEffect(() => {
-    const loadUser = () => {
-      const token = localStorage.getItem("token");
-
-      if (!token) {
-        setUser(null);
-        setUserLoading(false);
-        return;
-      }
-
-      fetch(`${import.meta.env.VITE_API_URL}/api/auth/me`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-        .then((res) => (res.ok ? res.json() : null))
-        .then((data) => {
-          if (data) {
-            setUser(data);
-            localStorage.setItem("user", JSON.stringify(data));
-          } else {
-            setUser(null);
-          }
-        })
-        .catch(() => setUser(null))
-        .finally(() => setUserLoading(false));
-    };
-
-    loadUser();
-
-    // 🔥 слушаем изменения localStorage
-    const handleStorageChange = () => {
-      loadUser();
-    };
-
-    window.addEventListener("storage", handleStorageChange);
-
-    return () => {
-      window.removeEventListener("storage", handleStorageChange);
-    };
-  }, []);
-
   const languages = [
     { code: "ru", flag: flagRu },
     { code: "uz", flag: flagUz },
@@ -119,13 +75,6 @@ const Header = () => {
     navigate(pathParts.join("/"));
   };
 
-  const navLinks = [
-    { key: "home", href: `/${currentLang}` },
-    { key: "about", href: `/${currentLang}/about` },
-    { key: "news", href: `/${currentLang}/news` },
-    { key: "contacts", href: `/${currentLang}/contacts` },
-  ];
-
   return (
     <header className="bg-white sticky top-0 z-50">
       <div className="container-wide flex items-center justify-between py-8">
@@ -133,11 +82,19 @@ const Header = () => {
           <img src={logo} alt={t("header.logoAlt")} className="h-10 cursor-pointer" onClick={() => navigate(`/${currentLang}`)} />
 
           <nav className="hidden lg:flex items-center gap-6">
-            {navLinks.map((item) => (
-              <a key={item.key} href={item.href} className="text-gray-900 hover:text-gray-700 text-[17px] font-medium transition">
-                {t(`header.nav.${item.key}`)}
-              </a>
-            ))}
+            <a
+              onClick={() => navigate(`/${currentLang}/for-passengers`)}
+              className="text-gray-900 hover:text-gray-700 text-[17px] font-medium transition cursor-pointer"
+            >
+              {t("header.links.passengers")}
+            </a>
+
+            <a
+              onClick={() => navigate(`/${currentLang}/for-drivers`)}
+              className="text-gray-900 hover:text-gray-700 text-[17px] font-medium transition cursor-pointer"
+            >
+              {t("header.links.drivers")}
+            </a>
 
             <div className="relative">
               <div className="flex items-center gap-2 cursor-pointer select-none" onClick={() => setLangOpen(!langOpen)}>
@@ -212,11 +169,25 @@ const Header = () => {
         </div>
 
         <div className="flex flex-col items-start px-8 pt-4 gap-6">
-          {navLinks.map((item) => (
-            <a key={item.key} href={item.href} className="text-gray-900 text-[18px] font-medium hover:text-gray-600 transition" onClick={() => setMenuOpen(false)}>
-              {t(`header.nav.${item.key}`)}
-            </a>
-          ))}
+          <a
+            className="text-gray-900 text-[18px] font-medium hover:text-gray-600 transition cursor-pointer"
+            onClick={() => {
+              navigate(`/${currentLang}/for-passengers`);
+              setMenuOpen(false);
+            }}
+          >
+            {t("header.links.passengers")}
+          </a>
+
+          <a
+            className="text-gray-900 text-[18px] font-medium hover:text-gray-600 transition cursor-pointer"
+            onClick={() => {
+              navigate(`/${currentLang}/for-drivers`);
+              setMenuOpen(false);
+            }}
+          >
+            {t("header.links.drivers")}
+          </a>
 
           <div className="relative">
             <div className="flex items-center gap-2 cursor-pointer" onClick={() => setLangOpen(!langOpen)}>

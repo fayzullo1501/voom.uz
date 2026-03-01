@@ -1,9 +1,12 @@
 import React from "react";
 import { Instagram, Youtube, Send } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { useParams } from "react-router-dom"; 
 
 function Footer() {
   const { t } = useTranslation("layout");
+  const { lang } = useParams();                // 🔥 ДОБАВИТЬ
+  const currentLang = lang || "ru";   
 
   return (
     <footer className="bg-black text-gray-300 pt-16 pb-6 border-t border-neutral-800">
@@ -67,16 +70,32 @@ function Footer() {
             </ul>
           </div>
 
-          {/* Возможности */}
+          {/* Навигация */}
           <div>
             <h4 className="text-white font-semibold text-lg mb-3">
-              {t("footer.features.title")}
+              {t("footer.navigation.title")}
             </h4>
             <ul className="space-y-2 text-sm">
-              <li><a href="#" className="hover:text-white transition-colors">{t("footer.features.passengers")}</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">{t("footer.features.drivers")}</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">{t("footer.features.safety")}</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">{t("footer.features.support")}</a></li>
+              <li>
+                <a href={`/${currentLang}`} className="hover:text-white transition-colors">
+                  {t("footer.navigation.home")}
+                </a>
+              </li>
+              <li>
+                <a href={`/${currentLang}/about`} className="hover:text-white transition-colors">
+                  {t("footer.navigation.about")}
+                </a>
+              </li>
+              <li>
+                <a href={`/${currentLang}/news`} className="hover:text-white transition-colors">
+                  {t("footer.navigation.news")}
+                </a>
+              </li>
+              <li>
+                <a href={`/${currentLang}/contacts`} className="hover:text-white transition-colors">
+                  {t("footer.navigation.contacts")}
+                </a>
+              </li>
             </ul>
           </div>
 

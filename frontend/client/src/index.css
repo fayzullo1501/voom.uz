@@ -1,5 +1,13 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: "FE-Schrift";
+  src: url("/fonts/FE-FONT.TTF") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   font-family: 'Product Sans', 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -35,3 +43,13 @@
 }
 
 
+.test-font {
+  font-family: "FE-Schrift", sans-serif;
+  font-size: 40px;
+}
+
+@layer utilities {
+  .font-plate {
+    font-family: "FE-Schrift", sans-serif;
+  }
+}

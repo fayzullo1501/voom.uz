@@ -1,11 +1,9 @@
 {
   "header": {
     "logoAlt": "Voom — intercity ride service",
-    "nav": {
-      "home": "Home",
-      "about": "About",
-      "news": "News",
-      "contacts": "Contacts"
+    "links": {
+      "passengers": "For passengers",
+      "drivers": "For drivers"
     },
     "language": {
       "ru": "Russian",
@@ -57,12 +55,12 @@
       "contacts": "Contacts"
     },
 
-    "features": {
-      "title": "Features",
-      "passengers": "For passengers",
-      "drivers": "For drivers",
-      "safety": "Trip safety",
-      "support": "Support service"
+    "navigation": {
+      "title": "Navigation",
+      "home": "Home",
+      "about": "About",
+      "news": "News",
+      "contacts": "Contacts"
     },
 
     "company": {

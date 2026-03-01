@@ -2,6 +2,11 @@
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        plate: ["FE-Schrift", "sans-serif"],
+      },
+    },
   },
+  plugins: [],
 };

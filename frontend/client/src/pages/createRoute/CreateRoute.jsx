@@ -124,6 +124,7 @@ const CreateRoute = () => {
 
   const [agree, setAgree] = useState(false);
   const [creating, setCreating] = useState(false);
+  const [bannerLoaded, setBannerLoaded] = useState(false);
 
   useEffect(() => {
     const loadCars = async () => {
@@ -649,9 +650,25 @@ const CreateRoute = () => {
             <div className="w-full lg:w-1/2">
               <div>
               <div className="relative rounded-[32px] overflow-hidden shadow-lg w-full h-[600px]">
-                <img src={bgImg} alt="banner" className="w-full h-full object-cover" />
 
-                <div className="absolute left-6 right-6 bottom-6 bg-white rounded-2xl shadow-md p-6 flex flex-col sm:flex-row gap-4">
+                {/* Placeholder */}
+                <div
+                  className={`absolute inset-0 bg-gray-300 transition-opacity duration-500 ${
+                    bannerLoaded ? "opacity-0" : "opacity-100"
+                  }`}
+                />
+
+                {/* Image */}
+                <img
+                  src={bgImg}
+                  alt="banner"
+                  onLoad={() => setBannerLoaded(true)}
+                  className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
+                    bannerLoaded ? "opacity-100" : "opacity-0"
+                  }`}
+                />
+
+                <div className="absolute left-6 right-6 bottom-6 z-10 bg-white rounded-2xl shadow-md p-6 flex flex-col sm:flex-row gap-4">
                   <img src={qrImg} alt="qr" className="w-[70px] h-[70px]" />
                   <div>
                     <p className="font-semibold text-[15px] leading-tight">

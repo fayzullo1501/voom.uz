@@ -101,27 +101,27 @@ const EditTransport = () => {
   const renderPlateView = () => {
     const empty = !plateNumber;
     return (
-      <div className="relative w-full max-w-[260px] h-[68px] border-[2px] border-black rounded-[14px] flex items-center overflow-hidden">
-        <span className="absolute left-[6px] top-1/2 -translate-y-1/2 w-[7px] h-[7px] rounded-full bg-black" />
-        <div className="w-[60px] h-full flex items-center justify-center border-r-[2px] border-black text-[24px] font-semibold">
-          {empty ? <span className="text-gray-300">XX</span> : plateNumber.slice(0, 2)}
+      <div className="relative w-full max-w-[320px] md:max-w-[380px] h-[72px] md:h-[86px] border-2 border-[#0F2A3D] rounded-[10px] md:rounded-[12px] flex items-center overflow-hidden">
+        <span className="absolute left-[10px] w-[8px] h-[8px] top-1/2 -translate-y-1/2 rounded-full bg-black" />
+        <div className="w-[70px] md:w-[90px] h-full flex items-center justify-center pl-6 border-r-2 border-[#0F2A3D] text-[24px] md:text-[36px] font-plate tracking-[2px] whitespace-nowrap">
+          {empty ? <span className="text-gray-300">40</span> : plateNumber.slice(0, 2)}
         </div>
-        <div className="flex-1 h-full flex items-center justify-center gap-2 text-[24px] font-semibold tracking-widest">
+        <div className="flex-1 h-full flex items-center justify-center px-6 text-[24px] md:text-[36px] font-plate tracking-[2px] whitespace-nowrap">
           {empty ? (
             <>
-              <span className="text-gray-300">X</span>
-              <span className="text-gray-300">XXX</span>
-              <span className="text-gray-300">XX</span>
+              <span className="text-gray-300">H</span>
+              <span className="text-gray-300">024</span>
+              <span className="text-gray-300">AX</span>
             </>
           ) : (
             <span>{plateNumber.slice(2)}</span>
           )}
         </div>
-        <div className="w-[54px] h-full flex flex-col items-center justify-center">
+        <div className="w-[70px] md:w-[85px] h-full flex flex-col items-center justify-center pr-8">
           <img src={uzFlag} className="w-6 h-4" />
           <span className="text-[13px] font-semibold text-blue-700">UZ</span>
         </div>
-        <span className="absolute right-[6px] top-1/2 -translate-y-1/2 w-[7px] h-[7px] rounded-full bg-black" />
+        <span className="absolute right-[18px] w-[8px] h-[8px] top-1/2 -translate-y-1/2 rounded-full bg-black" />
       </div>
     );
   };

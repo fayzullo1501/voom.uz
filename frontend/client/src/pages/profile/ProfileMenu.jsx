@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Header from "../../components/layout/Header";
 import ProfileTopBar from "./ProfileTopBar";
@@ -86,6 +86,7 @@ const RejectedIcon = () => (
   const { lang } = useParams();
 
   const { user, cars, loading } = useUser();
+  const [avatarLoaded, setAvatarLoaded] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -93,6 +94,11 @@ const RejectedIcon = () => (
       navigate(`/${lang}/login`);
     }
   }, [lang, navigate]);
+
+  const avatarSrc =
+    user?.profilePhoto?.status === "approved"
+      ? `${user.profilePhoto.url}?v=${user.profilePhoto.uploadedAt}`
+      : avatarPlaceholder;
 
   const defaultNameByLang = { ru: "Пользователь", uz: "Foydalanuvchi", en: "User" };
   const verifiedLabelByLang = { ru: "Проверенный пользователь", uz: "Tasdiqlangan foydalanuvchi", en: "Verified user" };
@@ -110,10 +116,6 @@ const RejectedIcon = () => (
   (user?.firstName || "").trim() ||
   defaultNameByLang[lang] ||
   defaultNameByLang.ru;
-  const avatarSrc =
-  user?.profilePhoto?.status === "approved"
-    ? `${user.profilePhoto.url}?v=${user.profilePhoto.uploadedAt}`
-    : avatarPlaceholder;
   const photoStatus = user?.profilePhoto?.status || "empty";
   const passportStatus = user?.passport?.status || "empty";
   const isVerified =
@@ -149,8 +151,33 @@ const RejectedIcon = () => (
 
           {/* ===== Аватар + имя ===== */}
           <div className="mt-10 flex items-center gap-5">
-            <div className="w-24 h-24 rounded-full overflow-hidden bg-gray-100">
-              <img src={avatarSrc} alt="Avatar" className="w-full h-full object-cover" onError={(e) => (e.currentTarget.src = avatarPlaceholder)} />
+            <div className="relative w-24 h-24 rounded-full overflow-hidden">
+  
+              {/* Placeholder */}
+              <div
+                className={`absolute inset-0 bg-gray-200 transition-opacity duration-300 ${
+                  avatarLoaded ? "opacity-0" : "opacity-100"
+                }`}
+              />
+
+              <img
+                key={avatarSrc}
+                src={avatarSrc}
+                alt="Avatar"
+                ref={(img) => {
+                  if (img && img.complete) {
+                    setAvatarLoaded(true);
+                  }
+                }}
+                onLoad={() => setAvatarLoaded(true)}
+                onError={(e) => {
+                  e.currentTarget.src = avatarPlaceholder;
+                  setAvatarLoaded(true);
+                }}
+                className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${
+                  avatarLoaded ? "opacity-100" : "opacity-0"
+                }`}
+              />
             </div>
 
             <div className="flex flex-col">

@@ -1,11 +1,9 @@
 {
   "header": {
     "logoAlt": "voom — shaharlararo safarlar xizmati",
-    "nav": {
-      "home": "Bosh sahifa",
-      "about": "Kompaniya haqida",
-      "news": "Yangiliklar",
-      "contacts": "Kontaktlar"
+    "links": {
+      "passengers": "Yo‘lovchilar uchun",
+      "drivers": "Haydovchilar uchun"
     },
     "language": {
       "ru": "Ruscha",
@@ -57,12 +55,12 @@
       "contacts": "Aloqa"
     },
 
-    "features": {
-      "title": "Imkoniyatlar",
-      "passengers": "Yo‘lovchilar uchun",
-      "drivers": "Haydovchilar uchun",
-      "safety": "Sayohat xavfsizligi",
-      "support": "Yordam xizmati"
+    "navigation": {
+      "title": "Navigatsiya",
+      "home": "Bosh sahifa",
+      "about": "Kompaniya haqida",
+      "news": "Yangiliklar",
+      "contacts": "Kontaktlar"
     },
 
     "company": {

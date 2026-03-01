@@ -23,13 +23,27 @@ export const UserProvider = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    loadUser();
-  }, [loadUser]);
+    const token = localStorage.getItem("token");
 
-  // обновление вручную
+    if (!token) {
+      setUser(null);
+      setCars([]);
+      setLoading(false);
+      return;
+    }
+
+    if (!user) {
+      loadUser();
+    }
+  }, [loadUser, user]);
+
+  // обновление вручную (без глобального спиннера)
   const refreshUser = async () => {
-    setLoading(true);
-    await loadUser();
+    try {
+      await loadUser();
+    } catch (err) {
+      console.error("Refresh user failed", err);
+    }
   };
 
   return (

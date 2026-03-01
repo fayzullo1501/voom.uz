@@ -16,7 +16,7 @@ function Home({ lang }) {
       <Header lang={lang} />
       <Hero lang={lang} />
       <Partners lang={lang} />
-      <WhyChooseUs lang={lang} />
+      {/* <WhyChooseUs lang={lang} /> */}
       <PromoBanner lang={lang} />
       <HowItWorks lang={lang} />
       <DownloadApp lang={lang} />

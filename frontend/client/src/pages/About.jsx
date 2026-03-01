@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
@@ -9,6 +9,7 @@ import bannerImg from "../assets/about-banner.jpg";
 
 const About = () => {
   const { t } = useTranslation(["about"]);
+  const [bannerLoaded, setBannerLoaded] = useState(false);
 
   return (
     <>
@@ -19,12 +20,29 @@ const About = () => {
 
         {/* Banner */}
         <div className="container-wide mt-4">
-          <div className="w-full h-[260px] md:h-[340px] lg:h-[420px] rounded-3xl overflow-hidden">
+          <div className="relative w-full h-[260px] md:h-[340px] lg:h-[420px] rounded-3xl overflow-hidden">
+
+            {/* Серый фон */}
+            <div
+              className={`absolute inset-0 bg-gray-200 transition-opacity duration-300 ${
+                bannerLoaded ? "opacity-0" : "opacity-100"
+              }`}
+            />
+
             <img
               src={bannerImg}
               alt="About VOOM"
-              className="w-full h-full object-cover"
+              ref={(img) => {
+                if (img && img.complete) {
+                  setBannerLoaded(true);
+                }
+              }}
+              onLoad={() => setBannerLoaded(true)}
+              className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${
+                bannerLoaded ? "opacity-100" : "opacity-0"
+              }`}
             />
+
           </div>
         </div>
 

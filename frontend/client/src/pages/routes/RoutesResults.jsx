@@ -30,6 +30,7 @@ const RoutesResults = () => {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
   const [activeImage, setActiveImage] = useState({});
+  const [loadedImages, setLoadedImages] = useState({}); 
 
   const toggleTime = (key) =>
     setTimeFilters((p) => ({ ...p, [key]: !p[key] }));
@@ -240,10 +241,30 @@ const RoutesResults = () => {
                 {/* IMAGE BLOCK */}
                 <div className="relative w-[260px] h-[160px] rounded-[14px] overflow-hidden shrink-0">
                   {route.car?.photos?.length > 0 ? (
-                    <img
-                      src={route.car.photos[activeImage[route._id] || 0].url}
-                      className="absolute inset-0 w-full h-full object-cover"
-                    />
+                    <>
+                      <div
+                        className={`absolute inset-0 bg-gray-200 transition-opacity duration-300 ${
+                          loadedImages[`car-${route._id}-${activeImage[route._id] || 0}`]
+                            ? "opacity-0"
+                            : "opacity-100"
+                        }`}
+                      />
+
+                      <img
+                        src={route.car.photos[activeImage[route._id] || 0].url}
+                        onLoad={() =>
+                          setLoadedImages((prev) => ({
+                            ...prev,
+                            [`car-${route._id}-${activeImage[route._id] || 0}`]: true,
+                          }))
+                        }
+                        className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${
+                          loadedImages[`car-${route._id}-${activeImage[route._id] || 0}`]
+                            ? "opacity-100"
+                            : "opacity-0"
+                        }`}
+                      />
+                    </>
                   ) : (
                     <div className="w-full h-full bg-gray-200" />
                   )}
@@ -402,11 +423,31 @@ const RoutesResults = () => {
                   <div className="flex items-center gap-10">
                     <div className="flex items-center gap-3">
                       {route.car?.brand?.logo?.url && (
-                        <img
-                          src={route.car.brand.logo.url}
-                          alt="brand"
-                          className="w-10 h-10 object-contain"
-                        />
+                        <div className="relative w-10 h-10">
+                          <div
+                            className={`absolute inset-0 bg-gray-200 rounded transition-opacity duration-300 ${
+                              loadedImages[`brand-${route._id}`]
+                                ? "opacity-0"
+                                : "opacity-100"
+                            }`}
+                          />
+
+                          <img
+                            src={route.car.brand.logo.url}
+                            alt="brand"
+                            onLoad={() =>
+                              setLoadedImages((prev) => ({
+                                ...prev,
+                                [`brand-${route._id}`]: true,
+                              }))
+                            }
+                            className={`w-10 h-10 object-contain transition-opacity duration-300 ${
+                              loadedImages[`brand-${route._id}`]
+                                ? "opacity-100"
+                                : "opacity-0"
+                            }`}
+                          />
+                        </div>
                       )}
 
                       <div>
@@ -424,11 +465,31 @@ const RoutesResults = () => {
 
                     <div className="flex items-center gap-3">
                       {route.driver?.profilePhoto?.url && (
-                        <img
-                          src={route.driver.profilePhoto.url}
-                          alt="driver"
-                          className="w-10 h-10 rounded-full object-cover"
-                        />
+                        <div className="relative w-10 h-10">
+                          <div
+                            className={`absolute inset-0 bg-gray-200 rounded-full transition-opacity duration-300 ${
+                              loadedImages[`driver-${route._id}`]
+                                ? "opacity-0"
+                                : "opacity-100"
+                            }`}
+                          />
+
+                          <img
+                            src={route.driver.profilePhoto.url}
+                            alt="driver"
+                            onLoad={() =>
+                              setLoadedImages((prev) => ({
+                                ...prev,
+                                [`driver-${route._id}`]: true,
+                              }))
+                            }
+                            className={`w-10 h-10 rounded-full object-cover transition-opacity duration-300 ${
+                              loadedImages[`driver-${route._id}`]
+                                ? "opacity-100"
+                                : "opacity-0"
+                            }`}
+                          />
+                        </div>
                       )}
 
                       <div>

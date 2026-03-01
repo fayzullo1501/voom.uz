@@ -4,6 +4,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { X, Eye, EyeOff, Loader2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useToast } from "../../components/ui/useToast";
+import { useUser } from "../../context/UserContext";
 
 
 import logo from "../../assets/logo.svg";
@@ -41,6 +42,7 @@ const Login = () => {
   const navigate = useNavigate();
   const { t, i18n } = useTranslation("auth");
   const { showToast } = useToast();
+  const { refreshUser } = useUser();
 
 
   useEffect(() => {
@@ -107,9 +109,12 @@ const Login = () => {
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
 
+      await refreshUser();   // 🔥 ВАЖНО
+
       showToast(t("success.loginSuccess"), "success");
 
       navigate(`/${lang}/profile/menu`);
+
     } catch {
       showToast(t("errors.network"));
     } finally {

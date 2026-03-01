@@ -103,7 +103,7 @@ const EditPlateNumber = () => {
         </div>
       </div>
 
-      <div className="max-w-[440px] mx-auto">
+      <div className="max-w-[500px] mx-auto">
         {/* TABS */}
         <div className="flex mb-8">
           <button
@@ -135,8 +135,8 @@ const EditPlateNumber = () => {
         </div>
 
         {/* PLATE */}
-        <div className="relative w-full border-[3px] border-black rounded-[20px] flex items-center overflow-hidden mb-10">
-          <span className="absolute left-[10px] top-1/2 -translate-y-1/2 w-[10px] h-[10px] bg-black rounded-full" />
+        <div className="relative w-full max-w-[520px] h-[92px] md:h-[110px] border-[3px] border-[#0F2A3D] rounded-[22px] flex items-center overflow-hidden mb-10 bg-[#F4F6F8]">
+          <span className="absolute left-[12px] top-1/2 -translate-y-1/2 w-[12px] h-[12px] bg-black rounded-full" />
 
           {/* REGION */}
           <div className="w-[120px] border-r-[3px] border-black py-4 pr-5 flex justify-end">
@@ -153,12 +153,12 @@ const EditPlateNumber = () => {
                     : numbersRef.current?.focus();
                 }
               }}
-              className="w-[70px] text-center text-[42px] font-semibold focus:outline-none"
+              className="w-[80px] text-center text-[40px] md:text-[48px] font-plate tracking-[2px] focus:outline-none bg-transparent"
             />
           </div>
 
           {/* MAIN */}
-          <div className="flex-1 flex items-center justify-center gap-2 px-4">
+          <div className="flex-1 flex items-center justify-center gap-3 px-6">
             {type === "physical" && (
               <input
                 ref={letterLeftRef}
@@ -169,7 +169,7 @@ const EditPlateNumber = () => {
                   setLetterLeft(v);
                   if (v) numbersRef.current?.focus();
                 }}
-                className="w-[40px] text-center text-[44px] font-semibold focus:outline-none"
+                className="w-[46px] text-center text-[42px] md:text-[50px] font-plate tracking-[2px] focus:outline-none bg-transparent"
               />
             )}
 
@@ -182,7 +182,7 @@ const EditPlateNumber = () => {
                 setNumbers(v);
                 if (v.length === 3) lettersRightRef.current?.focus();
               }}
-              className="w-[104px] text-center text-[44px] font-semibold tracking-widest focus:outline-none"
+              className="w-[120px] text-center text-[42px] md:text-[50px] font-plate tracking-[4px] focus:outline-none bg-transparent"
             />
 
             <input
@@ -194,17 +194,17 @@ const EditPlateNumber = () => {
                   e.target.value.toUpperCase().replace(/[^A-Z]/g, "").slice(0, type === "physical" ? 2 : 3)
                 )
               }
-              className="w-[82px] text-center text-[44px] font-semibold focus:outline-none"
+              className="w-[96px] text-center text-[42px] md:text-[50px] font-plate tracking-[3px] focus:outline-none bg-transparent"
             />
           </div>
 
           {/* FLAG */}
-          <div className="w-[70px] flex flex-col items-start justify-center pl-2">
+          <div className="w-[90px] flex flex-col items-center justify-center">
             <img src={uzFlag} className="w-8 h-5" />
-            <span className="text-[18px] font-semibold text-blue-800">UZ</span>
+            <span className="text-[18px] font-bold text-[#0085CA] tracking-wide">UZ</span>
           </div>
 
-          <span className="absolute right-[10px] top-1/2 -translate-y-1/2 w-[10px] h-[10px] bg-black rounded-full" />
+          <span className="absolute right-[10px] top-1/2 -translate-y-1/2 w-[12px] h-[12px] bg-black rounded-full" />
         </div>
 
         {/* SAVE */}

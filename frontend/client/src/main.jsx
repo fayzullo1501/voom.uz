@@ -5,13 +5,16 @@ import App from "./App.jsx";
 import "./i18n";         // 🔥 ВАЖНО: подключаем мультиязычность
 import "./index.css";
 import { ToastProvider } from "./components/ui/ToastProvider";
+import { UserProvider } from "./context/UserContext";  
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <BrowserRouter>
-    <ToastProvider>
-      <App />
-    </ToastProvider>
+      <UserProvider>     {/* 🔥 ПЕРЕНЕСЛИ СЮДА */}
+        <ToastProvider>
+          <App />
+        </ToastProvider>
+      </UserProvider>
     </BrowserRouter>
   </StrictMode>
 );

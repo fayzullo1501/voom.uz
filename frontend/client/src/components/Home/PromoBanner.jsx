@@ -10,7 +10,7 @@ function PromoBanner({
   image = defaultBg, // можно передавать кастомный фон
 }) {
   return (
-    <section className="py-20 bg-white">
+    <section className="pb-20 bg-white">
       <div className="container-wide">
         <div
           className="relative rounded-3xl overflow-hidden"
