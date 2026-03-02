@@ -11,24 +11,29 @@ const Hero = () => {
   return (
     <section className="bg-white">
       <div className="container-wide">
-        <div className="relative rounded-[36px] overflow-visible">
+        <div className="relative rounded-[36px]">
   
-            {/* Placeholder */}
-            <div
-              className={`absolute inset-0 bg-gray-300 transition-opacity duration-500 ${
-                loaded ? "opacity-0" : "opacity-100"
-              }`}
-            />
+            {/* IMAGE WRAPPER */}
+            <div className="absolute inset-0 rounded-3xl overflow-hidden">
 
-            {/* Image */}
-            <img
-              src={heroBg}
-              alt="hero"
-              onLoad={() => setLoaded(true)}
-              className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
-                loaded ? "opacity-100" : "opacity-0"
-              }`}
-            />
+              {/* Placeholder */}
+              <div
+                className={`absolute inset-0 bg-gray-300 transition-opacity duration-500 ${
+                  loaded ? "opacity-0" : "opacity-100"
+                }`}
+              />
+
+              {/* Image */}
+              <img
+                src={heroBg}
+                alt="hero"
+                onLoad={() => setLoaded(true)}
+                className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
+                  loaded ? "opacity-100" : "opacity-0"
+                }`}
+              />
+
+            </div>
           <div className="relative z-10 flex flex-col items-center text-center px-6 md:px-10 pt-20 md:pt-24 pb-12 md:pb-14">
             <div className="max-w-3xl mb-10">
               <h1 className="text-4xl md:text-5xl font-bold text-white leading-tight mb-4">
