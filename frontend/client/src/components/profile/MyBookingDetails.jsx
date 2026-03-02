@@ -7,6 +7,7 @@ import driverAvatar from "../../assets/driverbookingtest.jpg";
 import carAvatar from "../../assets/carbookingtest.jpg";
 import userVerified from "../../assets/userverified.svg";
 import uzFlag from "../../assets/flag-uz.svg";
+import PlateNumber from "../../components/ui/PlateNumber";
 
 
 const MyBookingDetails = () => {
@@ -533,24 +534,11 @@ const MyBookingDetails = () => {
                 </div>
 
                 {plate && (
-                  <div className="mt-3 inline-flex items-center border-2 border-black rounded-lg overflow-visible bg-white">
-                    <div className="px-2 py-1 text-[14px] font-semibold border-r-2 border-black">
-                      {regionCode}
-                    </div>
-
-                    <div className="flex items-center gap-2 px-2 py-1">
-                      <div className="text-[14px] font-semibold tracking-widest">
-                        {restPlate}
-                      </div>
-
-                      <div className="flex flex-col items-center">
-                        <img src={uzFlag} className="w-4 h-[10px] mb-[2px]" />
-                        <div className="text-[10px] font-semibold text-blue-600 leading-none">
-                          UZ
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                  <PlateNumber
+                    value={plate}
+                    size="responsive"
+                    className="mt-3 self-start"
+                  />
                 )}
               </div>
 

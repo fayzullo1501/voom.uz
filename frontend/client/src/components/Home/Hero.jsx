@@ -11,7 +11,7 @@ const Hero = () => {
   return (
     <section className="bg-white">
       <div className="container-wide">
-        <div className="relative rounded-[36px] overflow-hidden">
+        <div className="relative rounded-[36px] overflow-visible">
   
             {/* Placeholder */}
             <div

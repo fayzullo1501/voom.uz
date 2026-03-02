@@ -5,6 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { API_URL } from "../../config/api";
 import { useToast } from "../../components/ui/useToast";
 import uzFlag from "../../assets/uz-flag.svg";
+import PlateNumber from "../../components/ui/PlateNumber";
 
 const EditTransport = () => {
   const navigate = useNavigate();
@@ -98,34 +99,6 @@ const EditTransport = () => {
   const colorHex = car.color?.hex || "#e5e7eb";
   const mainPhoto = photos[0];
 
-  const renderPlateView = () => {
-    const empty = !plateNumber;
-    return (
-      <div className="relative w-full max-w-[320px] md:max-w-[380px] h-[72px] md:h-[86px] border-2 border-[#0F2A3D] rounded-[10px] md:rounded-[12px] flex items-center overflow-hidden">
-        <span className="absolute left-[10px] w-[8px] h-[8px] top-1/2 -translate-y-1/2 rounded-full bg-black" />
-        <div className="w-[70px] md:w-[90px] h-full flex items-center justify-center pl-6 border-r-2 border-[#0F2A3D] text-[24px] md:text-[36px] font-plate tracking-[2px] whitespace-nowrap">
-          {empty ? <span className="text-gray-300">40</span> : plateNumber.slice(0, 2)}
-        </div>
-        <div className="flex-1 h-full flex items-center justify-center px-6 text-[24px] md:text-[36px] font-plate tracking-[2px] whitespace-nowrap">
-          {empty ? (
-            <>
-              <span className="text-gray-300">H</span>
-              <span className="text-gray-300">024</span>
-              <span className="text-gray-300">AX</span>
-            </>
-          ) : (
-            <span>{plateNumber.slice(2)}</span>
-          )}
-        </div>
-        <div className="w-[70px] md:w-[85px] h-full flex flex-col items-center justify-center pr-8">
-          <img src={uzFlag} className="w-6 h-4" />
-          <span className="text-[13px] font-semibold text-blue-700">UZ</span>
-        </div>
-        <span className="absolute right-[18px] w-[8px] h-[8px] top-1/2 -translate-y-1/2 rounded-full bg-black" />
-      </div>
-    );
-  };
-
   return (
     <div className="min-h-screen bg-white px-6 pt-6 pb-10">
       <header>
@@ -176,9 +149,16 @@ const EditTransport = () => {
           <div className="text-[18px] font-medium">{modelName}</div>
         </div>
 
-        <button onClick={() => navigate(`/${lang}/profile/transport/${id}/plate`)} className="w-full text-left mb-6">
+        <button
+          onClick={() => navigate(`/${lang}/profile/transport/${id}/plate`)}
+          className="w-full text-left mb-6"
+        >
           <div className="text-gray-500 text-[14px] mb-2">Гос. номер</div>
-          {renderPlateView()}
+
+          <PlateNumber
+            value={plateNumber}
+            size="md"
+          />
         </button>
 
         <div className="mb-6">

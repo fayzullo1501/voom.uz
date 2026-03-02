@@ -5,6 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { API_URL } from "../../config/api";
 import avatar from "../../assets/driverbookingtest.jpg";
 import uzFlag from "../../assets/flag-uz.svg";
+import PlateNumber from "../../components/ui/PlateNumber";
 
 const MyRouteDetails = () => {
   
@@ -262,8 +263,6 @@ const MyRouteDetails = () => {
   }, [mapOpen, route]);
 
   const plate = route?.car?.plateNumber || "";
-  const regionCode = plate.slice(0, 2);
-  const restPlate = plate.slice(2).trim();
 
   const earnedAmount =
     route?.bookings
@@ -511,24 +510,13 @@ const MyRouteDetails = () => {
                   </div>
                 </div>
 
-                <div className="mt-3 inline-flex items-center border-2 border-black rounded-lg overflow-visible bg-white">
-                  <div className="px-2 py-1 text-[14px] font-semibold border-r-2 border-black">
-                    {regionCode}
-                  </div>
-
-                  <div className="flex items-center gap-2 px-2 py-1">
-                    <div className="text-[14px] font-semibold tracking-widest">
-                      {restPlate}
-                    </div>
-
-                    <div className="flex flex-col items-center">
-                      <img src={uzFlag} className="w-4 h-[10px] mb-[2px]" />
-                      <div className="text-[10px] font-semibold text-blue-600 leading-none">
-                        UZ
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                {plate && (
+                  <PlateNumber
+                    value={plate}
+                    size="responsive"
+                    className="mt-3 self-start"
+                  />
+                )}
               </div>
 
               <div className="border border-gray-300 rounded-2xl p-4 mb-4">

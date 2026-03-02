@@ -7,6 +7,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import uzFlag from "../../assets/flag-uz.svg";
 import userVerified from "../../assets/userverified.svg";
 import avatarPlaceholder from "../../assets/avatar-placeholder.svg";
+import PlateNumber from "../../components/ui/PlateNumber";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -46,10 +47,6 @@ const RouteDetails = () => {
       </div>
     );
   if (!route) return <div className="p-10">Маршрут не найден</div>;
-
-  const plate = route.car?.plateNumber || "";
-  const regionCode = plate.slice(0, 2);
-  const restPlate = plate.slice(2).trim();
 
   const isVerified =
     route.driver?.passport?.status === "approved" &&
@@ -270,28 +267,8 @@ const RouteDetails = () => {
                   </div>
                 </div>
 
-                <div className="mt-6 flex items-center justify-between gap-4">
-                  <div className="text-[18px] font-bold">Номер машины</div>
-                  <div className="inline-flex items-center border-2 border-black rounded-lg overflow-visible bg-white w-[120px] lg:w-[190px] shrink-0">
-                    <div className="px-2 py-1 text-[10px] lg:px-3 lg:py-2 lg:text-[18px] font-semibold border-r-2 border-black">
-                      {regionCode}
-                    </div>
-                    <div className="flex items-center gap-2 px-2 py-1 lg:gap-3 lg:px-3 lg:py-2 w-full justify-between">
-                      <div className="text-[10px] lg:text-[18px] font-semibold tracking-widest">
-                        {restPlate}
-                      </div>
-                      <div className="flex flex-col items-center">
-                        <img
-                          src={uzFlag}
-                          alt=""
-                          className="w-4 h-[10px] lg:w-5 lg:h-3 mb-[2px]"
-                        />
-                        <div className="text-[10px] lg:text-[11px] font-semibold text-blue-600 leading-none">
-                          UZ
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                <div className="mt-6 flex flex-col gap-3">
+                  <PlateNumber value={route.car?.plateNumber || ""} size="responsive" className="self-start"/>
                 </div>
               </div>
 
