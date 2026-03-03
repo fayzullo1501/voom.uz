@@ -286,7 +286,7 @@ const CreateRoute = () => {
           <div className="flex flex-col lg:flex-row w-full gap-6 pb-8">
 
             {/* LEFT BLOCK */}
-            <div className="w-full lg:w-1/2 lg:max-h-[calc(100vh-120px)] lg:overflow-y-auto lg:no-scrollbar">
+            <div className="w-full lg:w-1/2 lg:max-h-[calc(100vh-120px)] overflow-y-auto no-scrollbar">
 
               <h1 className="text-3xl font-bold mb-8">{t("title")}</h1>
 

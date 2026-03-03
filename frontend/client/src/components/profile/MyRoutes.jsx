@@ -84,7 +84,7 @@ const MyRoutes = () => {
       <header>
         <div className="container-wide flex items-center justify-end py-6 sm:py-8">
           <button
-            onClick={() => navigate(-1)}
+            onClick={() => navigate(`/${lang}/profile/menu`)}
             className="p-2 rounded-full hover:bg-gray-100 transition"
             aria-label="Закрыть"
           >
