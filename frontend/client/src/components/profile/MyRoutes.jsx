@@ -4,10 +4,12 @@ import { useNavigate, useParams } from "react-router-dom";
 import walletIcon from "../../assets/icons/wallet.svg";
 import userIcon from "../../assets/icons/user.svg";
 import { API_URL } from "../../config/api";
+import { useTranslation } from "react-i18next";
 
 const MyRoutes = () => {
   const navigate = useNavigate();
   const { lang } = useParams();
+  const { t, i18n } = useTranslation("profile");
 
   const [tab, setTab] = useState("active");
   const [routes, setRoutes] = useState([]);
@@ -51,7 +53,13 @@ const MyRoutes = () => {
 
   const formatDate = (date) => {
     const d = new Date(date);
-    return d.toLocaleString("ru-RU", {
+    return d.toLocaleString(
+      i18n.language === "uz"
+        ? "uz-UZ"
+        : i18n.language === "en"
+        ? "en-US"
+        : "ru-RU",
+      {
       month: "long",
       day: "numeric",
       year: "numeric",
@@ -61,13 +69,13 @@ const MyRoutes = () => {
   };
 
   const getTotalEarned = (route) => {
-    if (!route.bookings) return "0 сум";
+    if (!route.bookings) return `0 ${t("routes.currency")}`;
 
     const total = route.bookings
       .filter((b) => b.status === "accepted")
       .reduce((sum, b) => sum + (b.totalPrice || 0), 0);
 
-    return `${total.toLocaleString()} сум`;
+    return `${total.toLocaleString()} ${t("routes.currency")}`;
   };
 
   const getAcceptedPassengers = (route) => {
@@ -86,7 +94,7 @@ const MyRoutes = () => {
           <button
             onClick={() => navigate(`/${lang}/profile/menu`)}
             className="p-2 rounded-full hover:bg-gray-100 transition"
-            aria-label="Закрыть"
+            aria-label={t("routes.close")}
           >
             <X size={24} className="text-gray-700" />
           </button>
@@ -95,7 +103,7 @@ const MyRoutes = () => {
 
       {/* ===== Title ===== */}
       <h1 className="text-[24px] sm:text-[32px] font-semibold text-center mb-6 sm:mb-8">
-        Мои маршруты
+        {t("routes.title")}
       </h1>
 
       {/* ===== Tabs ===== */}
@@ -104,8 +112,8 @@ const MyRoutes = () => {
           <div className="absolute bottom-0 left-0 right-0 h-px bg-gray-200" />
           <div className="flex gap-8">
             {[
-              { id: "active", label: "Активные" },
-              { id: "archive", label: "Архив" },
+              { id: "active", label: t("routes.tabs.active") },
+              { id: "archive", label: t("routes.tabs.archive") },
             ].map((item) => (
               <button
                 key={item.id}
@@ -138,7 +146,7 @@ const MyRoutes = () => {
 
           {!loading && routes.length === 0 && (
             <div className="text-center text-gray-500 py-20">
-              Маршрутов пока нет
+              {t("routes.empty")}
             </div>
           )}
 
@@ -161,7 +169,7 @@ const MyRoutes = () => {
                           {route.fromName}
                         </div>
                         <div className="text-xs text-gray-500">
-                          {route.fromCity?.region}, Узбекистан
+                          {route.fromCity?.region}, {t("routes.country")}
                         </div>
                         <div className="text-xs text-gray-500 mt-1">
                           {formatDate(route.departureAt)}
@@ -176,12 +184,12 @@ const MyRoutes = () => {
                           {route.toName}
                         </div>
                         <div className="text-xs text-gray-500">
-                          {route.toCity?.region}, Узбекистан
+                          {route.toCity?.region}, {t("routes.country")}
                         </div>
                         <div className="text-xs text-gray-500 mt-1">
                           {route.arrivalAt
                             ? formatDate(route.arrivalAt)
-                            : "—"}
+                            : t("routes.noArrival")}
                         </div>
                       </div>
                     </div>
@@ -195,7 +203,7 @@ const MyRoutes = () => {
                       <div className="flex items-center gap-2 text-sm font-medium">
                         <img
                           src={walletIcon}
-                          alt="Сумма"
+                          alt={t("routes.amount")}
                           className="w-5 h-5 opacity-70"
                         />
                         {getTotalEarned(route)}
@@ -204,10 +212,12 @@ const MyRoutes = () => {
                       <div className="flex items-center gap-2 text-sm text-gray-600">
                         <img
                           src={userIcon}
-                          alt="Места"
+                          alt={t("routes.seats")}
                           className="w-5 h-5 opacity-60"
                         />
-                        {getAcceptedPassengers(route)} пассажиров
+                        {t("routes.passengers", {
+                          count: getAcceptedPassengers(route),
+                        })}
                       </div>
                     </div>
                   </div>

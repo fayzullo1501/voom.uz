@@ -9,10 +9,18 @@ import HowItWorks from "../components/Home/HowItWorks";
 import DownloadApp from "../components/Home/DownloadApp";
 import NewsSection from "../components/Home/NewsSection";
 import RequestForm from "../components/Home/RequestForm";
+import SEO from "../components/SEO";
 
 function Home({ lang }) {
   return (
     <>
+
+      <SEO
+        title="VOOM — Карпулинг сервис в Узбекистане"
+        description="VOOM — удобный сервис совместных поездок по Узбекистану. Найдите попутчиков или станьте водителем."
+        path=""
+      />
+      
       <Header lang={lang} />
       <Hero lang={lang} />
       <Partners lang={lang} />

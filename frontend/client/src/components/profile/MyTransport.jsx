@@ -4,10 +4,12 @@ import { X, ChevronRight, Calendar, Loader2 } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import { API_URL } from "../../config/api";
 import uzFlag from "../../assets/uz-flag.svg";
+import { useTranslation } from "react-i18next";
 
 const MyTransport = () => {
   const navigate = useNavigate();
   const { lang } = useParams();
+  const { t } = useTranslation("profile");
   const token = localStorage.getItem("token");
 
   const [cars, setCars] = useState([]);
@@ -30,7 +32,7 @@ const MyTransport = () => {
         </div>
       </header>
 
-      <h1 className="text-[32px] sm:text-[36px] font-semibold text-center mt-4">Мои автомобили</h1>
+      <h1 className="text-[32px] sm:text-[36px] font-semibold text-center mt-4">{t("transport.title")}</h1>
 
       {loading && (
         <div className="mt-16 flex justify-center">
@@ -38,7 +40,7 @@ const MyTransport = () => {
         </div>
       )}
 
-      {!loading && cars.length === 0 && <div className="mt-10 text-center text-gray-500">У вас пока нет добавленного транспорта</div>}
+      {!loading && cars.length === 0 && <div className="mt-10 text-center text-gray-500">{t("transport.empty")}</div>}
 
       <div className="mt-8 flex flex-col items-center gap-4">
         {cars.map((car) => {
@@ -97,7 +99,7 @@ const MyTransport = () => {
           onClick={() => navigate(`/${lang}/profile/transport/add`)}
           className="w-full max-w-[380px] h-[56px] rounded-xl bg-[#32BB78] text-white text-[17px] font-semibold hover:bg-[#2aa86e] transition"
         >
-          Добавить транспорт
+          {t("transport.add")}
         </button>
       </div>
     </div>

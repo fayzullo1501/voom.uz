@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import Header from "../../components/layout/Header";
 import ProfileTopBar from "./ProfileTopBar";
 import { useUser } from "../../context/UserContext";
+import { useTranslation } from "react-i18next";
 
 import avatarPlaceholder from "../../assets/avatar-placeholder.svg";
 import { LoaderCircle, Car, Loader2, CaseSensitive, Route, Tickets, Bell  } from "lucide-react";
@@ -86,6 +87,7 @@ const RejectedIcon = () => (
   const { lang } = useParams();
 
   const { user, cars, loading } = useUser();
+  const { t } = useTranslation("profile");
   const [avatarLoaded, setAvatarLoaded] = useState(false);
 
   useEffect(() => {
@@ -100,9 +102,6 @@ const RejectedIcon = () => (
       ? `${user.profilePhoto.url}?v=${user.profilePhoto.uploadedAt}`
       : avatarPlaceholder;
 
-  const defaultNameByLang = { ru: "Пользователь", uz: "Foydalanuvchi", en: "User" };
-  const verifiedLabelByLang = { ru: "Проверенный пользователь", uz: "Tasdiqlangan foydalanuvchi", en: "Verified user" };
-
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-white">
@@ -113,9 +112,8 @@ const RejectedIcon = () => (
 
 
   const displayName =
-  (user?.firstName || "").trim() ||
-  defaultNameByLang[lang] ||
-  defaultNameByLang.ru;
+    (user?.firstName || "").trim() ||
+    t("menu.defaultUser");
   const photoStatus = user?.profilePhoto?.status || "empty";
   const passportStatus = user?.passport?.status || "empty";
   const isVerified =
@@ -135,10 +133,10 @@ const RejectedIcon = () => (
 
   const carsSubText =
     carsCount === 0
-      ? "Добавить машину"
+      ? t("menu.addCar")
       : carsCount === 1
       ? singleCarText
-      : `Машин: ${carsCount}`;
+      : `${t("menu.carsCount")}: ${carsCount}`;
 
   return (
     <>
@@ -189,11 +187,11 @@ const RejectedIcon = () => (
 
               {isVerified ? (
                 <div className="mt-2 inline-flex items-center gap-2 bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-medium w-fit">
-                  <span>{verifiedLabelByLang[lang] || verifiedLabelByLang.ru}</span>
+                  <span>{t("menu.verified")}</span>
                 </div>
               ) : (
                 <div className="mt-2 inline-flex items-center gap-2 bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-sm font-medium w-fit">
-                  <span>Не верифицирован</span>
+                  <span>{t("menu.notVerified")}</span>
                 </div>
               )}
             </div>
@@ -206,7 +204,7 @@ const RejectedIcon = () => (
           >
             <EditProfileIcon />
             <span className="text-[16px] font-medium text-gray-700">
-              Редактировать информацию о себе
+              {t("menu.editProfile")}
             </span>
           </div>
 
@@ -214,7 +212,7 @@ const RejectedIcon = () => (
 
           {/* ===== Подтверждение профиля ===== */}
           <div className="mt-8">
-            <h3 className="font-bold text-[20px] mb-5">Подтвердите свой профиль</h3>
+            <h3 className="font-bold text-[20px] mb-5">{t("menu.verifyProfileTitle")}</h3>
 
             <div
               onClick={() => navigate(`/${lang}/profile/photo`)}
@@ -226,16 +224,16 @@ const RejectedIcon = () => (
               {photoStatus === "empty" && <PlusIcon />}
 
               <span className="text-[16px] font-medium">
-                {photoStatus === "approved" && "Фото профиля подтверждено"}
-                {photoStatus === "pending" && "Фото на проверке"}
-                {photoStatus === "empty" && "Добавить фото профиля"}
+                {photoStatus === "approved" && t("menu.photoApproved")}
+                {photoStatus === "pending" && t("menu.photoPending")}
+                {photoStatus === "empty" && t("menu.photoAdd")}
 
                 {photoStatus === "rejected" && (
                   <>
-                    Фото профиля отклонено
+                    {t("menu.photoRejected")}
                     {user?.profilePhoto?.rejectionReason && (
                       <span className="ml-2 text-[14px] text-red-600 font-normal">
-                        (Причина: {user.profilePhoto.rejectionReason})
+                        ({t("menu.reason")}: {user.profilePhoto.rejectionReason})
                       </span>
                     )}
                   </>
@@ -255,16 +253,16 @@ const RejectedIcon = () => (
               {passportStatus === "empty" && <PlusIcon />}
 
               <span className="text-[16px] font-medium">
-                {passportStatus === "approved" && "Паспорт подтверждён"}
-                {passportStatus === "pending" && "Паспорт на проверке"}
-                {passportStatus === "empty" && "Загрузить паспортные данные"}
+                {passportStatus === "approved" && t("menu.passportApproved")}
+                {passportStatus === "pending" && t("menu.passportPending")}
+                {passportStatus === "empty" && t("menu.passportAdd")}
 
                 {passportStatus === "rejected" && (
                   <>
-                    Паспорт отклонён
+                    {t("menu.passportRejected")}
                     {user?.passport?.rejectionReason && (
                       <span className="ml-2 text-[14px] text-red-600 font-normal">
-                        (Причина: {user.passport.rejectionReason})
+                        ({t("menu.reason")}: {user.passport.rejectionReason})
                       </span>
                     )}
                   </>
@@ -287,14 +285,14 @@ const RejectedIcon = () => (
 
               <span className="text-[16px] font-medium">
                 {user?.phone && user.phoneVerified && (
-                  <>Тел. номер подтверждён&nbsp;+998 {user.phone}</>
+                  <>{t("menu.phoneApproved")}&nbsp;+998 {user.phone}</>
                 )}
 
                 {user?.phone && !user.phoneVerified && (
-                  <>Подтвердите номер телефона&nbsp;+998 {user.phone}</>
+                  <>{t("menu.phoneVerify")}&nbsp;+998 {user.phone}</>
                 )}
 
-                {!user?.phone && <>Добавить номер телефона</>}
+                {!user?.phone && <>{t("menu.phoneAdd")}</>}
               </span>
             </div>
 
@@ -313,14 +311,14 @@ const RejectedIcon = () => (
 
               <span className="text-[16px] font-medium">
                 {user?.email && user.emailVerified && (
-                  <>Email подтверждён&nbsp;{user.email}</>
+                  <>{t("menu.emailApproved")}&nbsp;{user.email}</>
                 )}
 
                 {user?.email && !user.emailVerified && (
-                  <>Подтвердите email&nbsp;{user.email}</>
+                  <>{t("menu.emailVerify")}&nbsp;{user.email}</>
                 )}
 
-                {!user?.email && <>Добавить email</>}
+                {!user?.email && <>{t("menu.emailAdd")}</>}
               </span>
             </div>
           </div>
@@ -329,21 +327,21 @@ const RejectedIcon = () => (
 
           {/* ===== Маршруты и брони ===== */}
           <div className="mt-8">
-            <h3 className="font-bold text-[20px] mb-5">Маршруты и брони</h3>
+            <h3 className="font-bold text-[20px] mb-5">{t("menu.routesTitle")}</h3>
 
             <div onClick={() => navigate(`/${lang}/profile/bookings`)} className="flex items-center gap-3 py-3 px-2 rounded-lg hover:bg-gray-100 cursor-pointer transition">
               <MyBookingsIcon />
-              <span className="text-[16px] font-medium">Мои бронирования</span>
+              <span className="text-[16px] font-medium">{t("menu.myBookings")}</span>
             </div>
 
             <div onClick={() => navigate(`/${lang}/profile/routes`)} className="flex items-center gap-3 py-3 px-2 rounded-lg hover:bg-gray-100 cursor-pointer transition">
               <MyRoutesIcon />
-              <span className="text-[16px] font-medium">Мои маршруты</span>
+              <span className="text-[16px] font-medium">{t("menu.myRoutes")}</span>
             </div>
 
             <div onClick={() => navigate(`/${lang}/profile/notifications`)} className="flex items-center gap-3 py-3 px-2 rounded-lg hover:bg-gray-100 cursor-pointer transition">
               <NotificationsIcon />
-              <span className="text-[16px] font-medium">Уведомления</span>
+              <span className="text-[16px] font-medium">{t("menu.notifications")}</span>
             </div>
           </div>
 
@@ -351,7 +349,7 @@ const RejectedIcon = () => (
 
           {/* ===== Машины ===== */}
           <div className="mt-8 mb-10">
-            <h3 className="font-bold text-[20px] mb-2">Мои автомобили</h3>
+            <h3 className="font-bold text-[20px] mb-2">{t("menu.myCars")}</h3>
 
             <div
               onClick={() =>

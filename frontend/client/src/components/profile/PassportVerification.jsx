@@ -3,12 +3,14 @@ import { API_URL } from "../../config/api";
 import { useToast } from "../ui/useToast";
 import { X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 import passportExample from "../../assets/passport-example.svg";
 
 const PassportVerification = () => {
   const navigate = useNavigate();
   const { showToast } = useToast();
+  const { t } = useTranslation("profile");
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -31,11 +33,11 @@ const PassportVerification = () => {
 
       if (!res.ok) throw new Error("upload_failed");
 
-      showToast("Паспорт успешно отправлен на проверку", "success");
+      showToast(t("passport.uploadSuccess"), "success");
 
       navigate(-1);
     } catch (err) {
-      showToast("Не удалось загрузить паспорт", "error");
+      showToast(t("passport.uploadError"), "error");
     } finally {
       setLoading(false);
     }
@@ -56,7 +58,7 @@ const PassportVerification = () => {
 
       {/* ===== Title ===== */}
       <h1 className="text-[28px] sm:text-[32px] font-semibold text-center mt-6 mb-10">
-        Проверить паспорт
+        {t("passport.title")}
       </h1>
 
       {/* ===== Content ===== */}
@@ -71,12 +73,12 @@ const PassportVerification = () => {
 
         {/* Description */}
         <p className="text-[16px] text-gray-700 mb-12">
-          Загрузите скан или фото паспорта
+          {t("passport.description")}
         </p>
 
         {file && (
           <div className="mb-6 text-[14px] text-black  text-center">
-            Выбран файл: <span className="font-semibold">{file.name}</span>
+            {t("passport.selectedFile")}: <span className="font-semibold">{file.name}</span>
           </div>
         )}
 
@@ -96,7 +98,7 @@ const PassportVerification = () => {
               transition
             "
           >
-            Выбрать файл
+            {t("passport.selectFile")}
             <input
               type="file"
               accept="image/*,application/pdf"
@@ -111,7 +113,7 @@ const PassportVerification = () => {
             disabled={!file || loading}
             className="px-10 py-3 rounded-xl bg-[#32BB78] text-white text-[16px] font-medium hover:opacity-90 transition disabled:opacity-50"
           >
-            {loading ? "Отправка..." : "Отправить"}
+            {loading ? t("passport.sending") : t("passport.submit")}
           </button>
         </div>
 

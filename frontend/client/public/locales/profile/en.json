@@ -20,5 +20,153 @@
   "tabs": {
     "about": "About",
     "account": "Account"
+  },
+  "menu": {
+    "defaultUser": "User",
+    "verified": "Verified user",
+    "notVerified": "Not verified",
+
+    "editProfile": "Edit profile information",
+
+    "verifyProfileTitle": "Verify your profile",
+
+    "photoApproved": "Profile photo approved",
+    "photoPending": "Photo under review",
+    "photoAdd": "Add profile photo",
+    "photoRejected": "Profile photo rejected",
+
+    "passportApproved": "Passport verified",
+    "passportPending": "Passport under review",
+    "passportAdd": "Upload passport details",
+    "passportRejected": "Passport rejected",
+
+    "reason": "Reason",
+
+    "phoneApproved": "Phone number verified",
+    "phoneVerify": "Verify your phone number",
+    "phoneAdd": "Add phone number",
+
+    "emailApproved": "Email verified",
+    "emailVerify": "Verify your email",
+    "emailAdd": "Add email",
+
+    "routesTitle": "Routes and bookings",
+    "myBookings": "My bookings",
+    "myRoutes": "My routes",
+    "notifications": "Notifications",
+
+    "myCars": "My cars",
+    "addCar": "Add a car",
+    "carsCount": "Cars"
+  },
+  "account": {
+    "balance": "Balance",
+    "loading": "Loading...",
+    "email": "Email",
+    "driverStatus": "Driver status",
+    "yes": "Yes",
+    "no": "No",
+    "logout": "Log out"
+  },
+  "photo": {
+    "title": "Profile photo",
+    "choose": "Choose a photo",
+    "button": "Select photo",
+    "invalidType": "Only JPG, PNG or WEBP files are supported",
+    "invalidSize": "File size must not exceed 5 MB",
+    "instructions": {
+      "line1": "Take a photo alone,",
+      "line2": "remove your sunglasses",
+      "line3": "and look straight ahead."
+    },
+    "uploadSuccess": "Photo successfully sent for review",
+    "uploadError": "Failed to upload photo",
+    "loading": "Loading...",
+    "save": "Save"
+  },
+  "passport": {
+    "title": "Verify passport",
+    "description": "Upload a scan or photo of your passport",
+    "selectedFile": "Selected file",
+    "selectFile": "Select file",
+    "submit": "Submit",
+    "sending": "Sending...",
+    "uploadSuccess": "Passport successfully sent for review",
+    "uploadError": "Failed to upload passport"
+  },
+  "phone": {
+    "title": "Phone verification",
+    "placeholder": "99 996 16 96",
+    "description": {
+      "line1": "We will send you a 4-digit code",
+      "line2": "via SMS to confirm your number."
+    },
+    "send": "Send code",
+    "sending": "Sending..."
+  },
+  "routes": {
+    "title": "My routes",
+    "close": "Close",
+    "empty": "No routes yet",
+    "currency": "UZS",
+    "country": "Uzbekistan",
+    "noArrival": "—",
+    "amount": "Amount",
+    "seats": "Seats",
+    "passengers": "{{count}} passengers",
+
+    "tabs": {
+      "active": "Active",
+      "archive": "Archive"
+    }
+  },
+  "bookings": {
+    "title": "My bookings",
+    "close": "Close",
+    "empty": "No bookings yet",
+    "currency": "UZS",
+    "country": "Uzbekistan",
+    "noArrival": "—",
+    "paid": "Paid",
+    "seats": "Seats",
+    "passengers": "{{count}} passengers",
+
+    "tabs": {
+      "active": "Active",
+      "archive": "Archive"
+    }
+  },
+  "transport": {
+    "title": "My cars",
+    "empty": "You have not added any vehicles yet",
+    "add": "Add vehicle"
+  },
+  "addTransport": {
+    "step1": "Who is the manufacturer?",
+    "step2": "Which model?",
+    "step3": "What color?",
+    "searchPlaceholder": "Enter name",
+    "customBrand": "Other brand",
+    "customModel": "Other model",
+    "customColor": "Other color",
+    "next": "Next",
+    "create": "Add vehicle",
+    "success": "Vehicle added successfully",
+
+    "errors": {
+      "loadDictionaries": "Failed to load dictionaries",
+      "loadModels": "Failed to load models",
+      "brandRequired": "Please specify vehicle brand",
+      "modelRequired": "Please specify vehicle model",
+      "colorRequired": "Please specify vehicle color",
+      "createFailed": "Failed to add vehicle"
+    }
+  },
+  "emailVerification": {
+    "title": "Email verification",
+    "descriptionLine1": "We will send you a 6-digit code",
+    "descriptionLine2": "to the specified email address for confirmation.",
+    "send": "Send code",
+    "sending": "Sending..."
   }
 }

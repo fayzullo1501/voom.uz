@@ -6,6 +6,7 @@ import uzFlag from "../../assets/uz-flag.svg";
 import { useEffect, useState } from "react";
 import { API_URL } from "../../config/api";
 import { useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const formatPhoneInput = (value) => {
   const digits = value.replace(/\D/g, "").slice(0, 9);
@@ -23,6 +24,7 @@ const formatPhoneInput = (value) => {
 const PhoneVerification = () => {
   const navigate = useNavigate();
   const { lang } = useParams();
+  const { t } = useTranslation("profile");
 
   const [phone, setPhone] = useState("");
   const [hasPhone, setHasPhone] = useState(false);
@@ -99,7 +101,7 @@ const PhoneVerification = () => {
 
       {/* ===== Title ===== */}
       <h1 className="text-[28px] sm:text-[32px] font-semibold text-center mt-6 mb-10">
-        Подтверждение тел. номера
+        {t("phone.title")}
       </h1>
 
       {/* ===== Content ===== */}
@@ -137,7 +139,7 @@ const PhoneVerification = () => {
                   const digits = e.target.value.replace(/\D/g, "").slice(0, 9);
                   setPhone(digits);
                 }}
-                placeholder="99 996 16 96"
+                placeholder={t("phone.placeholder")}
                 inputMode="numeric"
                 className="w-[140px] text-[18px] font-medium outline-none placeholder:text-gray-400"
               />
@@ -147,9 +149,9 @@ const PhoneVerification = () => {
 
         {/* Description */}
         <p className="text-gray-600 text-[16px] max-w-[320px] mb-10">
-          Мы отправим вам 4-значный код
+          {t("phone.description.line1")}
           <br />
-          по СМС для подтверждения.
+          {t("phone.description.line2")}
         </p>
 
         {/* Button */}
@@ -158,7 +160,7 @@ const PhoneVerification = () => {
           disabled={sending}
           className="px-10 py-3 rounded-xl bg-[#32BB78] text-white text-[17px] font-medium hover:opacity-90 transition disabled:opacity-70"
         >
-          {sending ? "Отправка..." : "Отправить код"}
+          {sending ? t("phone.sending") : t("phone.send")}
         </button>
       </div>
     </div>

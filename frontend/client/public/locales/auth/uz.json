@@ -32,14 +32,16 @@
     "invalidCredentials": "Email yoki parol noto‘g‘ri"
   },
   "confirm": {
-    "titleSms": "SMS orqali kelgan kodni kiriting",
+    "titlePhone": "SMS orqali kelgan kodni kiriting",
     "titleEmail": "Email orqali kelgan kodni kiriting",
-    "sentTo": "Yuborildi:",
+    "sentTo": "Kod {{value}} ga yuborildi",
     "codePlaceholder": "Kodni kiriting",
     "confirmBtn": "Tasdiqlash",
     "resend": "Kodni qayta yuborish",
     "resending": "Yuborilmoqda...",
     "resendIn": "Yangi kodni {{timer}} soniyadan keyin olish mumkin",
+      "successEmail": "Email muvaffaqiyatli tasdiqlandi",
+      "successPhone": "Telefon raqami muvaffaqiyatli tasdiqlandi",
     "errors": {
       "enterCodeSms": "SMS kodni kiriting",
       "enterCodeEmail": "Email kodni kiriting",

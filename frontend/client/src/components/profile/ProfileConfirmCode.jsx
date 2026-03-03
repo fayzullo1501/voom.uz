@@ -165,18 +165,20 @@ const ProfileConfirmCode = () => {
 
         <div className="text-center">
           <h1 className="text-2xl font-semibold mb-4">
-            {payload?.type === "phone" ? "Подтверждение телефона" : "Подтверждение почты"}
+            {payload?.type === "phone"
+            ? t("confirm.titlePhone")
+            : t("confirm.titleEmail")}
           </h1>
 
           {payload?.type === "phone" && (
             <p className="text-black mb-8">
-              Код отправлен на {formatPhoneView(payload.phone)}
+              {t("confirm.sentTo", { value: formatPhoneView(payload.phone) })}
             </p>
           )}
 
           {payload?.type === "email" && (
             <p className="text-black mb-8">
-              Код отправлен на {payload.email}
+              {t("confirm.sentTo", { value: payload.email })}
             </p>
           )}
 

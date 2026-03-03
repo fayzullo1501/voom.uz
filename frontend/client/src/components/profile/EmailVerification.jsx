@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { X } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import { API_URL } from "../../config/api";
+import { useTranslation } from "react-i18next";
 
 import googleIcon from "../../assets/auth/gmail.png";
 import yandexIcon from "../../assets/auth/yandex.png";
@@ -20,6 +21,7 @@ const getEmailIcon = (email) => {
 const EmailVerification = () => {
   const navigate = useNavigate();
   const { lang } = useParams();
+  const { t } = useTranslation("profile");
 
   const [email, setEmail] = useState("");
   const [hasEmail, setHasEmail] = useState(false);
@@ -94,7 +96,7 @@ const EmailVerification = () => {
 
       {/* Title */}
       <h1 className="text-[28px] sm:text-[32px] font-semibold text-center mt-6 mb-10">
-        Подтверждение email адреса
+        {t("emailVerification.title")}
       </h1>
 
       {/* Content */}
@@ -118,9 +120,9 @@ const EmailVerification = () => {
 
         {/* Description */}
         <p className="text-gray-600 text-[16px] max-w-[320px] mb-10">
-          Мы отправим вам 6-значный код
+          {t("emailVerification.descriptionLine1")}
           <br />
-          на указанный адрес для подтверждения.
+          {t("emailVerification.descriptionLine2")}
         </p>
 
         {/* Button */}
@@ -129,7 +131,7 @@ const EmailVerification = () => {
           disabled={sending}
           className="px-10 py-3 rounded-xl bg-[#32BB78] text-white text-[17px] font-medium hover:opacity-90 transition disabled:opacity-70"
         >
-          {sending ? "Отправка..." : "Отправить код"}
+          {sending ? t("emailVerification.sending") : t("emailVerification.send")}
         </button>
       </div>
     </div>

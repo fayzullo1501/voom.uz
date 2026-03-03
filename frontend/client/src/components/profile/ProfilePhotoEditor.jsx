@@ -5,6 +5,7 @@ import { X, RotateCcw, Plus, Minus } from "lucide-react";
 
 import { API_URL } from "../../config/api";
 import { useToast } from "../ui/useToast";
+import { useTranslation } from "react-i18next";
 
 /* ===== ВСПОМОГАТЕЛЬНАЯ ФУНКЦИЯ ОБРЕЗКИ ===== */
 const getCroppedImage = async (imageSrc, croppedAreaPixels) => {
@@ -41,6 +42,7 @@ const ProfilePhotoEditor = () => {
   const navigate = useNavigate();
   const { lang } = useParams();
   const { showToast } = useToast();
+  const { t } = useTranslation("profile");
 
   const imageSrc = sessionStorage.getItem("profilePhoto");
 
@@ -81,11 +83,11 @@ const ProfilePhotoEditor = () => {
 
       sessionStorage.removeItem("profilePhoto");
 
-      showToast("Фото успешно отправлено на проверку", "success");
+      showToast(t("photo.uploadSuccess"), "success");
 
       navigate(`/${lang}/profile/menu`, { replace: true });
     } catch (e) {
-      showToast("Не удалось загрузить фото", "error");
+      showToast(t("photo.uploadError"), "error");
     } finally {
       setLoading(false);
     }
@@ -99,7 +101,7 @@ const ProfilePhotoEditor = () => {
       <header>
         <div className="container-wide flex items-center justify-end">
           <button
-            onClick={() => navigate(-1)}
+            onClick={() => navigate(`/${lang}/profile/photo`)}
             className="p-3 rounded-full hover:bg-gray-100 transition"
           >
             <X className="w-6 h-6 text-gray-700" />
@@ -109,7 +111,7 @@ const ProfilePhotoEditor = () => {
 
       {/* ===== TITLE ===== */}
       <h1 className="text-[32px] sm:text-[36px] font-semibold text-center mt-4">
-        Фото профиля
+        {t("photo.title")}
       </h1>
 
       {/* ===== CROPPER ===== */}
@@ -160,7 +162,7 @@ const ProfilePhotoEditor = () => {
         onClick={save}
         className="mt-10 mx-auto px-10 py-3 rounded-xl text-white text-[17px] font-medium bg-[#32BB78] hover:opacity-90 transition disabled:opacity-60"
       >
-        {loading ? "Загрузка..." : "Сохранить"}
+        {loading ? t("photo.loading") : t("photo.save")}
       </button>
     </div>
   );

@@ -4,11 +4,13 @@ import { X, ChevronRight, Loader2 } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import { API_URL } from "../../config/api";
 import { useToast } from "../../components/ui/useToast";
+import { useTranslation } from "react-i18next";
 
 const AddTransport = () => {
   const navigate = useNavigate();
   const { lang } = useParams();
   const safeLang = lang || "ru";
+  const { t } = useTranslation("profile");
   const { showToast } = useToast();
   const token = localStorage.getItem("token");
 
@@ -42,7 +44,7 @@ const AddTransport = () => {
         setBrands(Array.isArray(bData) ? bData : []);
         setColors(Array.isArray(cData) ? cData : []);
       } catch {
-        showToast("Ошибка загрузки справочников", "error");
+        showToast(t("addTransport.errors.loadDictionaries"), "error");
       }
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -60,7 +62,7 @@ const AddTransport = () => {
         const data = await res.json();
         setModels(Array.isArray(data) ? data : []);
       } catch {
-        showToast("Ошибка загрузки моделей", "error");
+        showToast(t("addTransport.errors.loadModels"), "error");
       }
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -93,9 +95,9 @@ const AddTransport = () => {
     const hasModel = Boolean(modelId || customModel.trim());
     const hasColor = Boolean(colorId || customColor.trim());
 
-    if (!hasBrand) return showToast("Укажите марку автомобиля", "error");
-    if (!hasModel) return showToast("Укажите модель автомобиля", "error");
-    if (!hasColor) return showToast("Укажите цвет автомобиля", "error");
+    if (!hasBrand) return showToast(t("addTransport.errors.brandRequired"), "error");
+    if (!hasModel) return showToast(t("addTransport.errors.modelRequired"), "error");
+    if (!hasColor) return showToast(t("addTransport.errors.colorRequired"), "error");
 
     try {
       setLoading(true);
@@ -117,15 +119,15 @@ const AddTransport = () => {
 
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
-        const msg = data?.message || "Ошибка при добавлении транспорта";
+        const msg = data?.message || t("addTransport.errors.createFailed");
         showToast(msg, "error");
         return;
       }
 
-      showToast("Транспорт успешно добавлен", "success");
+      showToast(t("addTransport.success"), "success");
       navigate(`/${safeLang}/profile/transport`);
     } catch {
-      showToast("Ошибка при добавлении транспорта", "error");
+      showToast(t("addTransport.errors.createFailed"), "error");
     } finally {
       setLoading(false);
     }
@@ -143,12 +145,12 @@ const AddTransport = () => {
 
       <div className="max-w-[560px] mx-auto px-4">
         <h1 className="text-[28px] font-semibold text-center mb-6">
-          {step === 1 && "Кто производитель?"}
-          {step === 2 && "Какая модель?"}
-          {step === 3 && "Какой цвет?"}
+          {step === 1 && t("addTransport.step1")}
+          {step === 2 && t("addTransport.step2")}
+          {step === 3 && t("addTransport.step3")}
         </h1>
 
-        <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Введите название" className="w-full h-[56px] rounded-xl border border-gray-300 px-4 text-[16px] mb-4 focus:outline-none focus:border-[#32BB78]  transition" />
+        <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder={t("addTransport.searchPlaceholder")} className="w-full h-[56px] rounded-xl border border-gray-300 px-4 text-[16px] mb-4 focus:outline-none focus:border-[#32BB78]  transition" />
 
         {/* STEP 1: BRAND */}
         {step === 1 && (
@@ -188,13 +190,13 @@ const AddTransport = () => {
                 setColorId(null);
                 setCustomColor("");
               }}
-              placeholder="Другая марка"
+              placeholder={t("addTransport.customBrand")}
               className="w-full h-[56px] rounded-xl border border-gray-300 px-4 text-[16px] transition mb-10"
             />
 
             {customBrand.trim() && (
               <button onClick={() => goStep(2)} className="w-full h-[52px] rounded-xl bg-[#32BB78] text-white text-[17px] font-semibold hover:bg-[#2aa86e] transition mb-10">
-                Далее
+                {t("addTransport.next")}
               </button>
             )}
           </div>
@@ -233,7 +235,7 @@ const AddTransport = () => {
                 setColorId(null);
                 setCustomColor("");
               }}
-              placeholder="Другая модель"
+              placeholder={t("addTransport.customModel")}
               className="w-full h-[56px] rounded-xl border border-gray-300 px-4 text-[16px]  transition"
             />
 
@@ -274,7 +276,7 @@ const AddTransport = () => {
                 setCustomColor(e.target.value);
                 setColorId(null);
               }}
-              placeholder="Другой цвет"
+              placeholder={t("addTransport.customColor")}
               className="w-full h-[56px] rounded-xl border border-gray-300 px-4 text-[16px]  transition"
             />
 
@@ -283,7 +285,7 @@ const AddTransport = () => {
               disabled={loading || (!colorId && !customColor.trim())}
               className="w-full h-[52px] rounded-xl bg-[#32BB78] text-white text-[17px] font-semibold flex items-center justify-center gap-2 hover:bg-[#2aa86e] transition disabled:opacity-60 disabled:hover:bg-[#32BB78]"
             >
-              {loading ? <Loader2 size={20} className="animate-spin" /> : "Добавить транспорт"}
+              {loading ? <Loader2 size={20} className="animate-spin" /> : t("addTransport.create")}
             </button>
           </div>
         )}

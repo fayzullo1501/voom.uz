@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 import Header from "../components/layout/Header";
 import Footer from "../components/layout/Footer";
+import SEO from "../components/SEO";
 
 import newsImg from "../assets/hero-bg.jpg"; // временное фото
 
@@ -34,6 +35,13 @@ const News = () => {
 
   return (
     <>
+
+      <SEO
+        title="О компании VOOM"
+        description="VOOM — сервис совместных поездок по Узбекистану. Узнайте больше о нашей миссии и развитии."
+        path="/about"
+      />
+      
       <Header />
 
       <div className="container-wide py-16">

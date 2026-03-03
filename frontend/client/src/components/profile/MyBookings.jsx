@@ -4,10 +4,12 @@ import { useNavigate, useParams } from "react-router-dom";
 import walletIcon from "../../assets/icons/wallet.svg";
 import userIcon from "../../assets/icons/user.svg";
 import { API_URL } from "../../config/api";
+import { useTranslation } from "react-i18next";
 
 const MyBookings = () => {
   const navigate = useNavigate();
   const { lang } = useParams();
+  const { t, i18n } = useTranslation("profile");
 
   const [tab, setTab] = useState("active");
   const [bookings, setBookings] = useState([]);
@@ -51,7 +53,13 @@ const MyBookings = () => {
 
   const formatDate = (date) => {
     const d = new Date(date);
-    return d.toLocaleString("ru-RU", {
+    return d.toLocaleString(
+      i18n.language === "uz"
+        ? "uz-UZ"
+        : i18n.language === "en"
+        ? "en-US"
+        : "ru-RU",
+      {
       month: "long",
       day: "numeric",
       year: "numeric",
@@ -69,7 +77,7 @@ const MyBookings = () => {
           <button
             onClick={() => navigate(`/${lang}/profile/menu`)}
             className="p-2 rounded-full hover:bg-gray-100 transition"
-            aria-label="Закрыть"
+            aria-label={t("bookings.close")}
           >
             <X size={24} className="text-gray-700" />
           </button>
@@ -78,7 +86,7 @@ const MyBookings = () => {
 
       {/* ===== Title ===== */}
       <h1 className="text-[24px] sm:text-[32px] font-semibold text-center mb-6 sm:mb-8">
-        Мои бронирования
+        {t("bookings.title")}
       </h1>
 
       {/* ===== Tabs ===== */}
@@ -87,8 +95,8 @@ const MyBookings = () => {
           <div className="absolute bottom-0 left-0 right-0 h-px bg-gray-200" />
           <div className="flex gap-8">
             {[
-              { id: "active", label: "Активные" },
-              { id: "archive", label: "Архив" },
+              { id: "active", label: t("bookings.tabs.active") },
+              { id: "archive", label: t("bookings.tabs.archive") },
             ].map((item) => (
               <button
                 key={item.id}
@@ -121,7 +129,7 @@ const MyBookings = () => {
 
           {!loading && bookings.length === 0 && (
             <div className="text-center text-gray-500 py-20">
-              Бронирований пока нет
+              {t("bookings.empty")}
             </div>
           )}
 
@@ -144,7 +152,7 @@ const MyBookings = () => {
                           {booking.route?.fromName}
                         </div>
                         <div className="text-xs text-gray-500">
-                          {booking.route?.fromCity?.region}, Узбекистан
+                          {booking.route?.fromCity?.region}, {t("bookings.country")}
                         </div>
                         <div className="text-xs text-gray-500 mt-1">
                           {formatDate(booking.route?.departureAt)}
@@ -159,12 +167,12 @@ const MyBookings = () => {
                           {booking.route?.toName}
                         </div>
                         <div className="text-xs text-gray-500">
-                          {booking.route?.toCity?.region}, Узбекистан
+                          {booking.route?.toCity?.region},  {t("bookings.country")}
                         </div>
                         <div className="text-xs text-gray-500 mt-1">
                           {booking.route?.arrivalAt
                             ? formatDate(booking.route?.arrivalAt)
-                            : "—"}
+                            : t("bookings.noArrival")}
                         </div>
                       </div>
                     </div>
@@ -178,19 +186,21 @@ const MyBookings = () => {
                       <div className="flex items-center gap-2 text-sm font-medium">
                         <img
                           src={walletIcon}
-                          alt="Оплачено"
+                          alt={t("bookings.paid")}
                           className="w-5 h-5 opacity-70"
                         />
-                        {(booking.totalPrice || 0).toLocaleString()} сум
+                        {(booking.totalPrice || 0).toLocaleString()} {t("bookings.currency")}
                       </div>
 
                       <div className="flex items-center gap-2 text-sm text-gray-600">
                         <img
                           src={userIcon}
-                          alt="Места"
+                          alt={t("bookings.seats")}
                           className="w-5 h-5 opacity-60"
                         />
-                        {booking.seatsCount || 0} пассажиров
+                        {t("bookings.passengers", {
+                          count: booking.seatsCount || 0,
+                        })}
                       </div>
                     </div>
 

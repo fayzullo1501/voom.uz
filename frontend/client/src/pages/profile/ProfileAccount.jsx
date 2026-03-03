@@ -3,11 +3,13 @@ import { useNavigate, useParams } from "react-router-dom";
 import Header from "../../components/layout/Header";
 import ProfileTopBar from "./ProfileTopBar";
 import axios from "../../services/axios";
+import { useTranslation } from "react-i18next";
 
 
 const ProfileAccount = () => {
   const navigate = useNavigate();
   const { lang } = useParams();
+  const { t, i18n } = useTranslation("profile");
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -59,10 +61,10 @@ const ProfileAccount = () => {
                   <path d="M16 12H18" stroke="white" strokeWidth="2" strokeLinecap="round" />
                 </svg>
               </div>
-              <span className="flex-1 text-[16px] font-medium">Баланс</span>
+              <span className="flex-1 text-[16px] font-medium">{t("account.balance")}</span>
               <span className="text-black font-medium">
                 {balance === null ? (
-                  <span className="text-gray-400">Загрузка...</span>
+                  <span className="text-gray-400">{t("account.loading")}</span>
                 ) : (
                   `${balance.toLocaleString("ru-RU")} UZS`
                 )}
@@ -80,7 +82,7 @@ const ProfileAccount = () => {
                   <path d="M3 7L12 13L21 7" stroke="white" strokeWidth="2" strokeLinejoin="round" />
                 </svg>
               </div>
-              <span className="flex-1 text-[16px] font-medium">Email</span>
+              <span className="flex-1 text-[16px] font-medium">{t("account.email")}</span>
               <span className="text-black">fayzee.uz@gmail.com</span>
             </div>
 
@@ -92,8 +94,8 @@ const ProfileAccount = () => {
                   <path d="M5 21C5 16.5 19 16.5 19 21" stroke="white" strokeWidth="2" strokeLinecap="round" />
                 </svg>
               </div>
-              <span className="flex-1 text-[16px] font-medium">Статус водителя</span>
-              <span className="text-black">Да</span>
+              <span className="flex-1 text-[16px] font-medium">{t("account.driverStatus")}</span>
+              <span className="text-black">{t("account.yes")}</span>
             </div>
 
             {/* ===== ВЫХОД ===== */}
@@ -105,7 +107,7 @@ const ProfileAccount = () => {
                   <path d="M21 12H9" stroke="#EF4444" strokeWidth="2" strokeLinecap="round" />
                 </svg>
               </div>
-              <span className="text-[16px] font-medium text-red-500">Выйти</span>
+              <span className="text-[16px] font-medium text-red-500">{t("account.logout")}</span>
             </div>
 
           </div>

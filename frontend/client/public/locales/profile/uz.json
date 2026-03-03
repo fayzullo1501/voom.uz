@@ -20,5 +20,153 @@
   "tabs": {
     "about": "O‘zingiz haqida",
     "account": "Hisob"
+  },
+  "menu": {
+    "defaultUser": "Foydalanuvchi",
+    "verified": "Tasdiqlangan foydalanuvchi",
+    "notVerified": "Tasdiqlanmagan",
+
+    "editProfile": "Profil ma'lumotlarini tahrirlash",
+
+    "verifyProfileTitle": "Profilingizni tasdiqlang",
+
+    "photoApproved": "Profil rasmi tasdiqlandi",
+    "photoPending": "Rasm tekshiruvda",
+    "photoAdd": "Profil rasmini qo‘shish",
+    "photoRejected": "Profil rasmi rad etildi",
+
+    "passportApproved": "Pasport tasdiqlandi",
+    "passportPending": "Pasport tekshiruvda",
+    "passportAdd": "Pasport ma'lumotlarini yuklash",
+    "passportRejected": "Pasport rad etildi",
+
+    "reason": "Sabab",
+
+    "phoneApproved": "Telefon raqami tasdiqlandi",
+    "phoneVerify": "Telefon raqamini tasdiqlang",
+    "phoneAdd": "Telefon raqamini qo‘shish",
+
+    "emailApproved": "Email tasdiqlandi",
+    "emailVerify": "Emailni tasdiqlang",
+    "emailAdd": "Email qo‘shish",
+
+    "routesTitle": "Yo‘nalishlar va bronlar",
+    "myBookings": "Mening bronlarim",
+    "myRoutes": "Mening yo‘nalishlarim",
+    "notifications": "Bildirishnomalar",
+
+    "myCars": "Mening avtomobillarim",
+    "addCar": "Avtomobil qo‘shish",
+    "carsCount": "Avtomobillar"
+  },
+  "account": {
+    "balance": "Balans",
+    "loading": "Yuklanmoqda...",
+    "email": "Email",
+    "driverStatus": "Haydovchi maqomi",
+    "yes": "Ha",
+    "no": "Yo‘q",
+    "logout": "Chiqish"
+  },
+  "photo": {
+    "title": "Profil rasmi",
+    "choose": "Rasmni tanlang",
+    "button": "Rasm tanlash",
+    "invalidType": "Faqat JPG, PNG yoki WEBP formatlari qo‘llab-quvvatlanadi",
+    "invalidSize": "Fayl hajmi 5 MB dan oshmasligi kerak",
+    "instructions": {
+      "line1": "Rasmga yolg‘iz tushing,",
+      "line2": "quyosh ko‘zoynagini yeching",
+      "line3": "va to‘g‘ridan-to‘g‘ri kameraga qarang."
+    },
+    "uploadSuccess": "Rasm muvaffaqiyatli tekshiruvga yuborildi",
+    "uploadError": "Rasmni yuklash muvaffaqiyatsiz tugadi",
+    "loading": "Yuklanmoqda...",
+    "save": "Saqlash"
+  },
+  "passport": {
+    "title": "Pasportni tasdiqlash",
+    "description": "Pasportingizning skan yoki rasmini yuklang",
+    "selectedFile": "Tanlangan fayl",
+    "selectFile": "Faylni tanlash",
+    "submit": "Yuborish",
+    "sending": "Yuborilmoqda...",
+    "uploadSuccess": "Pasport muvaffaqiyatli tekshiruvga yuborildi",
+    "uploadError": "Pasportni yuklash muvaffaqiyatsiz tugadi"
+  },
+  "phone": {
+    "title": "Telefon raqamini tasdiqlash",
+    "placeholder": "99 996 16 96",
+    "description": {
+      "line1": "Raqamingizni tasdiqlash uchun, biz sizga",
+      "line2": "SMS orqali 4 xonali kod yuboramiz."
+    },
+    "send": "Kod yuborish",
+    "sending": "Yuborilmoqda..."
+  },
+  "routes": {
+    "title": "Mening yo‘nalishlarim",
+    "close": "Yopish",
+    "empty": "Hozircha yo‘nalishlar yo‘q",
+    "currency": "so‘m",
+    "country": "O‘zbekiston",
+    "noArrival": "—",
+    "amount": "Summa",
+    "seats": "O‘rinlar",
+    "passengers": "{{count}} yo‘lovchi",
+
+    "tabs": {
+      "active": "Faol",
+      "archive": "Arxiv"
+    }
+  },
+  "bookings": {
+    "title": "Mening bronlarim",
+    "close": "Yopish",
+    "empty": "Hozircha bronlar yo‘q",
+    "currency": "so‘m",
+    "country": "O‘zbekiston",
+    "noArrival": "—",
+    "paid": "To‘langan",
+    "seats": "O‘rinlar",
+    "passengers": "{{count}} yo‘lovchi",
+
+    "tabs": {
+      "active": "Faol",
+      "archive": "Arxiv"
+    }
+  },
+  "transport": {
+    "title": "Mening avtomobillarim",
+    "empty": "Hozircha transport qo‘shilmagan",
+    "add": "Transport qo‘shish"
+  },
+  "addTransport": {
+    "step1": "Ishlab chiqaruvchi kim?",
+    "step2": "Qaysi model?",
+    "step3": "Qanday rang?",
+    "searchPlaceholder": "Nomini kiriting",
+    "customBrand": "Boshqa marka",
+    "customModel": "Boshqa model",
+    "customColor": "Boshqa rang",
+    "next": "Keyingi",
+    "create": "Transport qo‘shish",
+    "success": "Transport muvaffaqiyatli qo‘shildi",
+
+    "errors": {
+      "loadDictionaries": "Ma'lumotlarni yuklashda xatolik",
+      "loadModels": "Modellarni yuklashda xatolik",
+      "brandRequired": "Avtomobil markasini kiriting",
+      "modelRequired": "Avtomobil modelini kiriting",
+      "colorRequired": "Avtomobil rangini kiriting",
+      "createFailed": "Transport qo‘shishda xatolik"
+    }
+  },
+  "emailVerification": {
+    "title": "Email manzilni tasdiqlash",
+    "descriptionLine1": "Tasdiqlash uchun",
+    "descriptionLine2": "6 xonali kod yuboramiz.",
+    "send": "Kod yuborish",
+    "sending": "Yuborilmoqda..."
   }
 }

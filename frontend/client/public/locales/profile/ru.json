@@ -20,5 +20,152 @@
   "tabs": {
     "about": "О себе",
     "account": "Учётная запись"
+  },
+  "menu": {
+    "defaultUser": "Пользователь",
+    "verified": "Проверенный пользователь",
+    "notVerified": "Не верифицирован",
+
+    "editProfile": "Редактировать информацию о себе",
+
+    "verifyProfileTitle": "Подтвердите свой профиль",
+
+    "photoApproved": "Фото профиля подтверждено",
+    "photoPending": "Фото на проверке",
+    "photoAdd": "Добавить фото профиля",
+    "photoRejected": "Фото профиля отклонено",
+
+    "passportApproved": "Паспорт подтверждён",
+    "passportPending": "Паспорт на проверке",
+    "passportAdd": "Загрузить паспортные данные",
+    "passportRejected": "Паспорт отклонён",
+
+    "reason": "Причина",
+
+    "phoneApproved": "Тел. номер подтверждён",
+    "phoneVerify": "Подтвердите номер телефона",
+    "phoneAdd": "Добавить номер телефона",
+
+    "emailApproved": "Email подтверждён",
+    "emailVerify": "Подтвердите email",
+    "emailAdd": "Добавить email",
+
+    "routesTitle": "Маршруты и брони",
+    "myBookings": "Мои бронирования",
+    "myRoutes": "Мои маршруты",
+    "notifications": "Уведомления",
+
+    "myCars": "Мои автомобили",
+    "addCar": "Добавить машину",
+    "carsCount": "Машин"
+  },
+  "account": {
+    "balance": "Баланс",
+    "loading": "Загрузка...",
+    "email": "Email",
+    "driverStatus": "Статус водителя",
+    "yes": "Да",
+    "no": "Нет",
+    "logout": "Выйти"
+  },
+  "photo": {
+    "title": "Фото профиля",
+    "choose": "Выберите фото",
+    "button": "Выбрать фото",
+    "invalidType": "Поддерживаются только JPG, PNG или WEBP",
+    "invalidSize": "Размер файла не должен превышать 5 МБ",
+    "instructions": {
+      "line1": "Фотографируйтесь одни,",
+      "line2": "снимите солнечные очки",
+      "line3": "и смотрите прямо перед собой."
+    },
+    "uploadSuccess": "Фото успешно отправлено на проверку",
+    "uploadError": "Не удалось загрузить фото",
+    "loading": "Загрузка...",
+    "save": "Сохранить"
+  },
+  "passport": {
+    "title": "Проверить паспорт",
+    "description": "Загрузите скан или фото паспорта",
+    "selectedFile": "Выбран файл",
+    "selectFile": "Выбрать файл",
+    "submit": "Отправить",
+    "sending": "Отправка...",
+    "uploadSuccess": "Паспорт успешно отправлен на проверку",
+    "uploadError": "Не удалось загрузить паспорт"
+  },
+  "phone": {
+    "title": "Подтверждение тел. номера",
+    "placeholder": "99 996 16 96",
+    "description": {
+      "line1": "Мы отправим вам 4-значный код",
+      "line2": "по СМС для подтверждения."
+    },
+    "send": "Отправить код",
+    "sending": "Отправка..."
+  },
+  "routes": {
+    "title": "Мои маршруты",
+    "close": "Закрыть",
+    "empty": "Маршрутов пока нет",
+    "currency": "сум",
+    "country": "Узбекистан",
+    "noArrival": "—",
+    "amount": "Сумма",
+    "seats": "Места",
+    "passengers": "{{count}} пассажиров",
+
+    "tabs": {
+      "active": "Активные",
+      "archive": "Архив"
+    }
+  },
+  "bookings": {
+    "title": "Мои бронирования",
+    "close": "Закрыть",
+    "empty": "Бронирований пока нет",
+    "currency": "сум",
+    "country": "Узбекистан",
+    "noArrival": "—",
+    "paid": "Оплачено",
+    "seats": "Места",
+    "passengers": "{{count}} пассажиров",
+
+    "tabs": {
+      "active": "Активные",
+      "archive": "Архив"
+    }
+  },
+  "transport": {
+    "title": "Мои автомобили",
+    "empty": "У вас пока нет добавленного транспорта"
+  },
+  "addTransport": {
+    "step1": "Кто производитель?",
+    "step2": "Какая модель?",
+    "step3": "Какой цвет?",
+    "searchPlaceholder": "Введите название",
+    "customBrand": "Другая марка",
+    "customModel": "Другая модель",
+    "customColor": "Другой цвет",
+    "next": "Далее",
+    "create": "Добавить транспорт",
+    "success": "Транспорт успешно добавлен",
+
+    "errors": {
+      "loadDictionaries": "Ошибка загрузки справочников",
+      "loadModels": "Ошибка загрузки моделей",
+      "brandRequired": "Укажите марку автомобиля",
+      "modelRequired": "Укажите модель автомобиля",
+      "colorRequired": "Укажите цвет автомобиля",
+      "createFailed": "Ошибка при добавлении транспорта"
+    }
+  },
+  "emailVerification": {
+    "title": "Подтверждение email адреса",
+    "descriptionLine1": "Мы отправим вам 6-значный код",
+    "descriptionLine2": "на указанный адрес для подтверждения.",
+    "send": "Отправить код",
+    "sending": "Отправка..."
   }
 }

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Header from "../components/layout/Header";
 import Footer from "../components/layout/Footer";
 import { useTranslation } from "react-i18next";
+import SEO from "../components/SEO";
 
 import { FaInstagram, FaTelegramPlane, FaYoutube } from "react-icons/fa";
 
@@ -76,6 +77,13 @@ const Contact = () => {
 
   return (
     <>
+
+      <SEO
+        title="О компании VOOM"
+        description="VOOM — сервис совместных поездок по Узбекистану. Узнайте больше о нашей миссии и развитии."
+        path="/about"
+      />
+
       <Header />
 
       <div className="w-full pb-20">

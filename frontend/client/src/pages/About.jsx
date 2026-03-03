@@ -6,6 +6,7 @@ import Header from "../components/layout/Header";
 import Footer from "../components/layout/Footer";
 
 import bannerImg from "../assets/about-banner.jpg";
+import SEO from "../components/SEO";
 
 const About = () => {
   const { t } = useTranslation(["about"]);
@@ -13,6 +14,12 @@ const About = () => {
 
   return (
     <>
+
+      <SEO
+        title="О компании VOOM"
+        description="VOOM — сервис совместных поездок по Узбекистану. Узнайте больше о нашей миссии и развитии."
+        path="/about"
+      />
       <Header />
 
       {/* Main Container */}

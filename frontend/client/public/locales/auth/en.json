@@ -32,9 +32,9 @@
     "invalidCredentials": "Invalid email or password"
   },
   "confirm": {
-    "titleSms": "Enter the code from SMS",
+    "titlePhone": "Enter the code from SMS",
     "titleEmail": "Enter the code from email",
-    "sentTo": "Sent to",
+    "sentTo": "Code sent to {{value}}",
     "codePlaceholder": "Enter the code",
     "confirmBtn": "Confirm",
     "resend": "Resend code",
@@ -48,6 +48,10 @@
       "tooMany": "Too many attempts. Request a new code",
       "resendFailed": "Failed to resend the code",
       "general": "Code verification failed"
+    },
+    "success": {
+      "successEmail": "Email successfully verified",
+      "successPhone": "Phone number successfully verified"
     }
   },
   "password": {
