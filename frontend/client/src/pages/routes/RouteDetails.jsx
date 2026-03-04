@@ -8,6 +8,7 @@ import uzFlag from "../../assets/flag-uz.svg";
 import userVerified from "../../assets/userverified.svg";
 import avatarPlaceholder from "../../assets/avatar-placeholder.svg";
 import PlateNumber from "../../components/ui/PlateNumber";
+import SEO from "../../components/SEO";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -47,6 +48,17 @@ const RouteDetails = () => {
       </div>
     );
   if (!route) return <div className="p-10">Маршрут не найден</div>;
+
+  const fromCity = route.fromCity?.nameRu || "";
+  const toCity = route.toCity?.nameRu || "";
+
+  const minPrice = Math.min(route.priceFront || 0, route.priceBack || 0);
+
+  const title = `${fromCity} → ${toCity} — ${minPrice.toLocaleString("ru-RU")} сум | Voom`;
+
+  const description = `Поездка ${fromCity} — ${toCity}. Цена от ${minPrice.toLocaleString(
+    "ru-RU"
+  )} сум. Забронируйте через Voom.`;
 
   const isVerified =
     route.driver?.passport?.status === "approved" &&
@@ -117,6 +129,12 @@ const RouteDetails = () => {
   return (
     <div className="min-h-screen bg-white">
       <Header />
+
+      <SEO
+        title={title}
+        description={description}
+        path={`/routes/${id}`}
+      />
 
       <div className="container-wide pb-20 lg:pb-32">
         {/* HEADER */}
