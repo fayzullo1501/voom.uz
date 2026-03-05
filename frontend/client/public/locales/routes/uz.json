@@ -1,0 +1,99 @@
+{
+  "results": "natija",
+  "filter": "Filtrlash",
+  "noRoutes": "Yo'nalishlar topilmadi",
+  "departure": "Jo'nash",
+  "from": "",
+  "sum": "so'm ",
+  "fromm": "dan boshlab",
+  "freeSeats": "bo'sh o'rin",
+  "seats": "o'rin",
+
+  "errors": {
+    "loadRoutes": "Yo'nalishlarni yuklashda xatolik"
+  },
+  "filters": {
+    "sort": "Saralash",
+    "early": "Eng erta safarlar",
+    "cheap": "Eng arzon safarlar",
+
+    "departureTime": "Jo'nash vaqti",
+
+    "before6": "06:00 gacha",
+    "morning": "06:00 - 12:00",
+    "day": "12:00 - 18:00",
+    "after18": "18:00 dan keyin",
+
+    "trust": "Ishonch va xavfsizlik",
+    "verifiedProfile": "Profil tasdiqlangan"
+  },
+  "details": {
+    "title": "Yo'nalish tafsilotlari",
+    "back": "Orqaga",
+    "share": "Ulashish",
+    "routeNotFound": "Yo'nalish topilmadi",
+
+    "reviews": "ta sharh",
+
+    "frontSeat": "Old o‘rindiq",
+    "backSeat": "Orqa o‘rindiq",
+    "free": "bo‘sh",
+
+    "route": "Yo'nalish",
+    "car": "Avtomobil",
+
+    "continue": "Davom etish"
+  },
+  "booking": {
+    "title": "Bron qilish",
+    "info": "Bron qilish uchun ma'lumot",
+
+    "namePlaceholder": "Ismingiz, familiyangiz",
+    "emailPlaceholder": "Email (ixtiyoriy)",
+
+    "myData": "Mening ma'lumotlarim",
+
+    "pickup": "Qayerdan olib ketish",
+    "dropoff": "Qayerga yetkazish (ixtiyoriy)",
+
+    "chooseRow": "Qatorni tanlang",
+    "frontRow": "Old qator",
+    "backRow": "Orqa qator",
+
+    "seats": "o‘rin",
+    "seatsCount": "O‘rinlar soni",
+
+    "wholeCar": "Butun avtomobilni bron qilish",
+
+    "note": "Izoh (ixtiyoriy)",
+
+    "paymentTitle": "To‘lov usulini tanlang",
+    "cash": "Naqd pul bilan to‘lov",
+    "card": "Bank kartasi",
+    "soon": "Tez orada",
+
+    "terms": "Foydalanish shartlari",
+    "accept": "Ushbu bronni rasmiylashtirish orqali siz",
+    "termss": "ni tasdiqlaysiz",
+
+    "order": "Sizning buyurtmangiz",
+    "price": "Bron narxi",
+    "total": "Jami",
+
+    "book": "Bron qilish",
+
+    "noSeats": "Bo‘sh o‘rinlar qolmadi",
+    "goBack": "Orqaga qaytish",
+
+    "success": "Bron muvaffaqiyatli yaratildi",
+
+    "errors": {
+      "bookingFailed": "Bron qilishda xatolik",
+      "serverError": "Server xatosi",
+      "pickup_required": "Olib ketish joyini kiriting",
+      "dropoff_required": "Tushirish joyini kiriting",
+      "seats_required": "O‘rinlar sonini tanlang",
+      "invalid_seat_type": "O'rindiqlar turini va sonini tanlang"
+    }
+  }
+}

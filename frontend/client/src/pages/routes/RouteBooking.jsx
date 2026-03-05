@@ -1,6 +1,7 @@
 // src/pages/routes/RouteBooking.jsx
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { ChevronLeft, Wallet, Loader2, MapPin, X } from "lucide-react";
 import Header from "../../components/layout/Header";
 import Footer from "../../components/layout/Footer";
@@ -8,10 +9,14 @@ import visaLogo from "../../assets/visa.png";
 import masterLogo from "../../assets/mastercard.png";
 import uzFlag from "../../assets/flag-uz.svg";
 import MapLocationModal from "../../components/routes/MapLocationModal";
+import { useToast } from "../../components/ui/useToast";
 
 
 const RouteBooking = () => {
   const { id: routeId } = useParams();
+  const { t, i18n } = useTranslation("routes");
+  const navigate = useNavigate();
+  const { showToast } = useToast();
 
   const [activeField, setActiveField] = useState("");
   const [payType, setPayType] = useState("cash");
@@ -137,16 +142,23 @@ const RouteBooking = () => {
 
       if (!res.ok) {
         const err = await res.json();
-        alert(err.message || "Ошибка бронирования");
+        showToast(
+          t(`booking.errors.${err.message}`),
+          "error"
+        );
         return;
       }
 
-      alert("Бронирование успешно создано");
+      showToast(t("booking.success"), "success");
+
+      setTimeout(() => {
+        navigate(`/${i18n.language}/profile/bookings`);
+      }, 5000);
     } catch (err) {
       console.error(err);
-      alert("Ошибка сервера");
+      showToast(t("booking.errors.serverError"), "error");
     } finally {
-      setSubmitting(false);
+      if (!submitting) setSubmitting(false);
     }
   };
 
@@ -205,13 +217,13 @@ const RouteBooking = () => {
         <div className="min-h-screen flex items-center justify-center bg-white">
           <div className="text-center">
             <div className="text-2xl font-bold mb-3">
-              Мест больше нет
+              {t("booking.noSeats")}
             </div>
             <button
               onClick={() => window.history.back()}
               className="px-6 h-11 bg-black text-white rounded-lg"
             >
-              Вернуться назад
+              {t("booking.goBack")}
             </button>
           </div>
         </div>
@@ -231,12 +243,12 @@ const RouteBooking = () => {
           >
             <ChevronLeft size={18} />
             <span className="hidden lg:inline ml-2 text-[15px] font-medium">
-              Назад
+              {t("details.back")}
             </span>
           </button>
 
           <div className="mx-auto text-[20px] lg:text-[36px] font-semibold text-center lg:text-left lg:mx-0">
-            Забронировать
+            {t("booking.title")}
           </div>
         </div>
 
@@ -244,7 +256,7 @@ const RouteBooking = () => {
           {/* LEFT */}
           <div>
             <div className="text-[28px] lg:text-[32px] font-bold text-black mb-4">
-              Информация для бронирования
+              {t("booking.info")}
             </div>
 
             <div className="flex flex-col gap-4">
@@ -252,7 +264,7 @@ const RouteBooking = () => {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 onFocus={() => setActiveField("name")}
-                placeholder="Ваше Имя, Фамилия"
+                placeholder={t("booking.namePlaceholder")}
                 className={`w-full h-[54px] rounded-xl px-4 text-[15px] font-semibold outline-none border transition ${
                   activeField === "name"
                     ? "border-gray-300 border-1 text-black"
@@ -274,7 +286,7 @@ const RouteBooking = () => {
                   }}
                   className="w-5 h-5 rounded-md"
                 />
-                Мои данные
+                {t("booking.myData")}
               </label>
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
@@ -282,7 +294,7 @@ const RouteBooking = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   onFocus={() => setActiveField("email")}
-                  placeholder="Эл. почта (не обязательно)"
+                  placeholder={t("booking.emailPlaceholder")}
                   className={`h-[54px] rounded-xl px-4 border outline-none transition ${
                     activeField === "email"
                       ? "border-gray-300 border-1"
@@ -322,7 +334,7 @@ const RouteBooking = () => {
                     onChange={(e) =>
                       setPickupLocation({ ...pickupLocation, address: e.target.value })
                     }
-                    placeholder="Откуда забрать"
+                    placeholder={t("booking.pickup")}
                     className="h-[54px] w-full rounded-xl px-4 pr-12 border border-gray-300 outline-none"
                   />
 
@@ -345,7 +357,7 @@ const RouteBooking = () => {
                     onChange={(e) =>
                       setDropoffLocation({ ...dropoffLocation, address: e.target.value })
                     }
-                    placeholder="Куда доставить (не обязательно)"
+                    placeholder={t("booking.dropoff")}
                     className="h-[54px] w-full rounded-xl px-4 pr-12 border border-gray-300 outline-none"
                   />
 
@@ -376,9 +388,9 @@ const RouteBooking = () => {
                   >
                     {seatType
                       ? seatType === "front"
-                        ? "Передний ряд"
-                        : "Задний ряд"
-                      : "Выберите ряд"}
+                        ? t("booking.frontRow")
+                        : t("booking.backRow")
+                      : t("booking.chooseRow")}
                     <span>›</span>
                   </button>
 
@@ -398,7 +410,7 @@ const RouteBooking = () => {
                             : "hover:bg-gray-50"
                         }`}
                       >
-                        Передний ряд ({route.availableSeatsFront} мест)
+                        {t("booking.frontRow")} ({route.availableSeatsFront} {t("booking.seats")})
                       </button>
 
                       {/* BACK */}
@@ -415,7 +427,7 @@ const RouteBooking = () => {
                             : "hover:bg-gray-50"
                         }`}
                       >
-                        Задний ряд ({route.availableSeatsBack} мест)
+                        {t("booking.backRow")} ({route.availableSeatsBack} {t("booking.seats")})
                       </button>
                     </div>
                   )}
@@ -432,7 +444,7 @@ const RouteBooking = () => {
                       : "border-gray-300"
                     }`}
                   >
-                    {seatsCount ? `${seatsCount} мест` : "Кол-во мест"}
+                    {seatsCount ? `${seatsCount} ${t("booking.seats")}` : t("booking.seatsCount")}
                     <span>›</span>
                   </button>
 
@@ -479,14 +491,14 @@ const RouteBooking = () => {
                     }}
                     className="w-5 h-5 rounded-md"
                   />
-                  Забронировать весь автомобиль
+                  {t("booking.wholeCar")}
                 </label>
               </div>
 
               <textarea
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
-                placeholder="Заметка (не обязательное поле)"
+                placeholder={t("booking.note")}
                 onFocus={() => setActiveField("message")}
                 className={`h-[140px] rounded-xl px-4 py-3 border outline-none transition ${
                   activeField === "message"
@@ -499,7 +511,7 @@ const RouteBooking = () => {
             {/* PAYMENT */}
             <div className="mt-10">
               <div className="text-[28px] lg:text-[32px] font-bold mb-4">
-                Выберите способ оплаты
+                {t("booking.paymentTitle")}
               </div>
 
               <div className="flex flex-col lg:flex-row gap-4">
@@ -511,7 +523,7 @@ const RouteBooking = () => {
                       : "border-gray-300 text-black font-semibold"
                   }`}
                 >
-                  <span>Оплата наличными</span>
+                  <span>{t("booking.cash")}</span>
                   <Wallet size={20} />
                 </button>
 
@@ -520,8 +532,8 @@ const RouteBooking = () => {
                   className="w-full h-[60px] rounded-xl px-5 flex items-center justify-between border border-gray-300 text-gray-400 bg-gray-100 cursor-not-allowed opacity-70"
                 >
                   <span>
-                    Банковская карта
-                    <span className="ml-2 text-xs text-gray-400">(Скоро будет)</span>
+                    {t("booking.card")}
+                    <span className="ml-2 text-xs text-gray-400">({t("booking.soon")})</span>
                   </span>
                   <div className="flex items-center gap-2">
                     <img src={masterLogo} alt="" className="h-6" />
@@ -531,10 +543,11 @@ const RouteBooking = () => {
               </div>
 
               <div className="mt-3 text-[13px] text-gray-500">
-                Оформляя это бронирование, вы принимаете{" "}
+                {t("booking.accept")}{" "}
                 <span className="underline cursor-pointer text-black">
-                  Условия использования
+                  {t("booking.terms")}
                 </span>
+                  {t("booking.termss")}
               </div>
             </div>
           </div>
@@ -543,7 +556,7 @@ const RouteBooking = () => {
           <div>
             <div className="lg:sticky lg:top-24">
               <div className="text-[28px] lg:text-[32px] font-bold text-black mb-4">
-                Ваш заказ
+                {t("booking.order")}
               </div>
 
               <div className="border border-gray-300 rounded-xl p-4">
@@ -604,13 +617,13 @@ const RouteBooking = () => {
 
               <div className="mt-4 border border-gray-300 rounded-xl p-4">
                 <div className="font-semibold mb-2 text-[22px]">
-                  Стоимость за поездку
+                  {t("booking.price")}
                 </div>
                 <div className="flex mt-6 border-t pt-5 border-gray-300 justify-between text-[18px]">
-                  <span>Всего</span>
+                  <span>{t("booking.total")}</span>
                   <span className="font-bold">
                     {totalPrice
-                      ? `${totalPrice.toLocaleString("ru-RU")} сум`
+                      ? `${totalPrice.toLocaleString("ru-RU")} ${t("sum")}`
                       : "—"}
                   </span>
                 </div>
@@ -626,7 +639,7 @@ const RouteBooking = () => {
                     <Loader2 className="w-5 h-5 animate-spin" />
                   </>
                 ) : (
-                  "Забронировать"
+                  t("booking.book")
                 )}
               </button>
             </div>

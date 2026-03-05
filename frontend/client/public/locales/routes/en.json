@@ -1,0 +1,99 @@
+{
+  "results": "results",
+  "filter": "Filter",
+  "noRoutes": "No routes found",
+  "departure": "Departure",
+  "from": "from",
+  "sum": "UZS",
+  "fromm": "",
+  "freeSeats": "free seats",
+  "seats": "seats",
+
+  "errors": {
+    "loadRoutes": "Failed to load routes"
+  },
+  "filters": {
+    "sort": "Sort",
+    "early": "Earliest trips",
+    "cheap": "Cheapest trips",
+
+    "departureTime": "Departure time",
+
+    "before6": "Before 06:00",
+    "morning": "06:00 - 12:00",
+    "day": "12:00 - 18:00",
+    "after18": "After 18:00",
+
+    "trust": "Trust and safety",
+    "verifiedProfile": "Verified profile"
+  },
+  "details": {
+    "title": "Route details",
+    "back": "Back",
+    "share": "Share",
+    "routeNotFound": "Route not found",
+
+    "reviews": "reviews",
+
+    "frontSeat": "Front seat",
+    "backSeat": "Back seat",
+    "free": "available",
+
+    "route": "Route",
+    "car": "Car",
+
+    "continue": "Continue"
+  },
+  "booking": {
+    "title": "Book",
+    "info": "Booking information",
+
+    "namePlaceholder": "Your name, surname",
+    "emailPlaceholder": "Email (optional)",
+
+    "myData": "My data",
+
+    "pickup": "Pickup location",
+    "dropoff": "Drop-off location (optional)",
+
+    "chooseRow": "Choose row",
+    "frontRow": "Front row",
+    "backRow": "Back row",
+
+    "seats": "seats",
+    "seatsCount": "Number of seats",
+
+    "wholeCar": "Book the whole car",
+
+    "note": "Note (optional)",
+
+    "paymentTitle": "Choose payment method",
+    "cash": "Cash payment",
+    "card": "Bank card",
+    "soon": "Coming soon",
+
+    "terms": "Terms of use",
+    "accept": "By making this booking you accept",
+    "termss": "",
+
+    "order": "Your order",
+    "price": "Trip price",
+    "total": "Total",
+
+    "book": "Book",
+
+    "noSeats": "No seats available",
+    "goBack": "Go back",
+
+    "success": "Booking successfully created",
+
+    "errors": {
+      "bookingFailed": "Booking failed",
+      "serverError": "Server error",
+      "pickup_required": "Please specify pickup location",
+      "dropoff_required": "Please specify drop-off location",
+      "seats_required": "Please select seats",
+      "invalid_seat_type": "Select the type and number of seats."
+    }
+  }
+}

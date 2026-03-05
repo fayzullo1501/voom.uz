@@ -21,8 +21,8 @@
       "menu": {
         "profile": "Profil",
         "balance": "Balans",
-        "bookings": "Bronlarim",
-        "routes": "Marshrutlarim",
+        "bookings": "Mening bronlarim",
+        "routes": "Mening marshrutlarim",
         "chat": "Chat",
         "logout": "Chiqish"
       }

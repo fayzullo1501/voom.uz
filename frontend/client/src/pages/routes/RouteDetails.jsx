@@ -4,7 +4,7 @@ import { Share2, ChevronLeft, ChevronRight, Star, Phone, Armchair, Loader2 } fro
 import Header from "../../components/layout/Header";
 import Footer from "../../components/layout/Footer";
 import { useNavigate, useParams } from "react-router-dom";
-import uzFlag from "../../assets/flag-uz.svg";
+import { useTranslation } from "react-i18next";
 import userVerified from "../../assets/userverified.svg";
 import avatarPlaceholder from "../../assets/avatar-placeholder.svg";
 import PlateNumber from "../../components/ui/PlateNumber";
@@ -15,6 +15,7 @@ const API_URL = import.meta.env.VITE_API_URL;
 const RouteDetails = () => {
   const { id, lang } = useParams();
   const navigate = useNavigate();
+  const { t, i18n } = useTranslation("routes");
 
   const [route, setRoute] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -47,7 +48,7 @@ const RouteDetails = () => {
         <Loader2 className="w-10 h-10 text-[#000] animate-spin" />
       </div>
     );
-  if (!route) return <div className="p-10">Маршрут не найден</div>;
+  if (!route) return <div className="p-10">{t("details.routeNotFound")}</div>;
 
   const fromCity = route.fromCity?.nameRu || "";
   const toCity = route.toCity?.nameRu || "";
@@ -141,16 +142,16 @@ const RouteDetails = () => {
         <div className="relative flex items-center py-4 border-b border-gray-300">
           <button onClick={() => window.history.back()} className="absolute left-0 flex items-center px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition lg:static lg:mr-4">
             <ChevronLeft size={18} />
-            <span className="hidden lg:inline ml-2 text-[15px] font-medium">Назад</span>
+            <span className="hidden lg:inline ml-2 text-[15px] font-medium">{t("details.back")}</span>
           </button>
 
           <div className="mx-auto text-[20px] lg:text-[36px] font-semibold text-center lg:text-left lg:mx-0">
-            Детали маршрута
+            {t("details.title")}
           </div>
 
           <button onClick={handleShare} className="absolute right-0 flex items-center px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition lg:static lg:ml-auto" >
             <Share2 size={18} />
-            <span className="hidden lg:inline ml-2 text-[15px] font-medium">Поделиться</span>
+            <span className="hidden lg:inline ml-2 text-[15px] font-medium">{t("details.share")}</span>
           </button>
         </div>
 
@@ -194,7 +195,7 @@ const RouteDetails = () => {
                   <div className="text-[16px] font-semibold">{route.driver?.firstName} {route.driver?.lastName}</div>
                   <div className="flex items-center gap-1 text-[14px] text-gray-500">
                     <Star size={14} className="fill-yellow-400 text-yellow-400" />
-                    5.0 · 4 отзыва
+                    5.0 · 4 {t("details.reviews")}
                   </div>
                 </div>
               </div>
@@ -203,7 +204,7 @@ const RouteDetails = () => {
                 {isVerified && (
                   <div className="flex items-center gap-2">
                     <img src={userVerified} alt="" className="w-5 h-5" />
-                    <span>Профиль подтвержден</span>
+                    <span>{t("filters.verifiedProfile")}</span>
                   </div>
                 )}
                 <div className="flex items-center gap-2">
@@ -220,11 +221,11 @@ const RouteDetails = () => {
               <div className="mt-4 border-t pt-4 flex flex-col gap-2 text-[14px] text-gray-700 border-gray-300">
                 <div className="flex items-center gap-2">
                   <Armchair size={16} />
-                  <span>Переднее место — {route.priceFront.toLocaleString("ru-RU")} сум ({route.availableSeatsFront} свободно)</span>
+                  <span>{t("details.frontSeat")} — {route.priceFront.toLocaleString("ru-RU")} {t("sum")} ({route.availableSeatsFront} {t("details.free")})</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Armchair size={16} />
-                  <span>Заднее место — {route.priceBack.toLocaleString("ru-RU")} сум ({route.availableSeatsBack} свободно)</span>
+                  <span>{t("details.backSeat")} — {route.priceBack.toLocaleString("ru-RU")} {t("sum")} ({route.availableSeatsBack} {t("details.free")})</span>
                 </div>
               </div>
             </div>
@@ -234,7 +235,7 @@ const RouteDetails = () => {
           <div>
             <div className="lg:sticky lg:top-24">
               <div className=" border border-gray-300 rounded-2xl p-6">
-                <div className="text-[22px] font-bold mb-1">Маршрут</div>
+                <div className="text-[22px] font-bold mb-1">{t("details.route")}</div>
                 <div className="text-[16px] text-gray-600 mb-6">{new Date(route.departureAt).toLocaleDateString("ru-RU", { weekday: "long", day: "numeric", month: "long", })}</div>
                 <div className="grid grid-cols-[auto_24px_1fr] gap-3">
                   <div className="flex flex-col gap-[38px] text-[15px] font-medium">
@@ -272,7 +273,7 @@ const RouteDetails = () => {
                 </div>
 
                 <div className="mt-6 border-t pt-5 border-gray-300">
-                  <div className="text-[22px] font-bold mb-3">Автомобиль</div>
+                  <div className="text-[22px] font-bold mb-3">{t("details.car")}</div>
                   <div className="flex items-center gap-3">
                     <img src={route.car?.brand?.logo?.url} alt="" className="w-12 h-10" />
                     <div>
@@ -294,7 +295,7 @@ const RouteDetails = () => {
                 onClick={() => navigate(`/${lang}/routes/${id}/booking`)}
                 className="w-full h-[56px] mt-4 bg-[#32BB78] text-white rounded-xl text-[17px] font-semibold hover:bg-[#2aa86e] transition"
               >
-                Продолжить
+                {t("details.continue")}
               </button>
             </div>
           </div>

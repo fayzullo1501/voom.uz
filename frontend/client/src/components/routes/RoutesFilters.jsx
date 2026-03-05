@@ -1,6 +1,7 @@
 // src/components/routes/RoutesFilters.jsx
 import React from "react";
 import userVerified from "../../assets/userverified.svg";
+import { useTranslation } from "react-i18next";
 
   const RoutesFilters = ({
     routes,
@@ -12,6 +13,8 @@ import userVerified from "../../assets/userverified.svg";
     setVerifiedOnly,
     verifiedCount
   }) => {
+
+    const { t } = useTranslation("routes");
 
   const timeCounts = {
     before6: 0,
@@ -37,14 +40,14 @@ import userVerified from "../../assets/userverified.svg";
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <div className="text-[20px] font-semibold">Сортировать</div>
+        <div className="text-[20px] font-semibold">{t("filters.sort")}</div>
       </div>
 
       <div className="space-y-5">
         {[
-          ["early", "Самые ранние поездки"],
-          ["cheap", "Самые дешевые поездки"],
-        ].map(([value, label]) => (
+            ["early", t("filters.early")],
+            ["cheap", t("filters.cheap")],
+          ].map(([value, label]) => (
           <label key={value} className="flex items-center gap-3 cursor-pointer text-[16px]">
             <input type="radio" checked={sort === value} onChange={() => setSort(value)} className="sr-only" />
             <span className={`w-5 h-5 rounded-full flex items-center justify-center border-2 ${sort === value ? "border-[#32BB78]" : "border-gray-300"}`}>
@@ -57,14 +60,14 @@ import userVerified from "../../assets/userverified.svg";
 
       <div className="h-[2px] bg-gray-200 my-6" />
 
-      <div className="text-[18px] font-semibold mb-4">Время выезда</div>
+      <div className="text-[18px] font-semibold mb-4">{t("filters.departureTime")}</div>
       <div className="space-y-4">
         {[
-          ["before6", "До 06:00"],
-          ["morning", "06:00 - 12:00"],
-          ["day", "12:00 - 18:00"],
-          ["after18", "После 18:00"],
-        ].map(([key, label]) => (
+            ["before6", t("filters.before6")],
+            ["morning", t("filters.morning")],
+            ["day", t("filters.day")],
+            ["after18", t("filters.after18")],
+          ].map(([key, label]) => (
           <label key={key} className="flex items-center justify-between text-[15px] cursor-pointer">
             <div className="flex items-center gap-3">
               <input type="checkbox" checked={timeFilters[key]} onChange={() => toggleTime(key)} className="sr-only" />
@@ -86,7 +89,7 @@ import userVerified from "../../assets/userverified.svg";
 
       <div className="h-[2px] bg-gray-200 my-6" />
 
-      <div className="text-[18px] font-semibold mb-4">Доверие и безопасность</div>
+      <div className="text-[18px] font-semibold mb-4">{t("filters.trust")}</div>
       <label className="flex items-center justify-between text-[15px] cursor-pointer">
         <div className="flex items-center gap-3">
           <input type="checkbox" checked={verifiedOnly} onChange={() => setVerifiedOnly(!verifiedOnly)} className="sr-only" />
@@ -97,7 +100,7 @@ import userVerified from "../../assets/userverified.svg";
               </svg>
             )}
           </span>
-          Профиль подтвержден
+          {t("filters.verifiedProfile")}
         </div>
         <div className="flex items-center gap-2">
           <span className="text-gray-700">

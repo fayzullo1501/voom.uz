@@ -11,7 +11,7 @@ const API_URL = import.meta.env.VITE_API_URL;
 const RoutesResults = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { i18n } = useTranslation();
+ const { t, i18n } = useTranslation("routes");
 
   const [routes, setRoutes] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -65,7 +65,7 @@ const RoutesResults = () => {
         setRoutes(data);
       } catch (err) {
         console.error("Routes load error:", err);
-        setError("Ошибка загрузки маршрутов");
+        setError(t("errors.loadRoutes"));
       } finally {
         setLoading(false);
       }
@@ -74,7 +74,7 @@ const RoutesResults = () => {
     if (location.search) {
       fetchRoutes();
     }
-  }, [location.search]);
+  }, [location.search, i18n.language]);
 
   const formatDate = (date) =>
     new Date(date).toLocaleString("ru-RU", {
@@ -173,7 +173,7 @@ const RoutesResults = () => {
               {filteredRoutes[0]?.toCity?.nameRu || ""}
             </div>
             <div className="text-[13px] text-gray-500">
-              {filteredRoutes.length} результатов
+              {filteredRoutes.length} {t("results")}
             </div>
           </div>
           <button
@@ -183,7 +183,7 @@ const RoutesResults = () => {
             }}
             className="text-[#32BB78] font-semibold text-[15px]"
           >
-            Фильтровать
+            {t("filter")}
           </button>
         </div>
       </div>
@@ -210,7 +210,7 @@ const RoutesResults = () => {
 
         <div className="flex-1 overflow-y-auto pr-2 no-scrollbar">
           <div className="text-[20px] font-semibold mb-6">
-            {filteredRoutes.length} результатов
+            {filteredRoutes.length} {t("results")}
           </div>
 
           {loading && (
@@ -227,7 +227,7 @@ const RoutesResults = () => {
 
           {!loading && filteredRoutes.length === 0 && (
             <div className="text-center py-10 text-gray-500">
-              Маршруты не найдены
+              {t("noRoutes")}
             </div>
           )}
 
@@ -368,7 +368,7 @@ const RoutesResults = () => {
                   <div className="flex items-start justify-between">
                     <div>
                       <div className="text-[18px] font-semibold">
-                        Выезд {formatDate(route.departureAt)}
+                        {t("departure")} {formatDate(route.departureAt)}
                       </div>
 
                       <div className="mt-2 flex items-center gap-6">
@@ -398,7 +398,7 @@ const RoutesResults = () => {
 
                     <div className="text-right">
                       <div className="text-[14px] font-semibold">
-                        от{" "}
+                        {t("from")}{" "}
                         <span className="text-[26px] font-bold">
                           {formatPrice(
                             Math.min(
@@ -406,14 +406,15 @@ const RoutesResults = () => {
                               route.priceBack ?? Infinity
                             )
                           )}
-                        </span>
-                        сум
+                        </span>{" "}
+                        {t("sum")} 
+                        {t("fromm")}{" "}
                       </div>
 
                       <div className="text-gray-500 text-[14px]">
                         {route.availableSeatsFront +
                           route.availableSeatsBack}{" "}
-                        свободных мест
+                        {t("freeSeats")}
                       </div>
                     </div>
                   </div>
@@ -527,7 +528,7 @@ const RoutesResults = () => {
                   route.priceFront ?? Infinity,
                   route.priceBack ?? Infinity
                 )
-              )} сум
+              )} {t("sum")}
             </div>
 
             <div className="text-gray-500 text-[14px]">
@@ -541,7 +542,7 @@ const RoutesResults = () => {
                 route.car?.customModel} ·{" "}
               {route.availableSeatsFront +
                 route.availableSeatsBack}{" "}
-              мест
+              {t("seats")}
             </div>
           </div>
         ))}
