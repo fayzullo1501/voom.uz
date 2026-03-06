@@ -162,7 +162,16 @@ const RoutesSearch = ({ isMobileModal = false, onClose }) => {
             {t("hero.placeholders.when")}
           </label>
 
-          <DatePickerModal isOpen={calendarOpen} selectedDate={selectedDate} onSelect={(date) => { setSelectedDate(date); setCalendarOpen(false); }} />
+          <DatePickerModal 
+            isOpen={calendarOpen} 
+            selectedDate={selectedDate}
+            fromCity={from}
+            toCity={to}
+            onSelect={(date) => { 
+              setSelectedDate(date); 
+              setCalendarOpen(false); 
+            }} 
+          />
         </div>
 
         {/* PASSENGERS */}

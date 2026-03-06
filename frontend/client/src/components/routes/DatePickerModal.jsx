@@ -5,12 +5,13 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 const weekDays = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
 const months = ["январь","февраль","март","апрель","май","июнь","июль","август","сентябрь","октябрь","ноябрь","декабрь"];
 
-const DatePickerModal = ({ isOpen, selectedDate, onSelect }) => {
+const DatePickerModal = ({ isOpen, selectedDate, onSelect, fromCity, toCity }) => {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
   const [currentDate, setCurrentDate] = useState(today);
   const [activeDate, setActiveDate] = useState(today);
+  const [routeDates, setRouteDates] = useState([]);
 
   useEffect(() => {
     if (selectedDate) {
@@ -24,8 +25,6 @@ const DatePickerModal = ({ isOpen, selectedDate, onSelect }) => {
     }
   }, [isOpen, selectedDate]);
 
-  if (!isOpen) return null;
-
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
   const isCurrentMonth = year === today.getFullYear() && month === today.getMonth();
@@ -37,6 +36,40 @@ const DatePickerModal = ({ isOpen, selectedDate, onSelect }) => {
   for (let i = 1; i < firstDay; i++) days.push(null);
   for (let d = 1; d <= daysInMonth; d++) days.push(d);
 
+  useEffect(() => {
+
+    if (!fromCity || !toCity) {
+      setRouteDates([]);
+      return;
+    }
+
+    const fetchCalendar = async () => {
+
+      try {
+
+        const monthStr = `${year}-${String(month + 1).padStart(2,"0")}`;
+
+        const res = await fetch(
+          `${import.meta.env.VITE_API_URL}/api/routes/calendar?from=${fromCity._id}&to=${toCity._id}&month=${monthStr}`
+        );
+
+        const data = await res.json();
+
+        setRouteDates(data.dates || []);
+
+      } catch (err) {
+        console.error("calendar fetch error", err);
+      }
+
+    };
+
+    fetchCalendar();
+
+  }, [currentDate, fromCity, toCity]);
+
+
+  if (!isOpen) return null;
+  
   return (
     <div className="absolute z-50 bg-white rounded-2xl shadow-xl p-5 w-[340px] left-0 top-full mt-3">
       <div className="flex items-center justify-between mb-4">
@@ -62,6 +95,9 @@ const DatePickerModal = ({ isOpen, selectedDate, onSelect }) => {
           const dateObj = new Date(year, month, day);
           dateObj.setHours(0, 0, 0, 0);
 
+          const dateStr = `${year}-${String(month + 1).padStart(2,"0")}-${String(day).padStart(2,"0")}`;
+          const hasRoute = routeDates.includes(dateStr);
+
           const isPast = isCurrentMonth && dateObj < today;
           const isToday = dateObj.getTime() === today.getTime();
           const isActive = activeDate && dateObj.getTime() === activeDate.getTime();
@@ -74,7 +110,20 @@ const DatePickerModal = ({ isOpen, selectedDate, onSelect }) => {
 
           return (
             <button key={idx} disabled={isPast} onClick={() => { setActiveDate(dateObj); onSelect(dateObj); }} className={cls}>
-              {day}
+
+              <div className="flex flex-col items-center justify-center">
+                <span>{day}</span>
+
+                {hasRoute && (
+                  <span
+                    className={`w-[6px] h-[6px] rounded-full mt-[2px] ${
+                      isActive ? "bg-white" : "bg-[#32BB78]"
+                    }`}
+                  />
+                )}
+
+              </div>
+
             </button>
           );
         })}

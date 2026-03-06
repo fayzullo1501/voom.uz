@@ -411,3 +411,66 @@ export const getRouteByIdPublic = async (req, res) => {
     return res.status(500).json({ message: "Internal server error" });
   }
 };
+
+
+/**
+ * ===============================
+ * GET /api/routes/calendar
+ * calendar days with routes
+ * ===============================
+ */
+export const getRoutesCalendar = async (req, res) => {
+  try {
+    const { from, to, month } = req.query;
+
+    if (!from || !to || !month) {
+      return res.status(400).json({ message: "missing_params" });
+    }
+
+    const [year, monthIndex] = month.split("-");
+
+    const start = new Date(Date.UTC(year, Number(monthIndex) - 1, 1));
+    const end = new Date(Date.UTC(year, Number(monthIndex), 1));
+
+    const routes = await Route.aggregate([
+      {
+        $match: {
+          fromCity: new Route.base.Types.ObjectId(from),
+          toCity: new Route.base.Types.ObjectId(to),
+          status: "active",
+          departureAt: {
+            $gte: start,
+            $lt: end,
+          },
+        },
+      },
+      {
+        $project: {
+          date: {
+            $dateToString: {
+              format: "%Y-%m-%d",
+              date: "$departureAt",
+              timezone: "+05:00",
+            },
+          },
+        },
+      },
+      {
+        $group: {
+          _id: "$date",
+        },
+      },
+      {
+        $sort: { _id: 1 },
+      },
+    ]);
+
+    const dates = routes.map((r) => r._id);
+
+    res.json({ dates });
+
+  } catch (error) {
+    console.error("getRoutesCalendar error:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};

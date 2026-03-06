@@ -108,7 +108,19 @@ const HeroSearch = () => {
         </div>
 
         <div className="relative flex-1 min-w-[150px]">
-          <input readOnly onClick={() => { if (!calendarOpen) { setCalendarOpen(true); setPassengersOpen(false); } }} value={selectedDate ? selectedDate.toLocaleDateString() : ""} className="peer w-full h-[56px] px-4 pt-4 bg-gray-100 rounded-lg text-[15px] cursor-pointer focus:outline-none" />
+          <input 
+            readOnly 
+            onClick={() => { 
+              if (calendarOpen) {
+                setCalendarOpen(false);
+              } else {
+                setCalendarOpen(true);
+                setPassengersOpen(false);
+              }
+            }} 
+            value={selectedDate ? selectedDate.toLocaleDateString() : ""} 
+            className="peer w-full h-[56px] px-4 pt-4 bg-gray-100 rounded-lg text-[15px] cursor-pointer focus:outline-none" 
+          />
           <label className={`absolute left-4 transition-all duration-200 ${selectedDate ? "top-1 text-[11px]" : "top-4 text-[15px]"} peer-focus:top-1 peer-focus:text-[11px] text-gray-500`}>
             {t("hero.placeholders.when")}
           </label>
@@ -116,6 +128,8 @@ const HeroSearch = () => {
           <DatePickerModal
             isOpen={calendarOpen}
             selectedDate={selectedDate}
+            fromCity={fromCity}
+            toCity={toCity}
             onSelect={(date) => {
               setSelectedDate(date);
               setCalendarOpen(false);

@@ -97,7 +97,7 @@ const CityAutocompleteInput = ({ label, value, onSelect }) => {
           setQuery(e.target.value);
           onSelect(null);
         }}
-        className="w-full h-[52px] px-4 pr-10 bg-gray-100 rounded-xl text-[16px] focus:outline-none"
+        className="w-full h-[56px] px-4 pr-10 bg-gray-100 rounded-lg text-[16px] focus:outline-none"
         placeholder={label}
       />
 
