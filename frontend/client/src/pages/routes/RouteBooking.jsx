@@ -107,11 +107,23 @@ const RouteBooking = () => {
 
 
   const handleBooking = async () => {
-    if (submitting) return;
-    try {
-      setSubmitting(true);
+      if (submitting) return;
+
+      if (!name || !phone || !pickupLocation.address || !dropoffLocation.address || (!bookWholeCar && (!seatType || !seatsCount))) {
+        showToast(t("booking.errors.fillRequired"), "error");
+        return;
+      }
+
+      try {
+        setSubmitting(true);
 
       const token = localStorage.getItem("token");
+
+      if (!token) {
+        showToast(t("booking.errors.authRequired"), "error");
+        navigate(`/${i18n.language}/login`);
+        return;
+      }
 
       const res = await fetch(
         `${import.meta.env.VITE_API_URL}/api/bookings`,
@@ -158,7 +170,7 @@ const RouteBooking = () => {
       console.error(err);
       showToast(t("booking.errors.serverError"), "error");
     } finally {
-      if (!submitting) setSubmitting(false);
+      setSubmitting(false);
     }
   };
 

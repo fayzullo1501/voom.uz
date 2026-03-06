@@ -4,6 +4,7 @@ import {
   createBooking,
   acceptBooking,
   rejectBooking,
+  cancelBooking,
   getMyBookings,
   getBookingById,
   leaveReview,
@@ -19,6 +20,8 @@ router.patch("/:id/accept", auth, acceptBooking);
 
 // PATCH /api/bookings/:id/reject
 router.patch("/:id/reject", auth, rejectBooking);
+// PATCH /api/bookings/:id/cancel
+router.patch("/:id/cancel", auth, cancelBooking);
 
 // GET /api/bookings/my?type=active|archive
 router.get("/my", auth, getMyBookings);

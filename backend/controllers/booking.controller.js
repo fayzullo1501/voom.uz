@@ -301,6 +301,11 @@ export const getMyBookings = async (req, res) => {
         populate: [
           { path: "fromCity", select: "region" },
           { path: "toCity", select: "region" },
+
+          {
+            path: "bookings",
+            select: "status seatsCount",
+          },
         ],
       })
       .sort({ createdAt: -1 });
@@ -340,11 +345,28 @@ export const getBookingById = async (req, res) => {
 
     const booking = await Booking.findById(id)
       .populate({
+        path: "passenger",
+        select: "firstName lastName profilePhoto",
+      })
+      .populate({
         path: "route",
         populate: [
           { path: "fromCity" },
           { path: "toCity" },
-          { path: "driver", select: ` firstName lastName phone profilePhoto phoneVerified emailVerified passport rating reviewsCount`  },
+
+          {
+            path: "bookings",
+            populate: {
+              path: "passenger",
+              select: "firstName lastName profilePhoto",
+            },
+          },
+
+          {
+            path: "driver",
+            select: `firstName lastName phone profilePhoto phoneVerified emailVerified passport rating reviewsCount`
+          },
+
           { 
             path: "car",
             populate: [
@@ -353,7 +375,7 @@ export const getBookingById = async (req, res) => {
               { path: "color" }
             ]
           },
-        ],
+        ]
       });
 
     if (!booking) {
@@ -361,7 +383,7 @@ export const getBookingById = async (req, res) => {
     }
 
     // Защита: пассажир может смотреть только свою бронь
-    if (booking.passenger?.toString() !== userId.toString()) {
+    if (booking.passenger?._id.toString() !== userId.toString()) {
       return res.status(403).json({ message: "not_allowed" });
     }
 
@@ -445,6 +467,65 @@ export const leaveReview = async (req, res) => {
 
   } catch (error) {
     console.error("leaveReview error:", error);
+    return res.status(500).json({ message: "internal_server_error" });
+  }
+};
+
+// ===== Отменить бронь пассажиром =====
+export const cancelBooking = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const { id } = req.params;
+
+    const booking = await Booking.findById(id).populate("route");
+
+    if (!booking) {
+      return res.status(404).json({ message: "booking_not_found" });
+    }
+
+    const route = booking.route;
+
+    // Только владелец брони может отменить
+    if (booking.passenger.toString() !== userId.toString()) {
+      return res.status(403).json({ message: "not_allowed" });
+    }
+
+    // Можно отменять только активный маршрут
+    if (route.status !== "active") {
+      return res.status(400).json({ message: "route_not_active" });
+    }
+
+    // Бронь уже отменена
+    if (booking.status === "cancelled") {
+      return res.status(400).json({ message: "booking_already_cancelled" });
+    }
+
+    // Возвращаем места если бронь была принята
+    if (booking.status === "accepted") {
+
+      if (booking.seatType === "front") {
+        route.availableSeatsFront += booking.seatsCount;
+      }
+
+      if (booking.seatType === "back") {
+        route.availableSeatsBack += booking.seatsCount;
+      }
+
+      if (booking.seatType === "whole") {
+        route.availableSeatsFront = route.seatsFront;
+        route.availableSeatsBack = route.seatsBack;
+      }
+
+      await route.save();
+    }
+
+    booking.status = "cancelled";
+    await booking.save();
+
+    return res.json({ message: "booking_cancelled" });
+
+  } catch (error) {
+    console.error("cancelBooking error:", error);
     return res.status(500).json({ message: "internal_server_error" });
   }
 };

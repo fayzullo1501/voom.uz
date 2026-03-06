@@ -4,9 +4,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import { API_URL } from "../../config/api";
 import { ChevronLeft, Maximize2, X, Star, FileText, Loader2 } from "lucide-react";
 import driverAvatar from "../../assets/driverbookingtest.jpg";
+import avatarPlaceholder from "../../assets/avatar-placeholder.svg";
 import carAvatar from "../../assets/carbookingtest.jpg";
 import userVerified from "../../assets/userverified.svg";
-import uzFlag from "../../assets/flag-uz.svg";
 import PlateNumber from "../../components/ui/PlateNumber";
 
 
@@ -50,6 +50,28 @@ const MyBookingDetails = () => {
       }
     } catch (err) {
       console.error("Review error:", err);
+    }
+  };
+
+  const handleCancelBooking = async () => {
+    if (!window.confirm("Отменить бронь?")) return;
+
+    try {
+      const res = await fetch(
+        `${API_URL}/api/bookings/${id}/cancel`,
+        {
+          method: "PATCH",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      if (res.ok) {
+        navigate(-1);
+      }
+    } catch (err) {
+      console.error("Cancel booking error:", err);
     }
   };
 
@@ -263,7 +285,35 @@ const MyBookingDetails = () => {
 
   const regionCode = plate.slice(0, 2);
   const restPlate = plate.slice(2).trim();
-    
+
+  const passengers = [
+    booking,
+    ...(booking?.route?.bookings || []).filter(
+      (b) => b._id !== booking._id && b.status === "accepted"
+    ),
+  ];
+
+  const mySeats = booking?.seatsCount || 0;
+
+  const totalPassengers =
+    booking?.route?.bookings
+      ?.filter((b) => b.status === "accepted")
+      ?.reduce((sum, b) => sum + (b.seatsCount || 0), 0) || 0;
+
+  const passengerName =
+    booking?.passengerName ||
+    `${booking?.passenger?.firstName || ""} ${booking?.passenger?.lastName || ""}`.trim();
+
+  const passengerPhone =
+    booking?.passengerPhone || booking?.passenger?.phone || "";
+
+  const bookedBy =
+    passengerName === `${booking?.passenger?.firstName || ""} ${booking?.passenger?.lastName || ""}`.trim()
+      ? "Я"
+      : `${passengerName} (${passengerPhone})`;
+  
+  const totalPrice = booking?.totalPrice || 0;    
+
   return (
     <div className="min-h-screen bg-white flex flex-col">
       {/* ===== Header (как BalanceTopUp) ===== */}
@@ -419,6 +469,67 @@ const MyBookingDetails = () => {
                 )}
               </div>
             )}
+
+            {/* ===== PASSENGERS ===== */}
+            <div className="mt-10">
+              <div className="text-[22px] sm:text-[26px] font-bold mb-4">
+                Пассажиры
+              </div>
+
+              <div className="space-y-2">
+                {passengers.length === 0 && (
+                  <div className="text-gray-400">Пассажиров пока нет</div>
+                )}
+
+                {passengers.map((b) => {
+                  const passenger = b.passenger;
+
+                  const name =
+                    b.passengerName ||
+                    `${passenger?.firstName || ""} ${passenger?.lastName || ""}`.trim();
+
+                  const avatar =
+                    passenger?.profilePhoto?.url ||
+                    passenger?.profilePhoto ||
+                    passenger?.photo ||
+                    avatarPlaceholder;
+
+                  return (
+                    <div
+                      key={b._id || passenger?._id}
+                      className="flex items-center gap-4 px-4 py-4 rounded-xl hover:bg-gray-100 transition"
+                    >
+                      <img
+                        src={avatar}
+                        className="w-14 h-14 rounded-full object-cover"
+                      />
+
+                      <div>
+                        <div className="font-semibold text-[18px]">
+                          {name || "Пассажир"} {b.seatsCount > 1 && `×${b.seatsCount}`}
+                        </div>
+
+                        <div
+                          className={`text-sm font-medium ${
+                            b.status === "pending"
+                              ? "text-yellow-500"
+                              : b.status === "accepted"
+                              ? "text-green-600"
+                              : b.status === "cancelled"
+                              ? "text-red-600"
+                              : ""
+                          }`}
+                        >
+                          {b.status === "pending" && "В ожидании"}
+                          {b.status === "accepted" && "Принят"}
+                          {b.status === "cancelled" && "Отклонён"}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
           </div>
 
           {/* ===== Right (scrollable) ===== */}
@@ -543,20 +654,44 @@ const MyBookingDetails = () => {
               </div>
 
               <div className="border border-gray-300 rounded-2xl p-4 mb-4">
-                <div className="font-semibold mb-3 text-[20px]">Пассажиры</div>
+                <div className="font-semibold mb-3 text-[20px]">Мои данные</div>
 
                 <div className="text-sm space-y-2">
-                  <div className="flex justify-between"><span>Попутчик</span><span>Я</span></div>
-                  <div className="flex justify-between"><span>Кол-во</span><span>2</span></div>
-                  <div className="flex justify-between"><span>Всего пассажиров</span><span>3</span></div>
+                  <div className="flex justify-between">
+                    <span>Бронировал(а)</span>
+                    <span>{bookedBy}</span>
+                  </div>
+
+                  <div className="flex justify-between">
+                    <span>Кол-во моих мест</span>
+                    <span>{mySeats}</span>
+                  </div>
+
+                  <div className="flex justify-between">
+                    <span>Всего пассажиров</span>
+                    <span>{totalPassengers}</span>
+                  </div>
                 </div>
               </div>
 
               <div className="border border-gray-300 rounded-2xl p-4 mb-4">
-                <div className="font-semibold text-[20px] mb-4">Стоимость за поездку</div>
-                <div className="flex justify-between border-t border-gray-300 pt-4">
-                  <span>Всего</span>
-                  <span className="font-bold">132 000 сум</span>
+                <div className="font-semibold text-[20px] mb-4">Стоимость моей поездки</div>
+
+                <div className="text-sm space-y-3">
+
+                  <div className="flex justify-between">
+                    <span>Тип оплаты</span>
+                    <span>Наличные</span>
+                  </div>
+
+                  <div className="flex justify-between border-t border-gray-300 pt-3">
+                    <span>К оплате</span>
+
+                    <span className="font-bold">
+                      {totalPrice.toLocaleString("ru-RU")} сум
+                    </span>
+                  </div>
+
                 </div>
               </div>
 
@@ -564,6 +699,15 @@ const MyBookingDetails = () => {
                 <FileText size={18} />
                 Скачать инвойс
               </button>
+
+              {booking?.route?.status === "active" && (
+                <button
+                  onClick={handleCancelBooking}
+                  className="w-full mt-3 text-red-600 text-[15px] font-medium hover:underline"
+                >
+                  Отменить бронь
+                </button>
+              )}
             </div>
           </div>
         </div>

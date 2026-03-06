@@ -68,6 +68,24 @@ const MyBookings = () => {
     });
   };
 
+  const uniqueBookings = Object.values(
+    bookings.reduce((acc, booking) => {
+      const routeId = booking.route?._id;
+
+      if (!acc[routeId]) {
+        acc[routeId] = booking;
+      }
+
+      return acc;
+    }, {})
+  );
+
+  const getAcceptedPassengers = (booking) => {
+    return booking?.route?.bookings
+      ?.filter((b) => b.status === "accepted")
+      ?.reduce((sum, b) => sum + (b.seatsCount || 0), 0) || 0;
+  };
+
   return (
     <div className="min-h-screen bg-white px-4 sm:px-6 pb-10 flex flex-col">
 
@@ -135,7 +153,7 @@ const MyBookings = () => {
 
           {!loading && bookings.length > 0 && (
             <div className="flex flex-col gap-4">
-              {bookings.map((booking) => (
+              {uniqueBookings.map((booking) => (
                 <div
                   key={booking._id}
                   onClick={() =>
@@ -199,7 +217,7 @@ const MyBookings = () => {
                           className="w-5 h-5 opacity-60"
                         />
                         {t("bookings.passengers", {
-                          count: booking.seatsCount || 0,
+                          count: getAcceptedPassengers(booking),
                         })}
                       </div>
                     </div>

@@ -369,7 +369,7 @@ const MyRouteDetails = () => {
 
                         <div>
                           <div className="font-semibold text-[18px]">
-                            {passenger?.firstName} {passenger?.lastName}
+                            {booking.passengerName || `${passenger?.firstName || ""} ${passenger?.lastName || ""}`}
                           </div>
 
                           <div
@@ -379,7 +379,7 @@ const MyRouteDetails = () => {
                                 : "text-gray-400 blur-[6px] select-none"
                             }`}
                           >
-                            {passenger?.phone}
+                            {booking.passengerPhone || passenger?.phone}
                           </div>
 
                           <div className="text-sm text-gray-500 mt-1">
