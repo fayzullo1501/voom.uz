@@ -16,8 +16,8 @@ const About = () => {
     <>
 
       <SEO
-        title="О компании VOOM"
-        description="VOOM — сервис совместных поездок по Узбекистану. Узнайте больше о нашей миссии и развитии."
+        title="О компании Voom"
+        description="Voom — сервис совместных поездок по Узбекистану. Узнайте больше о нашей миссии и развитии."
         path="/about"
       />
       <Header />
@@ -38,7 +38,7 @@ const About = () => {
 
             <img
               src={bannerImg}
-              alt="About VOOM"
+              alt="About Voom"
               ref={(img) => {
                 if (img && img.complete) {
                   setBannerLoaded(true);
