@@ -733,3 +733,116 @@ export const getAdminStats = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+
+/* ===============================
+   GET /admin/routes
+=============================== */
+export const getAdminRoutes = async (req, res) => {
+  try {
+
+    if (req.user.role !== "admin") {
+      return res.status(403).json({ message: "Forbidden" });
+    }
+
+    const { search, status, from, to, dateFrom, dateTo } = req.query;
+
+    const query = {};
+
+    if (search) {
+      const regex = new RegExp(search, "i");
+
+      query.$or = [
+        { fromName: regex },
+        { toName: regex }
+      ];
+    }
+
+    if (status) {
+      query.status = status;
+    }
+
+    if (from) {
+      query.fromName = new RegExp(from, "i");
+    }
+
+    if (to) {
+      query.toName = new RegExp(to, "i");
+    }
+
+    if (dateFrom || dateTo) {
+      query.departureAt = {};
+
+      if (dateFrom) {
+        query.departureAt.$gte = new Date(dateFrom);
+      }
+
+      if (dateTo) {
+        query.departureAt.$lte = new Date(dateTo);
+      }
+    }
+
+    const routesRaw = await Route.find(query)
+      .populate("driver", "firstName lastName")
+      .populate("fromCity", "nameRu")
+      .populate("toCity", "nameRu")
+      .populate({
+        path: "bookings",
+        select: "status seatsCount"
+      })
+      .sort({ createdAt: -1 })
+      .lean();
+
+    const routes = routesRaw.map(route => {
+
+      const passengersCount = route.bookings
+        .filter(b => b.status === "accepted")
+        .reduce((sum, b) => sum + b.seatsCount, 0);
+
+      return {
+        ...route,
+        passengersCount
+      };
+
+    });
+
+    res.json(routes);
+
+  } catch (err) {
+    console.error("ADMIN GET ROUTES ERROR:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+
+/* ===============================
+   DELETE /admin/routes
+=============================== */
+export const deleteRoutes = async (req, res) => {
+
+  try {
+
+    if (req.user.role !== "admin") {
+      return res.status(403).json({ message: "Forbidden" });
+    }
+
+    const { ids } = req.body;
+
+    if (!ids || !ids.length) {
+      return res.status(400).json({ message: "ids_required" });
+    }
+
+    await Route.deleteMany({
+      _id: { $in: ids }
+    });
+
+    res.json({ success: true });
+
+  } catch (err) {
+
+    console.error("ADMIN DELETE ROUTES ERROR:", err);
+    res.status(500).json({ message: "Server error" });
+
+  }
+
+};

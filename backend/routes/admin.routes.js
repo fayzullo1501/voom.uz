@@ -10,6 +10,8 @@ import {
   approvePassport,
   rejectPassport,
   getAdminStats,
+  getAdminRoutes,
+  deleteRoutes
 } from "../controllers/admin.controller.js";
 import auth from "../middlewares/auth.middleware.js";
 import brandsRoutes from "./brands.routes.js";
@@ -31,5 +33,7 @@ router.use("/brands", brandsRoutes);
 router.use("/models", carModelsRoutes);
 router.use("/colors", carColorsRoutes);
 router.get("/stats", auth, getAdminStats);
+router.get("/routes", auth, getAdminRoutes);
+router.delete("/routes", auth, deleteRoutes);
 
 export default router;
