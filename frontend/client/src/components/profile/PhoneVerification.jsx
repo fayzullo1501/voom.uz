@@ -1,5 +1,5 @@
 import React from "react";
-import { X } from "lucide-react";
+import { X, Loader2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import uzFlag from "../../assets/uz-flag.svg";
 
@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { API_URL } from "../../config/api";
 import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useUser } from "../../context/UserContext";
 
 const formatPhoneInput = (value) => {
   const digits = value.replace(/\D/g, "").slice(0, 9);
@@ -25,6 +26,7 @@ const PhoneVerification = () => {
   const navigate = useNavigate();
   const { lang } = useParams();
   const { t } = useTranslation("profile");
+  const { refreshUser } = useUser();
 
   const [phone, setPhone] = useState("");
   const [hasPhone, setHasPhone] = useState(false);
@@ -75,6 +77,8 @@ const PhoneVerification = () => {
         return;
       }
 
+      await refreshUser();
+      
       navigate(`/${lang}/profile/phone-code`, {
         state: {
           type: "phone",
@@ -158,9 +162,15 @@ const PhoneVerification = () => {
         <button
           onClick={sendCode}
           disabled={sending}
-          className="px-10 py-3 rounded-xl bg-[#32BB78] text-white text-[17px] font-medium hover:opacity-90 transition disabled:opacity-70"
+          className="px-10 py-3 rounded-xl bg-[#32BB78] text-white text-[17px] font-medium hover:opacity-90 transition disabled:opacity-70 relative flex items-center justify-center"
         >
-          {sending ? t("phone.sending") : t("phone.send")}
+          <span className={sending ? "opacity-0" : ""}>
+            {t("phone.send")}
+          </span>
+
+          {sending && (
+            <Loader2 className="w-5 h-5 animate-spin absolute" />
+          )}
         </button>
       </div>
     </div>

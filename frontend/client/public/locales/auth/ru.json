@@ -33,8 +33,10 @@
   },
   "confirm": {
     "titlePhone": "Введите код из SMS",
+    "titleSms": "Введите код из SMS",
     "titleEmail": "Введите код из письма",
     "sentTo": "Код отправлен на {{value}}",
+    "sentToreg": "Код отправлен на",
     "codePlaceholder": "Введите код",
     "confirmBtn": "Подтвердить",
     "resend": "Отправить код повторно",

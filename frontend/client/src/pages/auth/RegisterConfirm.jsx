@@ -146,13 +146,13 @@ const RegisterConfirm = () => {
 
           {payload?.phone && (
             <p className="text-black mb-8">
-              {t("confirm.sentTo")} {formatPhoneView(payload.phone)}
+              {t("confirm.sentToreg")} {formatPhoneView(payload.phone)}
             </p>
           )}
 
           {payload?.email && (
             <p className="text-black mb-8">
-              {t("confirm.sentTo")} {payload.email}
+              {t("confirm.sentToreg")} {payload.email}
             </p>
           )}
 

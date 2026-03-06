@@ -1,11 +1,12 @@
 import React, { useCallback, useEffect, useState } from "react";
 import Cropper from "react-easy-crop";
 import { useNavigate, useParams } from "react-router-dom";
-import { X, RotateCcw, Plus, Minus } from "lucide-react";
+import { X, RotateCcw, Plus, Minus, Loader2 } from "lucide-react";
 
 import { API_URL } from "../../config/api";
 import { useToast } from "../ui/useToast";
 import { useTranslation } from "react-i18next";
+import { useUser } from "../../context/UserContext";
 
 /* ===== ВСПОМОГАТЕЛЬНАЯ ФУНКЦИЯ ОБРЕЗКИ ===== */
 const getCroppedImage = async (imageSrc, croppedAreaPixels) => {
@@ -43,6 +44,7 @@ const ProfilePhotoEditor = () => {
   const { lang } = useParams();
   const { showToast } = useToast();
   const { t } = useTranslation("profile");
+  const { refreshUser } = useUser();
 
   const imageSrc = sessionStorage.getItem("profilePhoto");
 
@@ -84,6 +86,8 @@ const ProfilePhotoEditor = () => {
       sessionStorage.removeItem("profilePhoto");
 
       showToast(t("photo.uploadSuccess"), "success");
+
+      await refreshUser();
 
       navigate(`/${lang}/profile/menu`, { replace: true });
     } catch (e) {
@@ -160,9 +164,15 @@ const ProfilePhotoEditor = () => {
       <button
         disabled={loading}
         onClick={save}
-        className="mt-10 mx-auto px-10 py-3 rounded-xl text-white text-[17px] font-medium bg-[#32BB78] hover:opacity-90 transition disabled:opacity-60"
+        className="mt-10 mx-auto px-10 py-3 rounded-xl text-white text-[17px] font-medium bg-[#32BB78] hover:opacity-90 transition disabled:opacity-60 relative flex items-center justify-center"
       >
-        {loading ? t("photo.loading") : t("photo.save")}
+        <span className={loading ? "opacity-0" : ""}>
+          {t("photo.save")}
+        </span>
+
+        {loading && (
+          <Loader2 className="w-5 h-5 animate-spin absolute" />
+        )}
       </button>
     </div>
   );

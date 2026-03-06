@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { API_URL } from "../../config/api";
 import { useToast } from "../ui/useToast";
-import { X } from "lucide-react";
+import { X, Loader2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useUser } from "../../context/UserContext";
 
 import passportExample from "../../assets/passport-example.svg";
 
@@ -11,6 +12,7 @@ const PassportVerification = () => {
   const navigate = useNavigate();
   const { showToast } = useToast();
   const { t } = useTranslation("profile");
+  const { refreshUser } = useUser();
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -34,6 +36,8 @@ const PassportVerification = () => {
       if (!res.ok) throw new Error("upload_failed");
 
       showToast(t("passport.uploadSuccess"), "success");
+
+      await refreshUser();
 
       navigate(-1);
     } catch (err) {
@@ -111,9 +115,15 @@ const PassportVerification = () => {
           <button
             onClick={submit}
             disabled={!file || loading}
-            className="px-10 py-3 rounded-xl bg-[#32BB78] text-white text-[16px] font-medium hover:opacity-90 transition disabled:opacity-50"
+            className="px-10 py-3 rounded-xl bg-[#32BB78] text-white text-[16px] font-medium hover:opacity-90 transition disabled:opacity-50 relative flex items-center justify-center"
           >
-            {loading ? t("passport.sending") : t("passport.submit")}
+            <span className={loading ? "opacity-0" : ""}>
+              {t("passport.submit")}
+            </span>
+
+            {loading && (
+              <Loader2 className="w-5 h-5 animate-spin absolute" />
+            )}
           </button>
         </div>
 

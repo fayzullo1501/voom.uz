@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { X } from "lucide-react";
+import { X, Loader2 } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import { API_URL } from "../../config/api";
 import { useTranslation } from "react-i18next";
+import { useUser } from "../../context/UserContext";
 
 import googleIcon from "../../assets/auth/gmail.png";
 import yandexIcon from "../../assets/auth/yandex.png";
@@ -22,6 +23,7 @@ const EmailVerification = () => {
   const navigate = useNavigate();
   const { lang } = useParams();
   const { t } = useTranslation("profile");
+const { refreshUser } = useUser();
 
   const [email, setEmail] = useState("");
   const [hasEmail, setHasEmail] = useState(false);
@@ -69,6 +71,8 @@ const EmailVerification = () => {
         setSending(false);
         return;
       }
+      
+      await refreshUser();
 
       navigate(`/${lang}/profile/phone-code`, {
         state: {
@@ -129,9 +133,15 @@ const EmailVerification = () => {
         <button
           onClick={sendCode}
           disabled={sending}
-          className="px-10 py-3 rounded-xl bg-[#32BB78] text-white text-[17px] font-medium hover:opacity-90 transition disabled:opacity-70"
+          className="px-10 py-3 rounded-xl bg-[#32BB78] text-white text-[17px] font-medium hover:opacity-90 transition disabled:opacity-70 relative flex items-center justify-center"
         >
-          {sending ? t("emailVerification.sending") : t("emailVerification.send")}
+          <span className={sending ? "opacity-0" : ""}>
+            {t("emailVerification.send")}
+          </span>
+
+          {sending && (
+            <Loader2 className="w-5 h-5 animate-spin absolute" />
+          )}
         </button>
       </div>
     </div>

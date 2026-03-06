@@ -4,7 +4,6 @@ import { X, Calendar, Trash2, Loader2, ChevronLeft, Pencil } from "lucide-react"
 import { useNavigate, useParams } from "react-router-dom";
 import { API_URL } from "../../config/api";
 import { useToast } from "../../components/ui/useToast";
-import uzFlag from "../../assets/uz-flag.svg";
 import PlateNumber from "../../components/ui/PlateNumber";
 
 const EditTransport = () => {

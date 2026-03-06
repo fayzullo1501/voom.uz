@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import { API_URL } from "../../config/api";
 import logo from "../../assets/logo.svg";
 import { useToast } from "../../components/ui/useToast";
+import { useUser } from "../../context/UserContext";
 
 const formatPhoneView = (phone9) => {
   if (!phone9) return "";
@@ -18,6 +19,7 @@ const ProfileConfirmCode = () => {
   const location = useLocation();
   const { t, i18n } = useTranslation("auth");
   const { showToast } = useToast();
+  const { refreshUser } = useUser();
 
   const payload = location.state;
 
@@ -99,6 +101,8 @@ const ProfileConfirmCode = () => {
           : t("confirm.successEmail"),
         "success"
       );
+      
+      await refreshUser();
 
       navigate(`/${lang}/profile/menu`, { replace: true });
     } catch {

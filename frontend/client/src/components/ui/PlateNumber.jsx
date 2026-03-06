@@ -43,9 +43,9 @@ const PlateNumber = ({ value = "", size = "md", className = "" }) => {
     if (!rest) {
       return (
         <div className="flex items-center gap-3">
-          <span>F</span>
-          <span>001</span>
-          <span>FA</span>
+          <span className="text-gray-300">X</span>
+          <span className="text-gray-300">XXX</span>
+          <span className="text-gray-300">XX</span>
         </div>
       );
     }
@@ -78,7 +78,9 @@ const PlateNumber = ({ value = "", size = "md", className = "" }) => {
       {/* Левая точка + регион */}
       <div className="flex items-center gap-2 pr-4 font-plate h-full border-r-[1px] border-[#123B5A]">
         <div className="w-[5px] h-[5px] bg-black rounded-full" />
-        <span className={s.region}>{region || "01"}</span>
+        <span className={`${s.region} ${!region ? "text-gray-300" : ""}`}>
+          {region || "XX"}
+        </span>
       </div>
 
       {/* Центр */}
