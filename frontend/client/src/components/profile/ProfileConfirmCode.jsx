@@ -97,8 +97,8 @@ const ProfileConfirmCode = () => {
 
       showToast(
         payload.type === "phone"
-          ? t("confirm.successPhone")
-          : t("confirm.successEmail"),
+        ? t("confirm.success.successPhone")
+        : t("confirm.success.successEmail"),
         "success"
       );
       
