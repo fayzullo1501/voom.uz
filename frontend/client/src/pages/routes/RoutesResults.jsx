@@ -208,7 +208,7 @@ const RoutesResults = () => {
           />
         </div>
 
-        <div className="flex-1 overflow-y-auto pr-2 no-scrollbar">
+        <div className="flex-1 overflow-y-auto pr-2 pl-2 no-scrollbar">
           <div className="text-[20px] font-semibold mb-6">
             {filteredRoutes.length} {t("results")}
           </div>
@@ -236,7 +236,7 @@ const RoutesResults = () => {
               <div
                 key={route._id}
                 onClick={() => navigate(`/${i18n.language}/routes/${route._id}`)}
-                className="border border-gray-200 rounded-[18px] p-4 flex gap-6 hover:bg-gray-50 transition cursor-pointer"
+                className="border-2 border-gray-200 rounded-[18px] p-4 flex gap-6 bg-white hover:border-[#32BB78] hover:shadow-[0_4px_12px_rgba(50,187,120,0.2)] hover:-translate-y-[1px] transition-all duration-200 cursor-pointer"
               >
                 {/* IMAGE BLOCK */}
                 <div className="relative w-[260px] h-[160px] rounded-[14px] overflow-hidden shrink-0">
