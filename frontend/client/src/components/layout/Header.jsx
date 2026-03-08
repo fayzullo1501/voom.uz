@@ -63,27 +63,6 @@ const Header = () => {
   const notifRef = useRef(null);
 
   useEffect(() => {
-
-    const handleClickOutside = (event) => {
-
-      if (
-        notifRef.current &&
-        !notifRef.current.contains(event.target)
-      ) {
-        setNotifOpen(false);
-      }
-
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-
-  }, []);
-
-  useEffect(() => {
   
     if (!user) return;
 
@@ -210,7 +189,7 @@ const Header = () => {
           </nav>
         </div>
 
-        <div className="hidden lg:flex items-center gap-2">
+        <div className="hidden lg:flex items-center gap-4">
           <button
             className="flex items-center gap-2 p-2 rounded-lg hover:bg-gray-100 transition"
             onClick={() => navigate(`/${currentLang}/create-route`)}
