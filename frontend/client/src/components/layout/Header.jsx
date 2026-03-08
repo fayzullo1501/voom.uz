@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Bell } from "lucide-react";
 
 import logo from "../../assets/logo.svg";
 import plusIcon from "../../assets/plus-icon.svg";
@@ -12,6 +12,9 @@ import menuIcon from "../../assets/menu.svg";
 import closeIcon from "../../assets/close.svg";
 import avatarPlaceholder from "../../assets/avatar-placeholder.svg";
 import { useUser } from "../../context/UserContext";
+import NotificationsPanel from "../../components/ui/NotificationsPanel";
+import { API_URL } from "../../config/api";
+import { io } from "socket.io-client";
 
 const Header = () => {
   const { user, loading } = useUser();
@@ -31,6 +34,9 @@ const Header = () => {
   const [langOpen, setLangOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const [mobileProfileOpen, setMobileProfileOpen] = useState(false);
+  const [notifOpen, setNotifOpen] = useState(false);
+  const [notifications, setNotifications] = useState([]);
+  const [unreadCount, setUnreadCount] = useState(0);
 
 
   const isAuth = !!user;
@@ -46,18 +52,105 @@ const Header = () => {
       ? user.profilePhoto.url
       : avatarPlaceholder;
 
-
+  const playNotificationSound = () => {
+    const audio = new Audio("/notification.mp3");
+    audio.volume = 0.5;
+    audio.play().catch(() => {});
+  };
 
 
   const profileRef = useRef(null);
+  const notifRef = useRef(null);
 
   useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (profileRef.current && !profileRef.current.contains(e.target)) setProfileOpen(false);
+
+    const handleClickOutside = (event) => {
+
+      if (
+        notifRef.current &&
+        !notifRef.current.contains(event.target)
+      ) {
+        setNotifOpen(false);
+      }
+
     };
+
     document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+
   }, []);
+
+  useEffect(() => {
+  
+    if (!user) return;
+
+    const fetchNotifications = async () => {
+
+      try {
+
+        const token = localStorage.getItem("token");
+
+        const res = await fetch(`${API_URL}/api/notifications`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!res.ok) {
+          setNotifications([]);
+          setUnreadCount(0);
+          return;
+        }
+
+        const data = await res.json();
+
+        if (!Array.isArray(data)) {
+          setNotifications([]);
+          setUnreadCount(0);
+          return;
+        }
+
+        setNotifications(data);
+
+        const unread = data.filter((n) => !n.read).length;
+        setUnreadCount(unread);
+
+      } catch (error) {
+        console.error("notifications error", error);
+      }
+
+    };
+
+    fetchNotifications();
+
+  }, []);
+
+  useEffect(() => {
+
+    if (!user) return;
+
+    const socket = io(API_URL);
+
+    socket.emit("join", user._id);
+
+    socket.on("notification", (notification) => {
+
+      setNotifications((prev) => [notification, ...prev]);
+
+      setUnreadCount((prev) => prev + 1);
+
+      if (notification.type === "new_booking") {
+        playNotificationSound();
+      }
+
+    });
+
+    return () => socket.disconnect();
+
+  }, [user]);
 
   const languages = [
     { code: "ru", flag: flagRu },
@@ -117,11 +210,46 @@ const Header = () => {
           </nav>
         </div>
 
-        <div className="hidden lg:flex items-center gap-4">
-          <button className="flex items-center gap-2 text-[16px] text-gray-900 hover:text-gray-700 transition font-medium" onClick={() => navigate(`/${currentLang}/create-route`)}>
+        <div className="hidden lg:flex items-center gap-2">
+          <button
+            className="flex items-center gap-2 p-2 rounded-lg hover:bg-gray-100 transition"
+            onClick={() => navigate(`/${currentLang}/create-route`)}
+          >
             <img src={plusIcon} alt="+" className="w-4 h-4" />
-            {t("header.actions.createRoute")}
+            <span className="text-[15px] font-medium text-gray-900">
+              {t("header.actions.createRoute")}
+            </span>
           </button>
+
+          <div ref={notifRef} className="relative">
+            <button
+              onClick={() => setNotifOpen(!notifOpen)}
+              className="p-2 rounded-lg hover:bg-gray-100 transition"
+            >
+
+              <div className="relative">
+
+                <Bell size={22} className="text-gray-800" />
+
+                {unreadCount > 0 && (
+                  <>
+                    <span className="absolute -top-1 -right-0 w-2.5 h-2.5 bg-red-500 rounded-full animate-ping-slow"></span>
+                    <span className="absolute -top-1 -right-0 w-2.5 h-2.5 bg-red-500 rounded-full"></span>
+                  </>
+                )}
+
+              </div>
+
+            </button>
+
+            {notifOpen && (
+              <NotificationsPanel
+                notifications={notifications}
+                setNotifications={setNotifications}
+                setUnreadCount={setUnreadCount}
+              />
+            )}
+          </div>
 
           <div ref={profileRef} className="relative">
             <div className="flex items-center gap-2 cursor-pointer hover:bg-gray-100 px-3 py-1 rounded-lg" onClick={() => setProfileOpen(!profileOpen)}>
@@ -158,8 +286,44 @@ const Header = () => {
           </div>
         </div>
 
-        <div className="lg:hidden cursor-pointer z-[60]" onClick={() => setMenuOpen(!menuOpen)}>
-          <img src={menuOpen ? closeIcon : menuIcon} alt="menu" className="w-7 h-7" />
+        <div className="lg:hidden flex items-center gap-3">
+
+          {/* notifications */}
+          <div ref={notifRef} className="relative">
+            <button
+              onClick={() => setNotifOpen(!notifOpen)}
+              className="p-2 rounded-lg hover:bg-gray-100 transition"
+            >
+
+              <div className="relative">
+
+                <Bell size={22} className="text-gray-800" />
+
+                {unreadCount > 0 && (
+                  <>
+                    <span className="absolute -top-1 -right-0 w-2.5 h-2.5 bg-red-500 rounded-full animate-ping-slow"></span>
+                    <span className="absolute -top-1 -right-0 w-2.5 h-2.5 bg-red-500 rounded-full"></span>
+                  </>
+                )}
+
+              </div>
+
+            </button>
+
+            {notifOpen && (
+              <NotificationsPanel
+                notifications={notifications}
+                setNotifications={setNotifications}
+                setUnreadCount={setUnreadCount}
+              />
+            )}
+          </div>
+
+          {/* menu */}
+          <div className="cursor-pointer z-[60]" onClick={() => setMenuOpen(!menuOpen)}>
+            <img src={menuOpen ? closeIcon : menuIcon} alt="menu" className="w-7 h-7" />
+          </div>
+
         </div>
       </div>
 

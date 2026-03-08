@@ -13,6 +13,7 @@ import userCarsRoutes from "./routes/userCars.routes.js";
 import cityRoutes from "./routes/city.routes.js";
 import routeRoutes from "./routes/route.routes.js";
 import bookingRoutes from "./routes/booking.routes.js";
+import notificationRoutes from "./routes/notification.routes.js";
 
 
 
@@ -80,6 +81,7 @@ app.use("/api/bookings", bookingRoutes);
  * CITIES (справочник городов)
  */
 app.use("/api/cities", cityRoutes);
+app.use("/api/notifications", notificationRoutes);
 
 
 

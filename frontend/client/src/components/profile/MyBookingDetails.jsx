@@ -8,6 +8,7 @@ import avatarPlaceholder from "../../assets/avatar-placeholder.svg";
 import carAvatar from "../../assets/carbookingtest.jpg";
 import userVerified from "../../assets/userverified.svg";
 import PlateNumber from "../../components/ui/PlateNumber";
+import HiddenContact from "../../components/ui/HiddenContact";
 
 
 const MyBookingDetails = () => {
@@ -19,6 +20,7 @@ const MyBookingDetails = () => {
   const [booking, setBooking] = useState(null);
   const [loading, setLoading] = useState(true);
   const [mapOpen, setMapOpen] = useState(false);
+  const [mapLoading, setMapLoading] = useState(true);
 
   const mapRef = useRef(null);
   const modalMapRef = useRef(null);
@@ -79,6 +81,7 @@ const MyBookingDetails = () => {
     const fetchBooking = async () => {
       try {
         setLoading(true);
+        setMapLoading(true);
 
         const res = await fetch(
           `${API_URL}/api/bookings/${id}`,
@@ -108,6 +111,7 @@ const MyBookingDetails = () => {
     if (!booking?.route?.polyline) return;
 
     const initMap = () => {
+      setMapLoading(false);
       if (!window.google?.maps?.geometry) return;
 
       const decodedPath =
@@ -394,10 +398,20 @@ const MyBookingDetails = () => {
                 <Maximize2 size={18} />
               </button>
 
-              <div
-                ref={mapRef}
-                className="w-full h-[260px] sm:h-[340px] lg:h-[420px]"
-              />
+              <div className="relative">
+
+                {mapLoading && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-white/70 z-10">
+                    <Loader2 className="w-8 h-8 animate-spin text-gray-500" />
+                  </div>
+                )}
+
+                <div
+                  ref={mapRef}
+                  className="w-full h-[260px] sm:h-[340px] lg:h-[420px]"
+                />
+
+              </div>
             </div>
 
             {booking?.route?.status === "completed" && (
@@ -497,33 +511,46 @@ const MyBookingDetails = () => {
                   return (
                     <div
                       key={b._id || passenger?._id}
-                      className="flex items-center gap-4 px-4 py-4 rounded-xl hover:bg-gray-100 transition"
+                      className="flex items-center gap-4 px-4 py-4 transition"
                     >
                       <img
                         src={avatar}
                         className="w-14 h-14 rounded-full object-cover"
                       />
 
-                      <div>
+                     <div>
                         <div className="font-semibold text-[18px]">
-                          {name || "Пассажир"} {b.seatsCount > 1 && `×${b.seatsCount}`}
+                          {name || "Пассажир"}
                         </div>
 
-                        <div
-                          className={`text-sm font-medium ${
-                            b.status === "pending"
-                              ? "text-yellow-500"
-                              : b.status === "accepted"
-                              ? "text-green-600"
-                              : b.status === "cancelled"
-                              ? "text-red-600"
-                              : ""
-                          }`}
-                        >
-                          {b.status === "pending" && "В ожидании"}
-                          {b.status === "accepted" && "Принят"}
-                          {b.status === "cancelled" && "Отклонён"}
-                        </div>
+                        {b._id === booking._id ? (
+
+                            <div
+                              className={`text-sm font-medium ${
+                                b.status === "pending"
+                                  ? "text-yellow-500"
+                                  : b.status === "accepted"
+                                  ? "text-green-600"
+                                  : b.status === "cancelled"
+                                  ? "text-red-600"
+                                  : b.status === "rejected"
+                                  ? "text-gray-500"
+                                  : ""
+                              }`}
+                            >
+                              {b.status === "pending" && "В ожидании"}
+                              {b.status === "accepted" && "Принят"}
+                              {b.status === "cancelled" && "Отменён"}
+                              {b.status === "rejected" && "Отклонён водителем"}
+                            </div>
+
+                          ) : (
+
+                          <div className="text-sm text-gray-500">
+                            ×{b.seatsCount} — {b.seatType === "front" ? "переднее место" : "заднее место"}
+                          </div>
+
+                        )}
                       </div>
                     </div>
                   );

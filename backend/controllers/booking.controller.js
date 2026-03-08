@@ -1,5 +1,6 @@
 import Booking from "../models/Booking.js";
 import Route from "../models/Route.js";
+import { createNotification } from "../services/notification.service.js";
 
 
     // ===== Создать бронь =====
@@ -157,6 +158,24 @@ export const createBooking = async (req, res) => {
   route.bookings.push(booking._id);
   await route.save();
 
+  // уведомление водителю
+  const io = req.app.get("io");
+  
+  await createNotification({
+    userId: route.driver,
+    type: "new_booking",
+    title: "Новая бронь на ваш маршрут",
+    route: {
+      from: route.fromName,
+      to: route.toName,
+      departureAt: route.departureAt
+    },
+    routeId: route._id,
+    bookingId: booking._id
+  },
+  io
+  );
+
   return res.status(201).json(booking);
   } catch (error) {
     console.error("createBooking error:", error);
@@ -171,7 +190,10 @@ export const acceptBooking = async (req, res) => {
     const driverId = req.user._id;
     const { id } = req.params;
 
-    const booking = await Booking.findById(id).populate("route");
+    const booking = await Booking.findById(id).populate({
+      path: "route",
+      select: "fromName toName departureAt driver availableSeatsFront availableSeatsBack"
+    });
 
     if (!booking) {
       return res.status(404).json({ message: "booking_not_found" });
@@ -242,6 +264,24 @@ export const acceptBooking = async (req, res) => {
     await route.save();
     await booking.save();
 
+    // уведомление пассажиру
+    const io = req.app.get("io");
+    
+    await createNotification({
+      userId: booking.passenger,
+      type: "booking_accepted",
+      title: "Ваша бронь принята",
+      route: {
+        from: route.fromName,
+        to: route.toName,
+        departureAt: route.departureAt,
+      },
+      routeId: route._id,
+      bookingId: booking._id
+    },
+    io
+    );
+
     return res.json({ message: "booking_accepted", booking });
 
   } catch (error) {
@@ -257,7 +297,10 @@ export const rejectBooking = async (req, res) => {
     const driverId = req.user._id;
     const { id } = req.params;
 
-    const booking = await Booking.findById(id).populate("route");
+    const booking = await Booking.findById(id).populate({
+      path: "route",
+      select: "fromName toName departureAt driver availableSeatsFront availableSeatsBack"
+    });
 
     if (!booking) {
       return res.status(404).json({ message: "booking_not_found" });
@@ -273,8 +316,26 @@ export const rejectBooking = async (req, res) => {
       return res.status(400).json({ message: "booking_not_pending" });
     }
 
-    booking.status = "cancelled";
+    booking.status = "rejected";
     await booking.save();
+
+    // уведомление пассажиру
+    const io = req.app.get("io");
+    
+    await createNotification({
+      userId: booking.passenger,
+      type: "booking_rejected",
+      title: "Ваша бронь отклонена",
+      route: {
+        from: route.fromName,
+        to: route.toName,
+        departureAt: route.departureAt,
+      },
+      routeId: route._id,
+      bookingId: booking._id
+    },
+    io
+    );
 
     return res.json({ message: "booking_rejected", booking });
 
@@ -477,7 +538,10 @@ export const cancelBooking = async (req, res) => {
     const userId = req.user._id;
     const { id } = req.params;
 
-    const booking = await Booking.findById(id).populate("route");
+    const booking = await Booking.findById(id).populate({
+      path: "route",
+      select: "fromName toName departureAt driver availableSeatsFront availableSeatsBack"
+    });
 
     if (!booking) {
       return res.status(404).json({ message: "booking_not_found" });
@@ -521,6 +585,24 @@ export const cancelBooking = async (req, res) => {
 
     booking.status = "cancelled";
     await booking.save();
+
+    // уведомление водителю
+    const io = req.app.get("io");
+    
+    await createNotification({
+      userId: route.driver,
+      type: "booking_cancelled",
+      title: "Пассажир отменил бронь",
+      route: {
+        from: route.fromName,
+        to: route.toName,
+        departureAt: route.departureAt,
+      },
+      routeId: route._id,
+      bookingId: booking._id
+    },
+    io
+    );
 
     return res.json({ message: "booking_cancelled" });
 

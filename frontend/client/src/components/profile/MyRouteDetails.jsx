@@ -4,8 +4,20 @@ import { ChevronLeft, Maximize2, X, Check, X as XIcon, MoreVertical, Loader2 } f
 import { useNavigate, useParams } from "react-router-dom";
 import { API_URL } from "../../config/api";
 import avatar from "../../assets/driverbookingtest.jpg";
-import uzFlag from "../../assets/flag-uz.svg";
 import PlateNumber from "../../components/ui/PlateNumber";
+import HiddenContact from "../../components/ui/HiddenContact";
+
+const formatPhone = (phone) => {
+  if (!phone) return "";
+
+  const clean = phone.replace(/\D/g, "");
+
+  if (clean.length === 9) {
+    return `+998 ${clean.slice(0,2)} ${clean.slice(2,5)} ${clean.slice(5,7)} ${clean.slice(7,9)}`;
+  }
+
+  return phone;
+};
 
 const MyRouteDetails = () => {
   
@@ -16,6 +28,7 @@ const MyRouteDetails = () => {
   const [route, setRoute] = useState(null);
   const [loading, setLoading] = useState(true);
   const [mapOpen, setMapOpen] = useState(false);
+  const [mapLoading, setMapLoading] = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef(null);
   const mapRef = useRef(null);
@@ -23,16 +36,34 @@ const MyRouteDetails = () => {
 
   const handleAccept = async (bookingId) => {
     try {
-      await fetch(`${API_URL}/api/bookings/${bookingId}/accept`, {
+      const res = await fetch(`${API_URL}/api/bookings/${bookingId}/accept`, {
         method: "PATCH",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
 
+      if (!res.ok) {
+        const data = await res.json().catch(() => null);
+
+        const errorMessages = {
+          not_enough_front_seats: "Переднее место уже занято другим пассажиром.",
+          not_enough_back_seats: "Задние места уже заняты.",
+          not_enough_seats: "Свободных мест больше нет.",
+        };
+
+        alert(
+          errorMessages[data?.message] ||
+          "Невозможно принять бронь. Это место уже занято."
+        );
+
+        return;
+      }
+
       window.location.reload();
     } catch (err) {
       console.error(err);
+      alert("Ошибка сервера. Попробуйте позже.");
     }
   };
 
@@ -80,6 +111,7 @@ const MyRouteDetails = () => {
     const fetchRoute = async () => {
       try {
         setLoading(true);
+        setMapLoading(true);
 
         const res = await fetch(
           `${API_URL}/api/routes/${id}`,
@@ -117,6 +149,7 @@ const MyRouteDetails = () => {
     console.log("geometry:", window.google?.maps?.geometry);
 
     const initMap = () => {
+      setMapLoading(false);
       if (!window.google?.maps?.geometry) return;
 
       const decodedPath =
@@ -339,10 +372,20 @@ const MyRouteDetails = () => {
               <button onClick={() => setMapOpen(true)} className="absolute right-3 top-3 z-10 w-10 h-10 rounded-xl bg-white border border-gray-200 flex items-center justify-center hover:bg-gray-100 transition">
                 <Maximize2 size={18} />
               </button>
-              <div
-                ref={mapRef}
-                className="w-full h-[320px] sm:h-[380px] lg:h-[460px]"
-              />
+              <div className="relative">
+  
+                {mapLoading && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-white/70 z-10">
+                    <Loader2 className="w-8 h-8 animate-spin text-gray-500" />
+                  </div>
+                )}
+
+                <div
+                  ref={mapRef}
+                  className="w-full h-[320px] sm:h-[380px] lg:h-[460px]"
+                />
+
+              </div>
             </div>
 
             <div className="mt-10">
@@ -353,13 +396,16 @@ const MyRouteDetails = () => {
                   <div className="text-gray-400">Бронирований пока нет</div>
                 )}
 
-                {route?.bookings?.map((booking) => {
+                {route?.bookings
+                  ?.slice()
+                  ?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+                  ?.map((booking) => {
                   const passenger = booking.passenger;
 
                   return (
                     <div
                       key={booking._id}
-                      className="group flex items-center justify-between px-4 py-4 rounded-xl hover:bg-gray-200 transition"
+                      className="group flex items-center justify-between px-4 py-4 rounded-xl hover:bg-gray-100 transition"
                     >
                       <div className="flex items-center gap-4">
                         <img
@@ -372,15 +418,11 @@ const MyRouteDetails = () => {
                             {booking.passengerName || `${passenger?.firstName || ""} ${passenger?.lastName || ""}`}
                           </div>
 
-                          <div
-                            className={`text-[15px] ${
-                              booking.status === "accepted"
-                                ? "text-gray-600"
-                                : "text-gray-400 blur-[6px] select-none"
-                            }`}
-                          >
-                            {booking.passengerPhone || passenger?.phone}
-                          </div>
+                          {booking.status === "accepted" ? (
+                            formatPhone(booking.passengerPhone || passenger?.phone)
+                          ) : (
+                            <HiddenContact />
+                          )}
 
                           <div className="text-sm text-gray-500 mt-1">
                             {booking.seatType === "whole"
@@ -413,6 +455,14 @@ const MyRouteDetails = () => {
 
                         {booking.status === "accepted" && (
                           <span className="text-green-600 font-medium">Принят</span>
+                        )}
+
+                        {booking.status === "cancelled" && (
+                          <span className="text-red-600 font-medium">Отменён</span>
+                        )}
+
+                        {booking.status === "rejected" && (
+                          <span className="text-gray-500 font-medium">Отклонён водителем</span>
                         )}
                       </div>
                     </div>
