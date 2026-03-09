@@ -1,29 +1,62 @@
 // src/pages/News.jsx
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { API_URL } from "../config/api";
+import { useNavigate } from "react-router-dom";
 import Checkbox from "../components/ui/Checkbox";
 import { Search, Filter, Eye, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
 import PageHeader from "../components/layout/Header";
-
-/* ---------- MOCK DATA (40 NEWS) ---------- */
-const NEWS = Array.from({ length: 40 }, (_, i) => ({
-  id: i + 1,
-  title: `Новость ${i + 1}`,
-  image: "https://via.placeholder.com/48x32",
-  views: 120 + i * 3,
-  date: "22.07.2025",
-  status: i % 3 === 0 ? "Опубликован" : "Не опубликован",
-}));
 
 const PER_PAGE = 20;
 
 const News = () => {
   const [page, setPage] = useState(1);
+  const [news, setNews] = useState([]);
+  const [selected, setSelected] = useState([]);
+  const navigate = useNavigate();
 
-  const totalPages = Math.ceil(NEWS.length / PER_PAGE);
+  const totalPages = Math.ceil(news.length / PER_PAGE);
   const start = (page - 1) * PER_PAGE;
   const end = start + PER_PAGE;
-  const visible = NEWS.slice(start, end);
+  const visible = news.slice(start, end);
 
+  useEffect(() => {
+
+    const loadNews = async () => {
+
+      try {
+
+        const res = await fetch(`${API_URL}/api/admin/news`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`
+          }
+        });
+
+        const data = await res.json();
+
+        setNews(data);
+
+      } catch (err) {
+
+        console.error("LOAD NEWS ERROR", err);
+
+      }
+
+    };
+
+    loadNews();
+
+  }, []);
+
+  const toggleSelect = (id) => {
+
+    if (selected.includes(id)) {
+      setSelected(selected.filter(i => i !== id));
+    } else {
+      setSelected([...selected, id]);
+    }
+
+  };
+  
   return (
     <>
       <PageHeader title="Новости" />
@@ -31,14 +64,61 @@ const News = () => {
       <div className="bg-white px-8 pt-6 pb-10 overflow-y-auto h-[calc(100vh-72px)]">
         <div className="flex items-center justify-between mb-6">
           <div className="flex gap-3">
-            <button className="h-[42px] px-5 rounded-lg bg-[#32BB78] text-white text-[14px] font-medium hover:bg-[#28a96a] transition">
+            <button
+              onClick={() => navigate("/news/create")}
+              className="h-[42px] px-5 rounded-lg bg-[#32BB78] text-white text-[14px] font-medium hover:bg-[#28a96a] transition"
+            >
               Добавить
             </button>
-            <button disabled className="h-[42px] px-5 rounded-lg border border-gray-600 text-gray-600 text-[14px] font-medium bg-gray-100 hover:bg-gray-200 transition">
+            <button disabled={selected.length !== 1} onClick={() => navigate(`/news/edit/${selected[0]}`)} className="h-[42px] px-5 rounded-lg border border-gray-600 text-gray-600 text-[14px] font-medium bg-gray-100 hover:bg-gray-200 transition">
               Изменить
             </button>
-            <button disabled className="h-[42px] px-5 rounded-lg border border-red-600 text-red-600 text-[14px] font-medium bg-red-100 hover:bg-red-200 transition">
+            <button
+            disabled={!selected.length}
+            onClick={async () => {
+
+              if (!confirm("Удалить выбранные новости?")) return;
+
+              await fetch(`${API_URL}/api/admin/news`, {
+                method: "DELETE",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${localStorage.getItem("token")}`
+                },
+                body: JSON.stringify({ ids: selected })
+              });
+
+              setNews(news.filter(n => !selected.includes(n._id)));
+              setSelected([]);
+
+            }} className="h-[42px] px-5 rounded-lg border border-red-600 text-red-600 text-[14px] font-medium bg-red-100 hover:bg-red-200 transition">
               Удалить
+            </button>
+            <button
+              disabled={!selected.length}
+              onClick={async () => {
+
+                await fetch(`${API_URL}/api/admin/news/publish`, {
+                  method: "PATCH",
+                  headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${localStorage.getItem("token")}`
+                  },
+                  body: JSON.stringify({ ids: selected })
+                });
+
+                setNews(news.map(n =>
+                  selected.includes(n._id)
+                    ? { ...n, status: "published" }
+                    : n
+                ));
+
+                setSelected([]);
+
+              }}
+              className="h-[42px] px-5 rounded-lg border border-green-600 text-green-600 text-[14px] font-medium bg-green-100 hover:bg-green-200 transition"
+            >
+              Опубликовать
             </button>
           </div>
 
@@ -59,7 +139,16 @@ const News = () => {
               <thead className="bg-gray-50 text-gray-500">
                 <tr>
                   <th className="px-3 py-3 w-[48px] text-left">
-                    <Checkbox />
+                    <Checkbox
+                      checked={selected.length === news.length && news.length > 0}
+                      onChange={() => {
+                        if (selected.length === news.length) {
+                          setSelected([]);
+                        } else {
+                          setSelected(news.map(n => n._id));
+                        }
+                      }}
+                    />
                   </th>
                   <th className="px-3 py-3 w-[60px] text-left">№</th>
                   <th className="px-3 py-3 w-[80px] text-left">ID</th>
@@ -74,26 +163,43 @@ const News = () => {
 
               <tbody>
                 {visible.map((n, i) => (
-                  <tr key={n.id} className="border-t border-gray-100 hover:bg-gray-50 transition">
+                  <tr key={n._id} className="border-t border-gray-100 hover:bg-gray-50 transition">
                     <td className="px-3 py-3">
-                      <Checkbox />
+                      <Checkbox
+                        checked={selected.includes(n._id)}
+                        onChange={() => toggleSelect(n._id)}
+                      />
                     </td>
                     <td className="px-3 py-3">{start + i + 1}</td>
-                    <td className="px-3 py-3">{n.id}</td>
+                    <td className="px-3 py-3">{n._id.slice(-6)}</td>
                     <td className="px-3 py-3">
-                      <img src={n.image} alt="" className="w-12 h-8 object-cover rounded-md border border-gray-200" />
+                      <img
+                        src={
+                          n.content?.ru?.blocks?.find(b => b.type === "image")?.data?.file?.url ||
+                          "https://via.placeholder.com/48x32"
+                        }
+                        alt=""
+                        className="w-12 h-8 object-cover rounded-md border border-gray-200"
+                      />
                     </td>
-                    <td className="px-3 py-3 font-medium text-gray-800">{n.title}</td>
-                    <td className="px-3 py-3">{n.views}</td>
-                    <td className="px-3 py-3">{n.date}</td>
+                    <td className="px-3 py-3 font-medium text-gray-800">{n.title?.ru || "-"}</td>
+                    <td className="px-3 py-3">{n.views || 0}</td>
+                    <td className="px-3 py-3">{new Date(n.createdAt).toLocaleDateString()}</td>
                     <td className="px-3 py-3">
-                      <span className={`px-3 py-1 rounded-full text-[13px] font-medium ${n.status === "Опубликован" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}>
-                        {n.status}
+                      <span className={`px-3 py-1 rounded-full text-[13px] font-medium ${
+                        n.status === "published"
+                        ? "bg-green-100 text-green-700"
+                        : "bg-gray-200 text-gray-700"
+                      }`}>
+                        {n.status === "published" ? "Опубликован" : "Черновик"}
                       </span>
                     </td>
                     <td className="px-3 py-3 text-center">
-                    <button className="h-8 w-8 flex items-center justify-center rounded-lg hover:bg-gray-100 transition">
-                        <Eye size={18} className="text-gray-500" />
+                    <button
+                      onClick={() => navigate(`/news/view/${n._id}`)}
+                      className="h-8 w-8 flex items-center justify-center rounded-lg hover:bg-gray-100 transition"
+                    >
+                      <Eye size={18} className="text-gray-500" />
                     </button>
                     </td>
                   </tr>

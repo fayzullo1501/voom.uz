@@ -1,24 +1,81 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-
+import React, { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { Loader2 } from "lucide-react";
 import Header from "../components/layout/Header";
 import Footer from "../components/layout/Footer";
 import SEO from "../components/SEO";
+import { API_URL } from "../config/api";
 
 import newsImg from "../assets/hero-bg.jpg"; // временное фото
 
 const News = () => {
   const navigate = useNavigate();
+  const { lang } = useParams();
 
-  // временный список новостей
-  const allNews = Array.from({ length: 34 }).map((_, i) => ({
-    id: i + 1,
-    title: "Voom запускает новую систему безопасности",
-    description:
-      "Новая система повышает надежность поездок и улучшает опыт пользователей. Функции мониторинга и уведомлений теперь работают быстрее.",
-    date: "12 ноября 2025",
-    image: newsImg,
-  }));
+
+const [allNews, setAllNews] = useState([]);
+const [loading, setLoading] = useState(true);
+
+useEffect(() => {
+  const fetchNews = async () => {
+    try {
+      const res = await fetch(`${API_URL}/api/news`);
+      const data = await res.json();
+
+      const prepared = data.map((item) => {
+
+        let firstImage = newsImg;
+        let text = "";
+
+        try {
+          const parsed = item.content?.[lang];
+
+          if (parsed.blocks && parsed.blocks.length > 0) {
+
+            // найти первое изображение
+            const imageBlock = parsed.blocks.find(
+              (b) => b.type === "image"
+            );
+
+            if (imageBlock?.data?.file?.url) {
+              firstImage = imageBlock.data.file.url;
+            }
+
+            // собрать текст
+            text = parsed.blocks
+              .map((b) => b.data?.text || "")
+              .join(" ");
+          }
+
+        } catch {
+          text = "";
+        }
+
+        const shortDescription = text;
+
+        return {
+          id: item._id,
+          title: item.title?.[lang] || item.title?.ru || "",
+          description: shortDescription,
+          date: new Date(item.createdAt).toLocaleDateString(
+            lang === "uz" ? "uz-UZ" : lang === "en" ? "en-US" : "ru-RU"
+          ),
+          image: firstImage,
+        };
+      });
+
+      setAllNews(prepared);
+      setPage(1);
+
+    } catch (err) {
+      console.error("NEWS LOAD ERROR", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchNews();
+}, [lang]);
 
   const ITEMS_PER_PAGE = 9;
   const [page, setPage] = useState(1);
@@ -33,13 +90,22 @@ const News = () => {
   // Элементы пагинации
   const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
 
+
+  // LOADING
+  if (loading)
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <Loader2 className="w-10 h-10 text-[#000] animate-spin" />
+      </div>
+    );
+
   return (
     <>
 
       <SEO
-        title="О компании Voom"
-        description="Voom — сервис совместных поездок по Узбекистану. Узнайте больше о нашей миссии и развитии."
-        path="/about"
+        title="Новости VOOM"
+        description="Последние новости платформы VOOM — обновления сервиса, новые функции и развитие карпулинга в Узбекистане."
+        path="/news"
       />
       
       <Header />
@@ -51,22 +117,31 @@ const News = () => {
           {paginatedNews.map((item) => (
             <div
               key={item.id}
-              onClick={() => navigate(`/news/${item.id}`)}
+              onClick={() => navigate(`/${lang}/news/${item.id}`)}
               className="flex flex-col cursor-pointer group"
             >
               <img
-                src={item.image}
+                src={item.image || newsImg}
                 alt={item.title}
                 className="w-full h-60 object-cover rounded-2xl mb-5
-                           group-hover:opacity-90 transition"
+                          group-hover:opacity-90 transition"
               />
-              <h3 className="text-lg sm:text-xl font-semibold mb-3 leading-snug">
-                {item.title}
-              </h3>
-              <p className="text-gray-600 text-sm sm:text-base leading-relaxed mb-4">
-                {item.description}
-              </p>
-              <span className="text-gray-500 text-sm">{item.date}</span>
+
+              <div className="flex flex-col flex-grow">
+
+                <h3 className="text-lg sm:text-xl font-semibold mb-3 leading-snug line-clamp-2">
+                  {item.title}
+                </h3>
+
+                <p className="text-gray-600 text-sm sm:text-base leading-relaxed line-clamp-3">
+                  {item.description}
+                </p>
+
+                <span className="text-gray-500 text-sm mt-auto pt-4">
+                  {item.date}
+                </span>
+
+              </div>
             </div>
           ))}
         </div>

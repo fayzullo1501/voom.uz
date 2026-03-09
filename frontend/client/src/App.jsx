@@ -36,7 +36,8 @@ import EditCarPhoto from "./components/profile/EditCarPhoto.jsx";
 import RoutesResults from "./pages/routes/RoutesResults";
 import RouteDetails from "./pages/routes/RouteDetails";
 import RouteBooking from "./pages/routes/RouteBooking";
-
+import NewsDetails from "./pages/NewsDetails";
+import AdsDetails from "./pages/AdsDetails";
 
 
 
@@ -134,6 +135,10 @@ function App() {
           <Route path="/:lang/routes/:id" element={<RouteDetails />} />
           {/* Маршруты — Бронирование маршрута*/}
           <Route path="/:lang/routes/:id/booking" element={<LangWrapper Component={RouteBooking} />} />
+          {/* Новости — Детали новостей*/}
+          <Route path="/:lang/news/:id" element={<NewsDetails />} />
+          {/* Реклама — Детали рекламы*/}
+          <Route path="/:lang/ads/:id" element={<AdsDetails />} />
 
 
 

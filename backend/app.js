@@ -14,6 +14,8 @@ import cityRoutes from "./routes/city.routes.js";
 import routeRoutes from "./routes/route.routes.js";
 import bookingRoutes from "./routes/booking.routes.js";
 import notificationRoutes from "./routes/notification.routes.js";
+import newsRoutes from "./routes/news.routes.js";
+import adRoutes from "./routes/ad.routes.js";
 
 
 
@@ -82,6 +84,8 @@ app.use("/api/bookings", bookingRoutes);
  */
 app.use("/api/cities", cityRoutes);
 app.use("/api/notifications", notificationRoutes);
+app.use("/api", newsRoutes);
+app.use("/api", adRoutes);
 
 
 

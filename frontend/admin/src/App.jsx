@@ -14,7 +14,10 @@ import DirectoriesCarBrands from "./pages/DirectoriesCarBrands";
 import DirectoriesCarModels from "./pages/DirectoriesCarModels";
 import DirectoriesCarColors from "./pages/DirectoriesCarColors";
 import News from "./pages/News";
+import NewsCreate from "./pages/NewsCreate";
+import NewsPreview from "./pages/NewsPreview";
 import Ads from "./pages/Ads";
+import AdsCreate from "./pages/AdsCreate";
 import Settings from "./pages/Settings";
 
 const getAuth = () => {
@@ -56,7 +59,10 @@ const App = () => {
         <Route path="/directories/models" element={protectedPage(DirectoriesCarModels)} />
         <Route path="/directories/colors" element={protectedPage(DirectoriesCarColors)} />
         <Route path="/news" element={protectedPage(News)} />
+        <Route path="/news/create" element={protectedPage(NewsCreate)} />
+        <Route path="/news/view/:id" element={protectedPage(NewsPreview)} />
         <Route path="/ads" element={protectedPage(Ads)} />
+        <Route path="/ads/create" element={protectedPage(AdsCreate)} />
         <Route path="/settings" element={protectedPage(Settings)} />
       </Routes>
     </DeviceGuard>
