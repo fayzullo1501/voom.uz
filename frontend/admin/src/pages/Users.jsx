@@ -1,7 +1,7 @@
 // src/pages/Users.jsx
 import { useEffect, useState } from "react";
 import Checkbox from "../components/ui/Checkbox";
-import { Search, Filter, Eye, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
+import { Search, Filter, Eye, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Loader2 } from "lucide-react";
 import PageHeader from "../components/layout/Header";
 import { API_URL } from "../config/api";
 import AddUserModal from "../components/users/AddUserModal";
@@ -174,9 +174,9 @@ const Users = () => {
                 {loading && (
                   <tr>
                     <td colSpan={10} className="h-[240px]">
-                      <div className="flex flex-col items-center justify-center gap-3 text-gray-500">
-                        <div className="w-8 h-8 border-3 border-gray-300 border-t-[#000] rounded-full animate-spin"></div>
-                        <div className="text-[14px]">Загрузка...</div>
+                      <div className="flex flex-col items-center justify-center gap-3 text-gray-600">
+                        <Loader2 className="w-8 h-8 text-black animate-spin" />
+                        <span className="text-[14px]">Загрузка...</span>
                       </div>
                     </td>
                   </tr>

@@ -1,13 +1,13 @@
 import React, { useEffect, useState, useRef } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { API_URL } from "../../config/api";
-import defaultBg from "../../assets/about.jpg";
 import { useNavigate, useParams } from "react-router-dom";
 
 function PromoBanner() {
 
   const [ads, setAds] = useState([]);
   const [index, setIndex] = useState(0);
+  const [transition, setTransition] = useState(true);
   const intervalRef = useRef(null);
   const navigate = useNavigate();
   const { lang } = useParams();
@@ -23,7 +23,7 @@ function PromoBanner() {
 
         const prepared = data.map((ad) => {
 
-          let image = defaultBg;
+          let image = null;
 
           const parsed = ad.content?.ru || ad.content?.uz || ad.content?.en;
 
@@ -63,7 +63,7 @@ function PromoBanner() {
   const total = ads.length;
 
   const next = () => {
-    setIndex((prev) => (prev + 1) % total);
+    setIndex((prev) => prev + 1);
   };
 
   const prev = () => {
@@ -76,25 +76,36 @@ function PromoBanner() {
 
     intervalRef.current = setInterval(() => {
       next();
-    }, 5000);
+    }, 10000);
 
     return () => clearInterval(intervalRef.current);
 
   }, [total]);
 
+  useEffect(() => {
+
+    if (index === total) {
+
+      setTimeout(() => {
+
+        setTransition(false);
+        setIndex(0);
+
+        setTimeout(() => {
+          setTransition(true);
+        }, 50);
+
+      }, 700);
+
+    }
+
+  }, [index, total]);
+
   if (!ads.length) {
     return (
       <section className="pb-20 bg-white">
         <div className="container-wide">
-          <div
-            className="relative rounded-3xl overflow-hidden"
-            style={{
-              backgroundImage: `url(${defaultBg})`,
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-              minHeight: "420px"
-            }}
-          />
+          <div className="relative rounded-3xl overflow-hidden aspect-[16/6] bg-gray-100" />
         </div>
       </section>
     );
@@ -105,16 +116,41 @@ function PromoBanner() {
 
       <div className="container-wide">
 
-        <div
-          onClick={() => navigate(`/${lang}/ads/${ads[index].id}`)}
-          className="relative rounded-3xl overflow-hidden aspect-[16/9] md:aspect-[16/7] lg:aspect-[16/6] cursor-pointer"
-          style={{
-            backgroundImage: `url(${ads[index].image})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center"
-          }}
-        >
-          <div className="absolute inset-0 bg-black/50" />
+        <div className="relative rounded-3xl overflow-hidden">
+          <div
+            className={`flex will-change-transform ${transition ? "transition-transform duration-700 ease-in-out" : ""}`}
+            style={{
+              transform: `translateX(-${index * 100}%)`
+            }}
+          >
+
+            {ads.map((ad) => (
+              <div
+                key={ad.id}
+                onClick={() => navigate(`/${lang}/ads/${ad.id}`)}
+                className="min-w-full aspect-[16/6] cursor-pointer"
+                style={{
+                  backgroundImage: ad.image ? `url(${ad.image})` : "none",
+                  backgroundColor: ad.image ? "transparent" : "#f3f4f6",
+                  backgroundSize: "cover",
+                  backgroundPosition: "center"
+                }}
+              />
+            ))}
+
+            <div
+              key="clone"
+              onClick={() => navigate(`/${lang}/ads/${ads[0].id}`)}
+              className="min-w-full aspect-[16/6] cursor-pointer"
+              style={{
+                backgroundImage: `url(${ads[0].image})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center"
+              }}
+            />
+
+          </div>
+          <div className="absolute inset-0 pointer-events-none" />
 
           {total > 1 && (
             <>

@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { API_URL } from "../config/api";
 import { useNavigate } from "react-router-dom";
 import Checkbox from "../components/ui/Checkbox";
-import { Search, Filter, Eye, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
+import { Search, Filter, Eye, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Loader2 } from "lucide-react";
 import PageHeader from "../components/layout/Header";
 
 const PER_PAGE = 20;
@@ -13,12 +13,15 @@ const Ads = () => {
   const [page, setPage] = useState(1);
   const [ads, setAds] = useState([]);
   const [selected, setSelected] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
 
     const loadAds = async () => {
 
       try {
+
+        setLoading(true);
 
         const res = await fetch(`${API_URL}/api/admin/ads`, {
           headers: {
@@ -33,6 +36,10 @@ const Ads = () => {
       } catch (err) {
 
         console.error("LOAD ADS ERROR", err);
+
+      } finally {
+
+        setLoading(false);
 
       }
 
@@ -97,6 +104,8 @@ const Ads = () => {
                 setAds(ads.filter(a => !selected.includes(a._id)));
                 setSelected([]);
 
+                alert("Реклама успешно удалена");
+
               }}
               className="h-[42px] px-5 rounded-lg border border-red-600 text-red-600 text-[14px] font-medium bg-red-100 hover:bg-red-200 transition"
             >
@@ -122,6 +131,8 @@ const Ads = () => {
                 ));
 
                 setSelected([]);
+
+                alert("Реклама успешно опубликована");
 
               }}
               className="h-[42px] px-5 rounded-lg border border-green-600 text-green-600 text-[14px] font-medium bg-green-100 hover:bg-green-200 transition"
@@ -171,7 +182,18 @@ const Ads = () => {
               </thead>
 
               <tbody>
-                {visible.map((a, i) => (
+                    {loading && (
+                      <tr>
+                        <td colSpan={10} className="h-[240px]">
+                          <div className="flex flex-col items-center justify-center gap-3 text-gray-600">
+                            <Loader2 className="w-8 h-8 text-black animate-spin" />
+                            <span className="text-[14px]">Загрузка...</span>
+                          </div>
+                        </td>
+                      </tr>
+                    )}
+
+                    {!loading && visible.map((a, i) => (
                     <tr key={a._id} className="border-t border-gray-100 hover:bg-gray-50 transition">
                     <td className="px-3 py-3">
                       <Checkbox

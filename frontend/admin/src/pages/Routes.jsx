@@ -10,6 +10,7 @@ import {
   ChevronRight,
   ChevronsLeft,
   ChevronsRight,
+  Loader2,
 } from "lucide-react";
 import PageHeader from "../components/layout/Header";
 import FilterRoutesModal from "../components/routes/FilterRoutesModal";
@@ -20,34 +21,45 @@ const Routes = () => {
   const [page, setPage] = useState(1);
   const [routes, setRoutes] = useState([]);
   const [search, setSearch] = useState("");
+  const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState([]);
   const [showFilter, setShowFilter] = useState(false);
   const [filters, setFilters] = useState({});
   const token = localStorage.getItem("token");
 
   const fetchRoutes = async () => {
-    const params = new URLSearchParams();
 
-    if (search) params.append("search", search);
+      setLoading(true);
 
-    if (filters.status) params.append("status", filters.status);
-    if (filters.from) params.append("from", filters.from);
-    if (filters.to) params.append("to", filters.to);
-    if (filters.dateFrom) params.append("dateFrom", filters.dateFrom);
-    if (filters.dateTo) params.append("dateTo", filters.dateTo);
+      const params = new URLSearchParams();
 
-    const res = await fetch(
-      `${API_URL}/api/admin/routes?${params.toString()}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+      if (search) params.append("search", search);
 
-    const data = await res.json();
-    setRoutes(data);
-    setPage(1);
+      if (filters.status) params.append("status", filters.status);
+      if (filters.from) params.append("from", filters.from);
+      if (filters.to) params.append("to", filters.to);
+      if (filters.dateFrom) params.append("dateFrom", filters.dateFrom);
+      if (filters.dateTo) params.append("dateTo", filters.dateTo);
+
+      try {
+
+      const res = await fetch(
+        `${API_URL}/api/admin/routes?${params.toString()}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const data = await res.json();
+
+      setRoutes(data);
+      setPage(1);
+
+    } finally {
+      setLoading(false);
+    }
   };
 
   const deleteSelected = async () => {
@@ -144,7 +156,18 @@ const Routes = () => {
             </thead>
 
             <tbody>
-                {visible.map((r, i) => (
+                {loading && (
+                  <tr>
+                    <td colSpan={11} className="h-[240px]">
+                      <div className="flex flex-col items-center justify-center gap-3 text-gray-600">
+                        <Loader2 className="w-8 h-8 text-black animate-spin" />
+                        <span className="text-[14px]">Загрузка...</span>
+                      </div>
+                    </td>
+                  </tr>
+                )}
+
+                {!loading && visible.map((r, i) => (
                 <tr key={r._id} className="border-t border-gray-100 hover:bg-gray-50 transition">
                     <td className="px-3 py-3">
                     <Checkbox

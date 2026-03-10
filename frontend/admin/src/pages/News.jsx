@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { API_URL } from "../config/api";
 import { useNavigate } from "react-router-dom";
 import Checkbox from "../components/ui/Checkbox";
-import { Search, Filter, Eye, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
+import { Search, Filter, Eye, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Loader2 } from "lucide-react";
 import PageHeader from "../components/layout/Header";
 
 const PER_PAGE = 20;
@@ -11,6 +11,7 @@ const PER_PAGE = 20;
 const News = () => {
   const [page, setPage] = useState(1);
   const [news, setNews] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState([]);
   const navigate = useNavigate();
 
@@ -34,11 +35,11 @@ const News = () => {
         const data = await res.json();
 
         setNews(data);
+        setLoading(false);
 
       } catch (err) {
-
         console.error("LOAD NEWS ERROR", err);
-
+        setLoading(false);
       }
 
     };
@@ -91,6 +92,8 @@ const News = () => {
               setNews(news.filter(n => !selected.includes(n._id)));
               setSelected([]);
 
+              alert("Новость успешно удалена");
+
             }} className="h-[42px] px-5 rounded-lg border border-red-600 text-red-600 text-[14px] font-medium bg-red-100 hover:bg-red-200 transition">
               Удалить
             </button>
@@ -115,6 +118,8 @@ const News = () => {
 
                 setSelected([]);
 
+                alert("Новости успешно опубликованы");
+
               }}
               className="h-[42px] px-5 rounded-lg border border-green-600 text-green-600 text-[14px] font-medium bg-green-100 hover:bg-green-200 transition"
             >
@@ -133,8 +138,16 @@ const News = () => {
           </div>
         </div>
 
-        <div className="border border-gray-200 rounded-2xl overflow-hidden">
-          <div className="overflow-x-auto">
+        {loading ? (
+          <div className="border border-gray-200 rounded-2xl min-h-[400px] flex items-center justify-center">
+            <div className="flex flex-col items-center gap-3 text-gray-600">
+              <Loader2 className="w-8 h-8 text-black animate-spin" />
+              <span className="text-[14px]">Загрузка...</span>
+            </div>
+          </div>
+        ) : (
+          <div className="border border-gray-200 rounded-2xl overflow-hidden">
+            <div className="overflow-x-auto">
             <table className="w-full min-w-[1200px] text-[13px]">
               <thead className="bg-gray-50 text-gray-500">
                 <tr>
@@ -208,8 +221,9 @@ const News = () => {
             </table>
           </div>
         </div>
+        )}
 
-        {totalPages > 1 && (
+        {!loading && totalPages > 1 && (
           <div className="flex justify-center items-center gap-2 mt-10">
             <button onClick={() => setPage(1)} disabled={page === 1} className={`p-2 ${page === 1 ? "opacity-30" : "hover:text-[#32BB78]"}`}>
               <ChevronsLeft size={20} />
