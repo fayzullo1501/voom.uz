@@ -1,0 +1,79 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: "FE-Schrift";
+  src: url("/fonts/FE-FONT.TTF") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  font-family: 'Product Sans', 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: "kern";
+}
+
+@layer base {
+  body {
+    @apply bg-white text-gray-900;
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+@layer components {
+  .container-wide {
+    @apply w-full max-w-[1440px] mx-auto px-6 sm:px-8 lg:px-10;
+  }
+}
+
+/* скрыть скроллбар, но оставить скролл */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE */
+  scrollbar-width: none;     /* Firefox */
+}
+
+
+.test-font {
+  font-family: "FE-Schrift", sans-serif;
+  font-size: 40px;
+}
+
+@layer utilities {
+  .font-plate {
+    font-family: "FE-Schrift", sans-serif;
+  }
+}
+
+@keyframes pingSlow {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+    box-shadow: 0 0 0 0 rgba(239,68,68,0.6);
+  }
+
+  70% {
+    transform: scale(1.4);
+    opacity: 0.6;
+    box-shadow: 0 0 0 8px rgba(239,68,68,0);
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
+    box-shadow: 0 0 0 0 rgba(239,68,68,0);
+  }
+}
+
+.animate-ping-slow {
+  animation: pingSlow 1.6s infinite;
+}

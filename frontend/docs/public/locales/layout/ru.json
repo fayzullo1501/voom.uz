@@ -1,0 +1,66 @@
+{
+  "header": {
+    "logoAlt": "Voom — сервис междугородних поездок",
+
+    "search": {
+      "placeholder": "Поиск..."
+    },
+
+    "language": {
+      "ru": "Русский",
+      "uz": "O‘zbek",
+      "en": "English"
+    },
+
+    "actions": {
+      "login": "Войти"
+    }
+  },
+
+  "footer": {
+    "contacts": {
+      "number": "+998 99 996-16-96",
+      "support": "Служба поддержки",
+      "email": "info@voom.uz",
+      "instagram": "Instagram",
+      "youtube": "YouTube",
+      "telegram": "Telegram"
+    },
+
+    "info": {
+      "title": "Информация",
+      "terms": "Пользовательское соглашение",
+      "privacy": "Политика конфиденциальности",
+      "faq": "Часто задаваемые вопросы"
+    },
+
+    "platform": {
+      "title": "О платформе",
+      "what": "Что такое voom",
+      "how": "Как это работает",
+      "news": "Новости и обновления",
+      "contacts": "Контакты"
+    },
+
+    "navigation": {
+      "title": "Навигация",
+      "home": "Главная",
+      "about": "О компании",
+      "news": "Новости",
+      "contacts": "Контакты"
+    },
+
+    "company": {
+      "line1": "ООО «FAYKHANUR», ИНН 311015623",
+      "line2": "Республика Узбекистан, г. Ташкент,",
+      "line3": "Яккасарайский район, ул. Бабур, дом 67/4",
+      "line4": "Регистрационный номер 5220787"
+    },
+
+    "bottom": {
+      "brandLink": "voom.uz",
+      "brandSuffix": "сервис — карпулинг.",
+      "rights": "© FAYKHANUR Enterprises Group LLC, 2025"
+    }
+  }
+}
