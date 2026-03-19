@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import Home from "./pages/Home";
 import Help from "./pages/Help";
 import Article from "./pages/Article";
+import DocsPage from "./pages/docs/DocsPage";
 
 // обёртка для языка
 const LangWrapper = ({ Component }) => {
@@ -35,10 +36,10 @@ function App() {
       {/* home */}
       <Route path="/:lang" element={<LangWrapper Component={Home} />} />
 
-      {/* help sections */}
+      {/* docs sections */}
       <Route
-        path="/:lang/help/:section"
-        element={<LangWrapper Component={Help} />}
+        path="/:lang/docs/:section"
+        element={<LangWrapper Component={DocsPage} />}
       />
 
       {/* articles */}

@@ -1,0 +1,27 @@
+{
+  "start": {
+    "title": "Get started",
+    "items": {
+      "auth": {
+        "label": "Registration and login",
+        "content": "Текст..."
+      },
+      "methods": {
+        "label": "Способы входа",
+        "content": "Текст..."
+      },
+      "profile": {
+        "label": "Настройка профиля",
+        "content": "Текст..."
+      },
+      "howItWorks": {
+        "label": "Как работает Voom",
+        "content": "Текст..."
+      },
+      "features": {
+        "label": "Основные возможности",
+        "content": "Текст..."
+      }
+    }
+  }
+}
