@@ -1,11 +1,12 @@
 // src/components/profile/MyRouteDetails.jsx
 import React, { useEffect, useRef, useState } from "react";
-import { ChevronLeft, Maximize2, X, Check, X as XIcon, MoreVertical, Loader2 } from "lucide-react";
+import { ChevronLeft, ChevronRight, Maximize2, X, Check, X as XIcon, MoreVertical, Loader2 } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import { API_URL } from "../../config/api";
 import avatar from "../../assets/driverbookingtest.jpg";
 import PlateNumber from "../../components/ui/PlateNumber";
 import HiddenContact from "../../components/ui/HiddenContact";
+import PassengerBookingModal from "../../components/profile/PassengerBookingModal";
 
 const formatPhone = (phone) => {
   if (!phone) return "";
@@ -30,6 +31,7 @@ const MyRouteDetails = () => {
   const [mapOpen, setMapOpen] = useState(false);
   const [mapLoading, setMapLoading] = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [selectedBooking, setSelectedBooking] = useState(null);
   const menuRef = useRef(null);
   const mapRef = useRef(null);
   const modalMapRef = useRef(null);
@@ -405,66 +407,47 @@ const MyRouteDetails = () => {
                   return (
                     <div
                       key={booking._id}
-                      className="group flex items-center justify-between px-4 py-4 rounded-xl hover:bg-gray-100 transition"
+                      onClick={() => setSelectedBooking(booking)}
+                      className="group flex items-center justify-between px-4 py-4 rounded-xl hover:bg-gray-100 transition cursor-pointer"
                     >
-                      <div className="flex items-center gap-4">
+                      <div className="flex items-center gap-4 flex-1">
                         <img
                           src={passenger?.profilePhoto?.url || avatar}
                           className="w-14 h-14 rounded-full object-cover"
                         />
 
                         <div>
+                          {/* ФИО */}
                           <div className="font-semibold text-[18px]">
                             {booking.passengerName || `${passenger?.firstName || ""} ${passenger?.lastName || ""}`}
                           </div>
 
-                          {booking.status === "accepted" ? (
-                            formatPhone(booking.passengerPhone || passenger?.phone)
-                          ) : (
-                            <HiddenContact />
-                          )}
-
+                          {/* МЕСТА */}
                           <div className="text-sm text-gray-500 mt-1">
                             {booking.seatType === "whole"
                               ? "Вся машина"
-                              : `${booking.seatType === "front" ? "Переднее" : "Заднее"} × ${
-                                  booking.seatsCount
-                                }`}
+                              : `${booking.seatType === "front" ? "Переднее" : "Заднее"} × ${booking.seatsCount}`}
+                          </div>
+
+                          {/* СТАТУС */}
+                          <div className="text-sm mt-1">
+                            {booking.status === "pending" && (
+                              <span className="text-yellow-600">Ожидает подтверждения</span>
+                            )}
+                            {booking.status === "accepted" && (
+                              <span className="text-green-600">Принят</span>
+                            )}
+                            {booking.status === "cancelled" && (
+                              <span className="text-red-600">Отменён</span>
+                            )}
+                            {booking.status === "rejected" && (
+                              <span className="text-gray-500">Отклонён</span>
+                            )}
                           </div>
                         </div>
                       </div>
-
-                      <div className="flex items-center gap-3">
-                        {booking.status === "pending" && (
-                          <>
-                            <button
-                              onClick={() => handleAccept(booking._id)}
-                              className="w-12 h-12 rounded-xl flex items-center justify-center hover:bg-white"
-                            >
-                              <Check size={26} className="text-green-600" />
-                            </button>
-
-                            <button
-                              onClick={() => handleReject(booking._id)}
-                              className="w-12 h-12 rounded-xl flex items-center justify-center hover:bg-white"
-                            >
-                              <XIcon size={26} className="text-red-600" />
-                            </button>
-                          </>
-                        )}
-
-                        {booking.status === "accepted" && (
-                          <span className="text-green-600 font-medium">Принят</span>
-                        )}
-
-                        {booking.status === "cancelled" && (
-                          <span className="text-red-600 font-medium">Отменён</span>
-                        )}
-
-                        {booking.status === "rejected" && (
-                          <span className="text-gray-500 font-medium">Отклонён водителем</span>
-                        )}
-                      </div>
+                        {/* ВОТ ЭТО ДОБАВЛЯЕШЬ */}
+                        <ChevronRight size={20} className="text-gray-400" />
                     </div>
                   );
                 })}
@@ -625,6 +608,14 @@ const MyRouteDetails = () => {
             />
           </div>
         </div>
+      )}
+      {selectedBooking && (
+        <PassengerBookingModal
+          booking={selectedBooking}
+          onClose={() => setSelectedBooking(null)}
+          onAccept={handleAccept}
+          onReject={handleReject}
+        />
       )}
     </div>
   );

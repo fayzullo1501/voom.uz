@@ -155,14 +155,18 @@ const Header = () => {
 
           <nav className="hidden lg:flex items-center gap-6">
             <a
-              onClick={() => navigate(`/${currentLang}/for-passengers`)}
+              href="https://docs.voom.uz"
+              target="_blank"
+              rel="noopener noreferrer"
               className="text-gray-900 hover:text-gray-700 text-[17px] font-medium transition cursor-pointer"
             >
               {t("header.links.passengers")}
             </a>
 
             <a
-              onClick={() => navigate(`/${currentLang}/for-drivers`)}
+              href="https://docs.voom.uz"
+              target="_blank"
+              rel="noopener noreferrer"
               className="text-gray-900 hover:text-gray-700 text-[17px] font-medium transition cursor-pointer"
             >
               {t("header.links.drivers")}
