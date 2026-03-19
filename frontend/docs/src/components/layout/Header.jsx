@@ -60,7 +60,7 @@ const Header = () => {
 
   return (
     <header className="bg-white sticky top-0 z-50">
-      <div className="w-full flex items-center justify-between px-10 py-6">
+      <div className="w-full flex border border-gray-200 items-center justify-between px-10 py-6">
         
         {/* LEFT — LOGO */}
         <img
