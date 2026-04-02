@@ -10,5 +10,9 @@
   "courier": "voom courier:",
   "taxi": "voom taxi:",
 
-  "p3": "The voom team develops modern digital services, improves the quality of transportation and helps users save time and resources. We strive to make everyday and long-distance trips more comfortable for everyone."
+  "p3": "The voom team develops modern digital services, improves the quality of transportation and helps users save time and resources. We strive to make everyday and long-distance trips more comfortable for everyone.",
+  "seo": {
+    "title": "About Voom — Carpooling Service in Uzbekistan",
+    "description": "Learn about the Voom platform — a shared rides service across Uzbekistan. Our mission, values and team. Tashkent, Samarkand, Bukhara and hundreds of routes."
+  }
 }

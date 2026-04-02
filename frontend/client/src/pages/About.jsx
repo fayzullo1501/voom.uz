@@ -9,16 +9,17 @@ import bannerImg from "../assets/about-banner.jpg";
 import SEO from "../components/SEO";
 
 const About = () => {
-  const { t } = useTranslation(["about"]);
+  const { t, i18n } = useTranslation(["about"]);
   const [bannerLoaded, setBannerLoaded] = useState(false);
 
   return (
     <>
 
       <SEO
-        title="О компании Voom"
-        description="Voom — сервис совместных поездок по Узбекистану. Узнайте больше о нашей миссии и развитии."
+        title={t("seo.title")}
+        description={t("seo.description")}
         path="/about"
+        lang={i18n.language}
       />
       <Header />
 

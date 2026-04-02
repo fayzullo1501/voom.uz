@@ -2,30 +2,90 @@
 <html lang="ru">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+    <!-- Preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://maps.googleapis.com" />
+
+    <!-- Icons & PWA -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/manifest.json" />
     <meta name="theme-color" content="#32BB78" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="VOOM" />
 
-    <title>Voom — Карпулинг сервис в Узбекистане</title>
-
-    <!-- Basic SEO -->
-    <meta name="description" content="Voom — удобный сервис совместных поездок по Узбекистану. Найдите попутчиков или станьте водителем. Ташкент, Самарканд, Бухара и другие города." />
-    <meta name="keywords" content="карпулинг Узбекистан, попутчики Ташкент Самарканд, поездки по Узбекистану, совместные поездки" />
+    <!-- Default SEO (overridden per-page by react-helmet-async) -->
+    <title>Voom — Карпулинг в Узбекистане | Совместные поездки</title>
+    <meta name="description" content="Voom — сервис совместных поездок по Узбекистану. Ташкент, Самарканд, Бухара, Фергана и сотни других маршрутов. Найдите попутчика или предложите поездку." />
+    <meta name="keywords" content="карпулинг Узбекистан, попутчики Ташкент, совместные поездки, voom.uz, карпулинг, поездка Ташкент Самарканд, автобус попутчик" />
     <meta name="author" content="FAYKHANUR Enterprises Group LLC" />
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large" />
 
-    <!-- Open Graph (для соцсетей) -->
-    <meta property="og:title" content="Voom — Карпулинг сервис в Узбекистане" />
-    <meta property="og:description" content="Совместные поездки по Узбекистану. Безопасно. Удобно. Дешевле." />
+    <!-- Open Graph -->
+    <meta property="og:site_name" content="VOOM" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://voom.uz" />
+    <meta property="og:title" content="Voom — Карпулинг в Узбекистане" />
+    <meta property="og:description" content="Совместные поездки по Узбекистану. Безопасно. Удобно. Дешевле такси." />
     <meta property="og:image" content="https://voom.uz/og-image.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content="ru_RU" />
+    <meta property="og:locale:alternate" content="uz_UZ" />
+    <meta property="og:locale:alternate" content="en_US" />
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
-  </head>
+    <meta name="twitter:site" content="@voom_uz" />
+    <meta name="twitter:title" content="Voom — Карпулинг в Узбекистане" />
+    <meta name="twitter:description" content="Совместные поездки по Узбекистану. Безопасно. Удобно. Дешевле такси." />
+    <meta name="twitter:image" content="https://voom.uz/og-image.jpg" />
 
+    <!-- Structured Data: Organization -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "VOOM",
+      "url": "https://voom.uz",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://voom.uz/og-image.jpg"
+      },
+      "sameAs": [
+        "https://t.me/voom_uz",
+        "https://instagram.com/voom.uz"
+      ],
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "telephone": "+998999961696",
+        "contactType": "customer support",
+        "availableLanguage": ["Russian", "Uzbek"]
+      }
+    }
+    </script>
+
+    <!-- Structured Data: MobileApplication -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "MobileApplication",
+      "name": "VOOM",
+      "operatingSystem": "ANDROID, IOS",
+      "applicationCategory": "TravelApplication",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "UZS"
+      },
+      "description": "Сервис совместных поездок по Узбекистану"
+    }
+    </script>
+  </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>

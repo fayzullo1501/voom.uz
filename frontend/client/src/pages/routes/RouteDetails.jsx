@@ -9,6 +9,7 @@ import userVerified from "../../assets/userverified.svg";
 import avatarPlaceholder from "../../assets/avatar-placeholder.svg";
 import PlateNumber from "../../components/ui/PlateNumber";
 import SEO from "../../components/SEO";
+import { formatDateLong } from "../../utils/formatDate";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -50,16 +51,38 @@ const RouteDetails = () => {
     );
   if (!route) return <div className="p-10">{t("details.routeNotFound")}</div>;
 
-  const fromCity = route.fromCity?.nameRu || "";
-  const toCity = route.toCity?.nameRu || "";
+  const fromCity =
+    i18n.language === "uz"
+      ? route.fromCity?.nameUzLat || route.fromCity?.nameRu || ""
+      : i18n.language === "en"
+      ? route.fromCity?.nameEn || route.fromCity?.nameRu || ""
+      : route.fromCity?.nameRu || "";
+
+  const toCity =
+    i18n.language === "uz"
+      ? route.toCity?.nameUzLat || route.toCity?.nameRu || ""
+      : i18n.language === "en"
+      ? route.toCity?.nameEn || route.toCity?.nameRu || ""
+      : route.toCity?.nameRu || "";
 
   const minPrice = Math.min(route.priceFront || 0, route.priceBack || 0);
 
-  const title = `${fromCity} → ${toCity} — ${minPrice.toLocaleString("ru-RU")} сум | Voom`;
+  const title = t("seo.resultsTitle", { from: fromCity, to: toCity });
+  const description = t("seo.resultsDescription", { from: fromCity, to: toCity });
 
-  const description = `Поездка ${fromCity} — ${toCity}. Цена от ${minPrice.toLocaleString(
-    "ru-RU"
-  )} сум. Забронируйте через Voom.`;
+  const routeSchema = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: `${fromCity} → ${toCity}`,
+    description: description,
+    offers: {
+      "@type": "Offer",
+      price: minPrice,
+      priceCurrency: "UZS",
+      availability: "https://schema.org/InStock",
+      url: `https://voom.uz/${lang}/routes/${id}`,
+    },
+  };
 
   const isVerified =
     route.driver?.passport?.status === "approved" &&
@@ -135,6 +158,8 @@ const RouteDetails = () => {
         title={title}
         description={description}
         path={`/routes/${id}`}
+        lang={i18n.language}
+        schema={routeSchema}
       />
 
       <div className="container-wide pb-20 lg:pb-32">
@@ -236,7 +261,7 @@ const RouteDetails = () => {
             <div className="lg:sticky lg:top-24">
               <div className=" border border-gray-300 rounded-2xl p-6">
                 <div className="text-[22px] font-bold mb-1">{t("details.route")}</div>
-                <div className="text-[16px] text-gray-600 mb-6">{new Date(route.departureAt).toLocaleDateString("ru-RU", { weekday: "long", day: "numeric", month: "long", })}</div>
+                <div className="text-[16px] text-gray-600 mb-6">{formatDateLong(route.departureAt, i18n.language)}</div>
                 <div className="grid grid-cols-[auto_24px_1fr] gap-3">
                   <div className="flex flex-col gap-[38px] text-[15px] font-medium">
                     <div>{new Date(route.departureAt).toLocaleTimeString("ru-RU", { hour: "2-digit", minute: "2-digit", })}</div>

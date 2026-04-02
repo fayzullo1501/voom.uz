@@ -137,9 +137,7 @@ const Header = () => {
 
       setUnreadCount((prev) => prev + 1);
 
-      if (notification.type === "new_booking") {
-        playNotificationSound();
-      }
+      playNotificationSound();
 
     });
 

@@ -92,8 +92,14 @@
       "serverError": "Server xatosi",
       "pickup_required": "Olib ketish joyini kiriting",
       "dropoff_required": "Tushirish joyini kiriting",
-      "seats_required": "O‘rinlar sonini tanlang",
-      "invalid_seat_type": "O'rindiqlar turini va sonini tanlang"
+      "seats_required": "O’rinlar sonini tanlang",
+      "invalid_seat_type": "O’rindiqlar turini va sonini tanlang"
     }
+  },
+  "seo": {
+    "resultsTitle": "{{from}} → {{to}} yo’nalishlari — Voom karpuling",
+    "resultsDescription": "{{from}} — {{to}} yo’nalishi bo’yicha yo’ldosh toping. Voom — taksidan arzon, avtobusddan qulay birgalikda sayohat.",
+    "listTitle": "Barcha yo’nalishlar — O’zbekistonda Voom karpuling",
+    "listDescription": "O’zbekiston bo’ylab yuzlab yo’nalishlar. Toshkent, Samarqand, Buxoro, Farg’ona, Andijon va boshqa shaharlar. Hoziroq yo’ldosh toping."
   }
 }

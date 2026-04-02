@@ -19,5 +19,9 @@
     "phone": "Telefon raqami",
     "message": "Xabar",
     "submit": "Yuborish"
+  },
+  "seo": {
+    "title": "Voom bilan bog'laning — O'zbekistonda karpuling xizmati",
+    "description": "Voom jamoasi bilan bog'laning. Telefon, email, Telegram. O'zbekiston bo'ylab birgalikda sayohat xizmati foydalanuvchilari uchun qo'llab-quvvatlash."
   }
 }

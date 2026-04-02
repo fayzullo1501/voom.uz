@@ -4,6 +4,7 @@ import { ChevronLeft, ChevronRight, Maximize2, X, Loader2 } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { API_URL } from "../../config/api";
+import { formatDateLong, formatDateShort, formatTime, safeLocale } from "../../utils/formatDate";
 import avatar from "../../assets/driverbookingtest.jpg";
 import PlateNumber from "../../components/ui/PlateNumber";
 import HiddenContact from "../../components/ui/HiddenContact";
@@ -28,9 +29,7 @@ const MyRouteDetails = () => {
   const { id } = useParams();
   const { t, i18n } = useTranslation("profile");
 
-  const locale =
-    i18n.language === "uz" ? "uz-UZ" :
-    i18n.language === "en" ? "en-US" : "ru-RU";
+  const locale = safeLocale(i18n.language);
 
   const cityName = (city) => {
     if (!city) return "";
@@ -321,23 +320,10 @@ const MyRouteDetails = () => {
       </div>
     );
 
-  const departureDateFormatted = new Date(route.departureAt).toLocaleDateString(locale);
-
-  const departureDateLong = new Date(route.departureAt).toLocaleDateString(locale, {
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-  });
-
-  const departureTime = new Date(route.departureAt).toLocaleTimeString(locale, {
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-
-  const arrivalTime = new Date(route.arrivalAt).toLocaleTimeString(locale, {
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+  const departureDateFormatted = formatDateShort(route.departureAt, i18n.language);
+  const departureDateLong = formatDateLong(route.departureAt, i18n.language);
+  const departureTime = formatTime(route.departureAt, i18n.language);
+  const arrivalTime = formatTime(route.arrivalAt, i18n.language);
 
   return (
     <div className="min-h-screen bg-white">

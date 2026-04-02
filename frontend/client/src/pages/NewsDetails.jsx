@@ -61,6 +61,7 @@ const NewsDetails = () => {
         title={news.title?.[lang] || news.title?.ru}
         description={t("common.newsSeoDescription")}
         path={`/news/${id}`}
+        lang={lang}
       />
 
       <Header />

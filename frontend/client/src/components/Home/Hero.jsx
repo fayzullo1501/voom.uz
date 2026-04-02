@@ -9,7 +9,7 @@ const Hero = () => {
   const [loaded, setLoaded] = useState(false);
 
   return (
-    <section className="bg-white">
+    <section className=" py-10">
       <div className="container-wide">
         <div className="relative rounded-[36px]">
   

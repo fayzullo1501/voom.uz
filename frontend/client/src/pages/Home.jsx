@@ -13,7 +13,7 @@ import RequestForm from "../components/Home/RequestForm";
 import SEO from "../components/SEO";
 
 function Home({ lang }) {
-  const { t } = useTranslation("home");
+  const { t, i18n } = useTranslation("home");
 
   return (
     <>
@@ -22,6 +22,7 @@ function Home({ lang }) {
         title={t("seo.title")}
         description={t("seo.description")}
         path=""
+        lang={i18n.language}
       />
       
       <Header lang={lang} />

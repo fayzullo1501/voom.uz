@@ -69,7 +69,7 @@ const FloatingTextarea = ({ label, value, onChange }) => {
 // MAIN PAGE
 //
 const Contact = () => {
-  const { t } = useTranslation("contact");
+  const { t, i18n } = useTranslation("contact");
 
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
@@ -79,9 +79,10 @@ const Contact = () => {
     <>
 
       <SEO
-        title="О компании Voom"
-        description="Voom — сервис совместных поездок по Узбекистану. Узнайте больше о нашей миссии и развитии."
-        path="/about"
+        title={t("seo.title")}
+        description={t("seo.description")}
+        path="/contacts"
+        lang={i18n.language}
       />
 
       <Header />

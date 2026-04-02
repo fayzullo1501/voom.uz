@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { Loader2 } from "lucide-react";
 import Header from "../components/layout/Header";
 import Footer from "../components/layout/Footer";
@@ -11,6 +12,7 @@ import newsImg from "../assets/hero-bg.jpg"; // временное фото
 const News = () => {
   const navigate = useNavigate();
   const { lang } = useParams();
+  const { t, i18n } = useTranslation("home");
 
 
 const [allNews, setAllNews] = useState([]);
@@ -103,9 +105,10 @@ useEffect(() => {
     <>
 
       <SEO
-        title="Новости VOOM"
-        description="Последние новости платформы VOOM — обновления сервиса, новые функции и развитие карпулинга в Узбекистане."
+        title={t("newsSeo.title")}
+        description={t("newsSeo.description")}
         path="/news"
+        lang={i18n.language}
       />
       
       <Header />

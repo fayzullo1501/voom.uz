@@ -19,5 +19,9 @@
     "phone": "Phone number",
     "message": "Message",
     "submit": "Send"
+  },
+  "seo": {
+    "title": "Contact Voom — Carpooling Support in Uzbekistan",
+    "description": "Get in touch with the Voom team. Phone, email, Telegram. Support for users of the shared rides service across Uzbekistan."
   }
 }

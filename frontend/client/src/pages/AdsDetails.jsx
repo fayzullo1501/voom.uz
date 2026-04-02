@@ -61,6 +61,7 @@ const AdsDetails = () => {
         title={ad.title?.[lang] || ad.title?.ru}
         description={t("common.adsSeoDescription")}
         path={`/ads/${id}`}
+        lang={lang}
       />
 
       <Header />

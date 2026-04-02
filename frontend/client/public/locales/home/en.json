@@ -116,7 +116,11 @@
   },
 
   "seo": {
-    "title": "Carpooling service in Uzbekistan",
-    "description": "Voom — a convenient shared rides service across Uzbekistan. Find fellow travellers or become a driver."
+    "title": "Voom — Carpooling in Uzbekistan | Shared Rides",
+    "description": "Voom — shared rides service across Uzbekistan. Tashkent, Samarkand, Bukhara, Fergana and hundreds of routes. Find a ride or offer one."
+  },
+  "newsSeo": {
+    "title": "Voom News — Carpooling Service in Uzbekistan",
+    "description": "Latest news from Voom platform: service updates, new routes and carpooling development in Uzbekistan."
   }
 }

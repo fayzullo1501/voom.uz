@@ -10,5 +10,9 @@
   "courier": "voom courier:",
   "taxi": "voom taxi:",
 
-  "p3": "voom jamoasi zamonaviy raqamli servislarni ishlab chiqadi, transport sifatini yaxshilaydi va foydalanuvchilarning vaqtini tejashga yordam beradi. Biz kundalik va uzoq masofali safarlarni yanada qulay qilishga intilamiz."
+  "p3": "voom jamoasi zamonaviy raqamli servislarni ishlab chiqadi, transport sifatini yaxshilaydi va foydalanuvchilarning vaqtini tejashga yordam beradi. Biz kundalik va uzoq masofali safarlarni yanada qulay qilishga intilamiz.",
+  "seo": {
+    "title": "Voom haqida — O'zbekistonda karpuling xizmati",
+    "description": "Voom platformasi haqida bilib oling — O'zbekiston bo'ylab birgalikda sayohat xizmati. Bizning maqsadimiz, qadriyatlarimiz va jamoa. Toshkent, Samarqand, Buxoro va yuzlab yo'nalishlar."
+  }
 }

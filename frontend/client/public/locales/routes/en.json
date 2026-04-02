@@ -95,5 +95,11 @@
       "seats_required": "Please select seats",
       "invalid_seat_type": "Select the type and number of seats."
     }
+  },
+  "seo": {
+    "resultsTitle": "{{from}} → {{to}} Routes — Voom Carpooling",
+    "resultsDescription": "Find fellow travelers on the {{from}} — {{to}} route. Shared rides on Voom — cheaper than taxi, safer than bus.",
+    "listTitle": "All Routes — Voom Carpooling in Uzbekistan",
+    "listDescription": "Hundreds of routes across Uzbekistan. Tashkent, Samarkand, Bukhara, Fergana, Andijan and more. Find a ride right now."
   }
 }

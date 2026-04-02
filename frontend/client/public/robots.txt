@@ -1,4 +1,14 @@
 User-agent: *
 Allow: /
 
+# Не индексировать приватные страницы
+Disallow: /*/profile/
+Disallow: /*/register
+Disallow: /*/login
+Disallow: /*/routes/*/book
+
+# Карты и ресурсы
+Disallow: /src/
+Disallow: /node_modules/
+
 Sitemap: https://voom.uz/sitemap.xml

@@ -116,7 +116,11 @@
   },
 
   "seo": {
-    "title": "O'zbekistonda karpuling xizmati",
-    "description": "Voom — O'zbekiston bo'ylab qulay birgalikda sayohat xizmati. Yo'ldosh toping yoki haydovchi bo'ling."
+    "title": "Voom — O'zbekistonda karpuling | Birgalikda sayohat",
+    "description": "Voom — O'zbekiston bo'ylab birgalikda sayohat xizmati. Toshkent, Samarqand, Buxoro, Farg'ona va yuzlab yo'nalishlar. Yo'ldosh toping yoki haydovchi bo'ling."
+  },
+  "newsSeo": {
+    "title": "Voom yangiliklari — O'zbekistonda karpuling xizmati",
+    "description": "Voom platformasining so'nggi yangiliklari: xizmat yangilanishlari, yangi yo'nalishlar va O'zbekistonda karpuling rivojlanishi."
   }
 }

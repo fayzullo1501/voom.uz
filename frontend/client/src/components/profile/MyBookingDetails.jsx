@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { API_URL } from "../../config/api";
+import { formatDateLong, formatDateShort, formatTime, safeLocale } from "../../utils/formatDate";
 import { ChevronLeft, Maximize2, X, Star, FileText, Loader2 } from "lucide-react";
 import driverAvatar from "../../assets/driverbookingtest.jpg";
 import avatarPlaceholder from "../../assets/avatar-placeholder.svg";
@@ -19,9 +20,7 @@ const MyBookingDetails = () => {
   const { id } = useParams();
   const { t, i18n } = useTranslation("profile");
 
-  const locale =
-    i18n.language === "uz" ? "uz-UZ" :
-    i18n.language === "en" ? "en-US" : "ru-RU";
+  const locale = safeLocale(i18n.language);
 
   const [booking, setBooking] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -310,31 +309,10 @@ const MyBookingDetails = () => {
 
   const totalPrice = booking?.totalPrice || 0;
 
-  const departureDateFormatted = booking
-    ? new Date(booking.route?.departureAt).toLocaleDateString(locale)
-    : "";
-
-  const departureDateLong = booking
-    ? new Date(booking.route?.departureAt).toLocaleDateString(locale, {
-        weekday: "long",
-        day: "numeric",
-        month: "long",
-      })
-    : "";
-
-  const departureTime = booking
-    ? new Date(booking.route?.departureAt).toLocaleTimeString(locale, {
-        hour: "2-digit",
-        minute: "2-digit",
-      })
-    : "";
-
-  const arrivalTime = booking
-    ? new Date(booking.route?.arrivalAt).toLocaleTimeString(locale, {
-        hour: "2-digit",
-        minute: "2-digit",
-      })
-    : "";
+  const departureDateFormatted = booking ? formatDateShort(booking.route?.departureAt, i18n.language) : "";
+  const departureDateLong = booking ? formatDateLong(booking.route?.departureAt, i18n.language) : "";
+  const departureTime = booking ? formatTime(booking.route?.departureAt, i18n.language) : "";
+  const arrivalTime = booking ? formatTime(booking.route?.arrivalAt, i18n.language) : "";
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
