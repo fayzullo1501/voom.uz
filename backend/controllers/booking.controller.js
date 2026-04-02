@@ -1,6 +1,10 @@
 import Booking from "../models/Booking.js";
 import Route from "../models/Route.js";
+import User from "../models/User.js";
+import Transaction from "../models/Transaction.js";
 import { createNotification } from "../services/notification.service.js";
+
+const BOOKING_FEE = 3000;
 
 
     // ===== Создать бронь =====
@@ -211,6 +215,19 @@ export const acceptBooking = async (req, res) => {
     }
 
     // ==============================
+    // ПРОВЕРКА БАЛАНСА
+    // ==============================
+    const driver = await User.findById(driverId).select("balance");
+
+    if (!driver || driver.balance < BOOKING_FEE) {
+      return res.status(402).json({
+        message: "insufficient_balance",
+        required: BOOKING_FEE,
+        current: driver?.balance ?? 0,
+      });
+    }
+
+    // ==============================
     // WHOLE CAR
     // ==============================
     if (booking.seatType === "whole") {
@@ -258,6 +275,20 @@ export const acceptBooking = async (req, res) => {
 
       route.availableSeatsBack -= booking.seatsCount;
     }
+
+    // ==============================
+    // СПИСАНИЕ КОМИССИИ
+    // ==============================
+    await User.findByIdAndUpdate(driverId, { $inc: { balance: -BOOKING_FEE } });
+
+    await Transaction.create({
+      userId: driverId,
+      amount: BOOKING_FEE,
+      type: "debit",
+      status: "success",
+      provider: "internal",
+      meta: { bookingId: booking._id, reason: "booking_fee" },
+    });
 
     booking.status = "accepted";
 

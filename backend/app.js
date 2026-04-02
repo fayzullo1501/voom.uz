@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import compression from "compression";
 import env from "./config/env.js";
 
 import authRoutes from "./routes/auth.routes.js";
@@ -43,6 +44,7 @@ app.use(
   })
 );
 
+app.use(compression());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
