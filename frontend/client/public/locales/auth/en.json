@@ -33,8 +33,10 @@
   },
   "confirm": {
     "titlePhone": "Enter the code from SMS",
+    "titleSms": "Enter the code from SMS",
     "titleEmail": "Enter the code from email",
     "sentTo": "Code sent to {{value}}",
+    "sentToreg": "Code sent to",
     "codePlaceholder": "Enter the code",
     "confirmBtn": "Confirm",
     "resend": "Resend code",

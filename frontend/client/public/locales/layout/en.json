@@ -30,6 +30,19 @@
   },
 
 
+  "notifications": {
+    "title": "Notifications",
+    "markAllRead": "Mark all as read",
+    "tabs": {
+      "active": "Active",
+      "archive": "Archive"
+    },
+    "empty": "You have no notifications yet",
+    "justNow": "just now",
+    "minAgo": "min ago",
+    "hourAgo": "h ago"
+  },
+
   "footer": {
     "contacts": {
       "number": "+998 99 996-16-96",

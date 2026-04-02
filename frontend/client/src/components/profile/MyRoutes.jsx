@@ -1,10 +1,23 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { X, Loader2 } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 import walletIcon from "../../assets/icons/wallet.svg";
 import userIcon from "../../assets/icons/user.svg";
 import { API_URL } from "../../config/api";
 import { useTranslation } from "react-i18next";
+
+const fetchRoutes = async (type) => {
+  const token = localStorage.getItem("token");
+  const res = await fetch(`${API_URL}/api/routes?type=${type}`, {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  if (!res.ok) return [];
+  return res.json();
+};
 
 const MyRoutes = () => {
   const navigate = useNavigate();
@@ -12,44 +25,13 @@ const MyRoutes = () => {
   const { t, i18n } = useTranslation("profile");
 
   const [tab, setTab] = useState("active");
-  const [routes, setRoutes] = useState([]);
-  const [loading, setLoading] = useState(false);
 
-  const token = localStorage.getItem("token");
-
-  const fetchRoutes = async (type) => {
-    try {
-      setLoading(true);
-
-      const res = await fetch(
-        `${API_URL}/api/routes?type=${type}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        setRoutes([]);
-        return;
-      }
-
-      setRoutes(data);
-    } catch (error) {
-      console.error("Failed to load routes", error);
-      setRoutes([]);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchRoutes(tab);
-  }, [tab]);
+  const { data: routes = [], isLoading } = useQuery({
+    queryKey: ["myRoutes", tab],
+    queryFn: () => fetchRoutes(tab),
+    staleTime: 60 * 1000,       // 1 мин — смена вкладок мгновенна из кеша
+    placeholderData: (prev) => prev, // показывает старые данные пока грузит новые
+  });
 
   const formatDate = (date) => {
     const d = new Date(date);
@@ -138,19 +120,19 @@ const MyRoutes = () => {
       <div className="flex justify-center">
         <div className="w-full max-w-[760px]">
 
-          {loading && (
+          {isLoading && (
             <div className="flex justify-center py-20">
               <Loader2 className="w-6 h-6 animate-spin text-gray-500" />
             </div>
           )}
 
-          {!loading && routes.length === 0 && (
+          {!isLoading && routes.length === 0 && (
             <div className="text-center text-gray-500 py-20">
               {t("routes.empty")}
             </div>
           )}
 
-          {!loading && routes.length > 0 && (
+          {!isLoading && routes.length > 0 && (
             <div className="flex flex-col gap-4">
               {routes.map((route) => (
                 <div

@@ -30,6 +30,19 @@
   },
 
 
+  "notifications": {
+    "title": "Bildirishnomalar",
+    "markAllRead": "Barchasini o'qilgan deb belgilash",
+    "tabs": {
+      "active": "Faol",
+      "archive": "Arxiv"
+    },
+    "empty": "Hozircha bildirishnomalar yo'q",
+    "justNow": "hozirgina",
+    "minAgo": "daqiqa oldin",
+    "hourAgo": "soat oldin"
+  },
+
   "footer": {
     "contacts": {
       "number": "+998 99 996-16-96",

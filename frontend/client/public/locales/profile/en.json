@@ -82,7 +82,9 @@
     "uploadSuccess": "Photo successfully sent for review",
     "uploadError": "Failed to upload photo",
     "loading": "Loading...",
-    "save": "Save"
+    "save": "Save",
+    "takePhoto": "Take photo",
+    "chooseFromGallery": "Choose from gallery"
   },
   "passport": {
     "title": "Verify passport",
@@ -168,5 +170,149 @@
     "descriptionLine2": "to the specified email address for confirmation.",
     "send": "Send code",
     "sending": "Sending..."
+  },
+  "balance": {
+    "title": "My Balance",
+    "virtualCard": "Virtual Card",
+    "holder": "Cardholder",
+    "loading": "Loading...",
+    "topUp": "Top Up",
+    "withdraw": "Withdraw",
+    "history": "History"
+  },
+  "bookingDetails": {
+    "dateIn": "on ",
+    "status": {
+      "active": "Active",
+      "completed": "Completed",
+      "cancelled": "Cancelled",
+      "in_progress": "In progress"
+    },
+    "routeInfo": "Booked Route Information",
+    "leaveReview": "Leave a Review",
+    "reviewPlaceholder": "Text",
+    "save": "Save",
+    "yourReview": "Your Review",
+    "passengers": "Passengers",
+    "noPassengers": "No passengers yet",
+    "passenger": "Passenger",
+    "bookingStatus": {
+      "pending": "Pending",
+      "accepted": "Accepted",
+      "cancelled": "Cancelled",
+      "rejected": "Rejected by driver"
+    },
+    "seatType": {
+      "front": "front seat",
+      "back": "back seat"
+    },
+    "yourOrder": "Your Order",
+    "driver": "Driver",
+    "reviews": "reviews",
+    "profileVerified": "Profile verified",
+    "car": "Car",
+    "myData": "My Details",
+    "bookedBy": "Booked by",
+    "mySeats": "My seat count",
+    "totalPassengers": "Total passengers",
+    "tripCost": "My trip cost",
+    "paymentType": "Payment type",
+    "cash": "Cash",
+    "toPay": "To pay",
+    "currency": "UZS",
+    "downloadInvoice": "Download invoice",
+    "cancelBooking": "Cancel booking",
+    "cancelConfirm": "Cancel this booking?",
+    "mapTitle": "Route map",
+    "me": "Me"
+  },
+  "passengerModal": {
+    "title": "Passenger Information",
+    "pickup": "Pickup location",
+    "dropoff": "Drop-off location",
+    "seats": "Seats",
+    "comment": "Comment",
+    "accept": "Accept",
+    "reject": "Reject",
+    "accepting": "Accepting...",
+    "rejecting": "Rejecting...",
+    "seatWhole": "Whole car",
+    "seatFront": "Front seat",
+    "seatBack": "Back seat",
+    "hiddenContactTooltip": "Passenger contact will be revealed after accepting the booking. {{amount}} UZS will be deducted from your balance.",
+    "insufficientBalance": "Insufficient balance.",
+    "insufficientBalanceHint": "Top up your balance to accept this booking.",
+    "topUpBalance": "Top up balance"
+  },
+  "topUp": {
+    "title": "Top Up",
+    "paymentDetails": "Payment details",
+    "amount": "Payment amount",
+    "methodUnavailable": "This payment method is not available yet",
+    "paymentError": "Error initiating payment",
+    "redirecting": "Redirecting to payment...",
+    "continue": "Continue"
+  },
+  "transactionHistory": {
+    "title": "Transaction History",
+    "empty": "No transactions yet",
+    "col": {
+      "type": "Type",
+      "id": "Transaction ID",
+      "date": "Date",
+      "amount": "Amount",
+      "status": "Status"
+    },
+    "status": {
+      "success": "Success",
+      "pending": "Processing",
+      "failed": "Cancelled"
+    },
+    "type": {
+      "topup": "Top Up",
+      "debit": "Debit"
+    },
+    "currency": "UZS"
+  },
+  "routeDetails": {
+    "notFound": "Route not found",
+    "dateIn": "on ",
+    "status": {
+      "active": "Active",
+      "completed": "Completed",
+      "cancelled": "Cancelled",
+      "in_progress": "In progress"
+    },
+    "routeInfo": "Registered Route Information",
+    "passengers": "Passengers",
+    "noBookings": "No bookings yet",
+    "seatType": {
+      "whole": "Whole car",
+      "front": "Front",
+      "back": "Back"
+    },
+    "bookingStatus": {
+      "pending": "Awaiting confirmation",
+      "accepted": "Accepted",
+      "cancelled": "Cancelled",
+      "rejected": "Rejected"
+    },
+    "yourRoute": "Your Route",
+    "car": "Car",
+    "tripAmount": "Trip Amount",
+    "total": "Total",
+    "currency": "UZS",
+    "start": "Let's go",
+    "cancelRoute": "Cancel route",
+    "completeRoute": "Complete route",
+    "mapTitle": "Route map",
+    "errors": {
+      "frontTaken": "The front seat is already taken by another passenger.",
+      "backTaken": "The back seats are already taken.",
+      "noSeats": "No free seats available.",
+      "cannotAccept": "Cannot accept booking. This seat is already taken.",
+      "serverError": "Server error. Please try again later.",
+      "insufficientBalance": "Insufficient balance to accept this booking."
+    }
   }
 }

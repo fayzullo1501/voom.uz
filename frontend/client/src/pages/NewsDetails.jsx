@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { ArrowLeft, Calendar, Eye, Loader2 } from "lucide-react";
 
 import Header from "../components/layout/Header";
@@ -11,6 +12,7 @@ const NewsDetails = () => {
 
   const navigate = useNavigate();
   const { id, lang } = useParams();
+  const { t } = useTranslation("home");
 
   const [news, setNews] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -57,7 +59,7 @@ const NewsDetails = () => {
     <>
       <SEO
         title={news.title?.[lang] || news.title?.ru}
-        description="VOOM новости и обновления"
+        description={t("common.newsSeoDescription")}
         path={`/news/${id}`}
       />
 
@@ -74,7 +76,7 @@ const NewsDetails = () => {
             className="flex items-center gap-2 text-gray-600 hover:text-black transition"
           >
             <ArrowLeft size={18} />
-            Назад
+            {t("common.back")}
           </button>
 
           <div className="flex items-center gap-6 text-gray-500 text-sm">

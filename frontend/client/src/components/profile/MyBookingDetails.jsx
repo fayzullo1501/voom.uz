@@ -1,6 +1,7 @@
 // src/components/profile/MyBookingDetails.jsx
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { API_URL } from "../../config/api";
 import { ChevronLeft, Maximize2, X, Star, FileText, Loader2 } from "lucide-react";
 import driverAvatar from "../../assets/driverbookingtest.jpg";
@@ -16,6 +17,11 @@ const MyBookingDetails = () => {
 
   const navigate = useNavigate();
   const { id } = useParams();
+  const { t, i18n } = useTranslation("profile");
+
+  const locale =
+    i18n.language === "uz" ? "uz-UZ" :
+    i18n.language === "en" ? "en-US" : "ru-RU";
 
   const [booking, setBooking] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -47,7 +53,6 @@ const MyBookingDetails = () => {
       );
 
       if (res.ok) {
-        // перезагружаем данные
         window.location.reload();
       }
     } catch (err) {
@@ -56,7 +61,7 @@ const MyBookingDetails = () => {
   };
 
   const handleCancelBooking = async () => {
-    if (!window.confirm("Отменить бронь?")) return;
+    if (!window.confirm(t("bookingDetails.cancelConfirm"))) return;
 
     try {
       const res = await fetch(
@@ -106,7 +111,7 @@ const MyBookingDetails = () => {
 
     fetchBooking();
   }, [id]);
-  
+
   useEffect(() => {
     if (!booking?.route?.polyline) return;
 
@@ -138,15 +143,10 @@ const MyBookingDetails = () => {
 
       polyline.setMap(map);
 
-      // ===== START MARKER (A)
       new window.google.maps.Marker({
         position: decodedPath[0],
         map: map,
-        label: {
-          text: "A",
-          color: "#ffffff",
-          fontWeight: "bold",
-        },
+        label: { text: "A", color: "#ffffff", fontWeight: "bold" },
         icon: {
           path: window.google.maps.SymbolPath.CIRCLE,
           scale: 10,
@@ -157,15 +157,10 @@ const MyBookingDetails = () => {
         },
       });
 
-      // ===== END MARKER (B)
       new window.google.maps.Marker({
         position: decodedPath[decodedPath.length - 1],
         map: map,
-        label: {
-          text: "B",
-          color: "#ffffff",
-          fontWeight: "bold",
-        },
+        label: { text: "B", color: "#ffffff", fontWeight: "bold" },
         icon: {
           path: window.google.maps.SymbolPath.CIRCLE,
           scale: 10,
@@ -191,7 +186,7 @@ const MyBookingDetails = () => {
       initMap();
     }
   }, [booking]);
-  
+
   useEffect(() => {
     if (!mapOpen || !booking?.route?.polyline) return;
     if (!window.google?.maps?.geometry) return;
@@ -221,7 +216,6 @@ const MyBookingDetails = () => {
 
     polyline.setMap(map);
 
-    // ===== START MARKER (A)
     new window.google.maps.Marker({
       position: decodedPath[0],
       map,
@@ -236,7 +230,6 @@ const MyBookingDetails = () => {
       },
     });
 
-    // ===== END MARKER (B)
     new window.google.maps.Marker({
       position: decodedPath[decodedPath.length - 1],
       map,
@@ -255,13 +248,13 @@ const MyBookingDetails = () => {
     decodedPath.forEach((p) => bounds.extend(p));
     map.fitBounds(bounds);
   }, [mapOpen, booking]);
-  
+
   if (loading)
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-white">
-      <Loader2 className="w-10 h-10 text-black animate-spin" />
-    </div>
-  );
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <Loader2 className="w-10 h-10 text-black animate-spin" />
+      </div>
+    );
 
   const driver = booking?.route?.driver;
 
@@ -270,7 +263,6 @@ const MyBookingDetails = () => {
     driver?.emailVerified &&
     driver?.profilePhoto?.status === "approved" &&
     driver?.passport?.status === "approved";
-  
 
   const car = booking?.route?.car;
 
@@ -286,9 +278,6 @@ const MyBookingDetails = () => {
   const carName = `${carBrand} ${carModel}`.trim();
 
   const plate = car?.plateNumber || "";
-
-  const regionCode = plate.slice(0, 2);
-  const restPlate = plate.slice(2).trim();
 
   const passengers = [
     booking,
@@ -311,16 +300,44 @@ const MyBookingDetails = () => {
   const passengerPhone =
     booking?.passengerPhone || booking?.passenger?.phone || "";
 
-  const bookedBy =
-    passengerName === `${booking?.passenger?.firstName || ""} ${booking?.passenger?.lastName || ""}`.trim()
-      ? "Я"
-      : `${passengerName} (${passengerPhone})`;
-  
-  const totalPrice = booking?.totalPrice || 0;    
+  const isMe =
+    passengerName ===
+    `${booking?.passenger?.firstName || ""} ${booking?.passenger?.lastName || ""}`.trim();
+
+  const bookedBy = isMe
+    ? t("bookingDetails.me")
+    : `${passengerName} (${passengerPhone})`;
+
+  const totalPrice = booking?.totalPrice || 0;
+
+  const departureDateFormatted = booking
+    ? new Date(booking.route?.departureAt).toLocaleDateString(locale)
+    : "";
+
+  const departureDateLong = booking
+    ? new Date(booking.route?.departureAt).toLocaleDateString(locale, {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+      })
+    : "";
+
+  const departureTime = booking
+    ? new Date(booking.route?.departureAt).toLocaleTimeString(locale, {
+        hour: "2-digit",
+        minute: "2-digit",
+      })
+    : "";
+
+  const arrivalTime = booking
+    ? new Date(booking.route?.arrivalAt).toLocaleTimeString(locale, {
+        hour: "2-digit",
+        minute: "2-digit",
+      })
+    : "";
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
-      {/* ===== Header (как BalanceTopUp) ===== */}
       <header>
         <div className="container-wide flex items-center justify-end py-8">
           <button className="p-2 rounded-full transition invisible" aria-hidden="true" tabIndex={-1}>
@@ -329,98 +346,87 @@ const MyBookingDetails = () => {
         </div>
       </header>
 
-        {/* ===== Title ===== */}
-        <div className="container-wide mb-6">
-            <div className="border-b border-gray-300">
-                <div className="flex items-center justify-between py-4">
-                
-                {/* Левая часть */}
-                <div className="flex items-center gap-3">
-                    <button
-                    onClick={() => navigate(-1)}
-                    className="p-2 rounded-lg hover:bg-gray-100 transition"
-                    aria-label="Назад"
-                    >
-                    <ChevronLeft size={24} className="text-gray-800" />
-                    </button>
+      {/* ===== Title ===== */}
+      <div className="container-wide mb-6">
+        <div className="border-b border-gray-300">
+          <div className="flex items-center justify-between py-4">
 
-                    <div className="flex items-center gap-2 text-[20px] sm:text-[24px] font-semibold">
-                    <span>
-                      {booking
-                        ? `${booking.route?.fromCity?.nameRu?.toUpperCase()} – ${booking.route?.toCity?.nameRu?.toUpperCase()}`
-                        : ""}
-                    </span>
-                    <span className="text-gray-500 text-[16px] sm:text-[18px] font-normal">
-                      {booking
-                        ? `в ${new Date(booking.route?.departureAt).toLocaleDateString("ru-RU")}`
-                        : ""}
-                    </span>
-                    </div>
-                </div>
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => navigate(-1)}
+                className="p-2 rounded-lg hover:bg-gray-100 transition"
+                aria-label={t("bookingDetails.back")}
+              >
+                <ChevronLeft size={24} className="text-gray-800" />
+              </button>
 
-                {/* Правая часть */}
-                <div
-                  className={`text-[24px] font-medium ${
-                    booking?.route?.status === "active"
-                      ? "text-green-600"
-                      : booking?.route?.status === "completed"
-                      ? "text-gray-500"
-                      : booking?.route?.status === "cancelled"
-                      ? "text-red-600"
-                      : "text-yellow-600"
-                  }`}
-                >
-                  {booking?.route?.status === "active" && "Активный"}
-                  {booking?.route?.status === "completed" && "Завершён"}
-                  {booking?.route?.status === "cancelled" && "Отменён"}
-                  {booking?.route?.status === "in_progress" && "В пути"}
-                </div>
-                </div>
+              <div className="flex items-center gap-2 text-[20px] sm:text-[24px] font-semibold">
+                <span>
+                  {booking
+                    ? `${booking.route?.fromCity?.nameRu?.toUpperCase()} – ${booking.route?.toCity?.nameRu?.toUpperCase()}`
+                    : ""}
+                </span>
+                <span className="text-gray-500 text-[16px] sm:text-[18px] font-normal">
+                  {booking ? `${t("bookingDetails.dateIn")}${departureDateFormatted}` : ""}
+                </span>
+              </div>
             </div>
+
+            <div
+              className={`text-[24px] font-medium ${
+                booking?.route?.status === "active"
+                  ? "text-green-600"
+                  : booking?.route?.status === "completed"
+                  ? "text-gray-500"
+                  : booking?.route?.status === "cancelled"
+                  ? "text-red-600"
+                  : "text-yellow-600"
+              }`}
+            >
+              {booking?.route?.status === "active" && t("bookingDetails.status.active")}
+              {booking?.route?.status === "completed" && t("bookingDetails.status.completed")}
+              {booking?.route?.status === "cancelled" && t("bookingDetails.status.cancelled")}
+              {booking?.route?.status === "in_progress" && t("bookingDetails.status.in_progress")}
+            </div>
+          </div>
         </div>
-
-
-
-
-
+      </div>
 
       {/* ===== Content ===== */}
       <div className="container-wide flex-1 pb-24">
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_440px] gap-6">
+
           {/* ===== Left ===== */}
           <div className="flex flex-col">
             <div className="text-[22px] sm:text-[26px] font-bold mb-4">
-              Информация забронированного маршрута
+              {t("bookingDetails.routeInfo")}
             </div>
 
             <div className="relative border border-gray-200 rounded-2xl overflow-hidden bg-gray-50">
-              <button onClick={() => setMapOpen(true)} className="absolute right-3 top-3 z-10 w-10 h-10 rounded-xl bg-white border border-gray-200 flex items-center justify-center hover:bg-gray-100 transition">
+              <button
+                onClick={() => setMapOpen(true)}
+                className="absolute right-3 top-3 z-10 w-10 h-10 rounded-xl bg-white border border-gray-200 flex items-center justify-center hover:bg-gray-100 transition"
+              >
                 <Maximize2 size={18} />
               </button>
 
               <div className="relative">
-
                 {mapLoading && (
                   <div className="absolute inset-0 flex items-center justify-center bg-white/70 z-10">
                     <Loader2 className="w-8 h-8 animate-spin text-gray-500" />
                   </div>
                 )}
-
-                <div
-                  ref={mapRef}
-                  className="w-full h-[260px] sm:h-[340px] lg:h-[420px]"
-                />
-
+                <div ref={mapRef} className="w-full h-[260px] sm:h-[340px] lg:h-[420px]" />
               </div>
             </div>
 
+            {/* ===== REVIEW ===== */}
             {booking?.route?.status === "completed" && (
               <div className="mt-10">
-
                 {!booking?.review?.rating ? (
                   <>
                     <div className="text-[22px] sm:text-[26px] font-bold mb-4">
-                      Оставить отзыв
+                      {t("bookingDetails.leaveReview")}
                     </div>
 
                     <div className="flex items-center gap-2 mb-4">
@@ -445,7 +451,7 @@ const MyBookingDetails = () => {
                     <textarea
                       value={review}
                       onChange={(e) => setReview(e.target.value)}
-                      placeholder="Текст"
+                      placeholder={t("bookingDetails.reviewPlaceholder")}
                       className="w-full h-[140px] rounded-2xl px-4 py-4 border border-gray-300 outline-none focus:border-gray-400 transition text-[15px]"
                     />
 
@@ -453,13 +459,13 @@ const MyBookingDetails = () => {
                       onClick={handleSubmitReview}
                       className="w-full sm:w-[260px] h-[52px] mt-5 bg-[#32BB78] text-white rounded-xl text-[16px] font-semibold hover:bg-[#2aa86e] transition"
                     >
-                      Сохранить
+                      {t("bookingDetails.save")}
                     </button>
                   </>
                 ) : (
                   <>
                     <div className="text-[22px] sm:text-[26px] font-bold mb-4">
-                      Ваш отзыв
+                      {t("bookingDetails.yourReview")}
                     </div>
 
                     <div className="flex items-center gap-2 mb-3">
@@ -487,12 +493,12 @@ const MyBookingDetails = () => {
             {/* ===== PASSENGERS ===== */}
             <div className="mt-10">
               <div className="text-[22px] sm:text-[26px] font-bold mb-4">
-                Пассажиры
+                {t("bookingDetails.passengers")}
               </div>
 
               <div className="space-y-2">
                 {passengers.length === 0 && (
-                  <div className="text-gray-400">Пассажиров пока нет</div>
+                  <div className="text-gray-400">{t("bookingDetails.noPassengers")}</div>
                 )}
 
                 {passengers.map((b) => {
@@ -518,38 +524,37 @@ const MyBookingDetails = () => {
                         className="w-14 h-14 rounded-full object-cover"
                       />
 
-                     <div>
+                      <div>
                         <div className="font-semibold text-[18px]">
-                          {name || "Пассажир"}
+                          {name || t("bookingDetails.passenger")}
                         </div>
 
                         {b._id === booking._id ? (
-
-                            <div
-                              className={`text-sm font-medium ${
-                                b.status === "pending"
-                                  ? "text-yellow-500"
-                                  : b.status === "accepted"
-                                  ? "text-green-600"
-                                  : b.status === "cancelled"
-                                  ? "text-red-600"
-                                  : b.status === "rejected"
-                                  ? "text-gray-500"
-                                  : ""
-                              }`}
-                            >
-                              {b.status === "pending" && "В ожидании"}
-                              {b.status === "accepted" && "Принят"}
-                              {b.status === "cancelled" && "Отменён"}
-                              {b.status === "rejected" && "Отклонён водителем"}
-                            </div>
-
-                          ) : (
-
-                          <div className="text-sm text-gray-500">
-                            ×{b.seatsCount} — {b.seatType === "front" ? "переднее место" : "заднее место"}
+                          <div
+                            className={`text-sm font-medium ${
+                              b.status === "pending"
+                                ? "text-yellow-500"
+                                : b.status === "accepted"
+                                ? "text-green-600"
+                                : b.status === "cancelled"
+                                ? "text-red-600"
+                                : b.status === "rejected"
+                                ? "text-gray-500"
+                                : ""
+                            }`}
+                          >
+                            {b.status === "pending" && t("bookingDetails.bookingStatus.pending")}
+                            {b.status === "accepted" && t("bookingDetails.bookingStatus.accepted")}
+                            {b.status === "cancelled" && t("bookingDetails.bookingStatus.cancelled")}
+                            {b.status === "rejected" && t("bookingDetails.bookingStatus.rejected")}
                           </div>
-
+                        ) : (
+                          <div className="text-sm text-gray-500">
+                            ×{b.seatsCount} —{" "}
+                            {b.seatType === "front"
+                              ? t("bookingDetails.seatType.front")
+                              : t("bookingDetails.seatType.back")}
+                          </div>
                         )}
                       </div>
                     </div>
@@ -559,40 +564,24 @@ const MyBookingDetails = () => {
             </div>
           </div>
 
-          {/* ===== Right (scrollable) ===== */}
+          {/* ===== Right ===== */}
           <div className="lg:relative">
             <div className="lg:sticky lg:top-6 max-h-[calc(100vh-140px)] overflow-y-auto pr-1">
-              <div className="text-[22px] sm:text-[26px] font-bold mb-4">Ваш заказ</div>
 
+              <div className="text-[22px] sm:text-[26px] font-bold mb-4">
+                {t("bookingDetails.yourOrder")}
+              </div>
+
+              {/* Route timeline */}
               <div className="border border-gray-300 rounded-2xl p-4 mb-4">
                 <div className="font-semibold mb-3 text-[20px]">
-                  {booking
-                    ? new Date(booking.route?.departureAt).toLocaleDateString("ru-RU", {
-                        weekday: "long",
-                        day: "numeric",
-                        month: "long",
-                      })
-                    : ""}
+                  {departureDateLong}
                 </div>
 
                 <div className="grid grid-cols-[auto_24px_1fr] gap-3">
                   <div className="flex flex-col gap-[38px] text-[14px] font-medium">
-                    <div>
-                      {booking
-                        ? new Date(booking.route?.departureAt).toLocaleTimeString("ru-RU", {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          })
-                        : ""}
-                    </div>
-                    <div>
-                      {booking
-                        ? new Date(booking.route?.arrivalAt).toLocaleTimeString("ru-RU", {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          })
-                        : ""}
-                    </div>
+                    <div>{departureTime}</div>
+                    <div>{arrivalTime}</div>
                   </div>
 
                   <div className="flex flex-col items-center">
@@ -622,8 +611,11 @@ const MyBookingDetails = () => {
                 </div>
               </div>
 
+              {/* Driver */}
               <div className="border border-gray-300 rounded-2xl p-4 mb-4">
-                <div className="font-semibold mb-3 text-[20px]">Водитель</div>
+                <div className="font-semibold mb-3 text-[20px]">
+                  {t("bookingDetails.driver")}
+                </div>
 
                 <div className="flex items-center gap-3">
                   <img
@@ -640,7 +632,7 @@ const MyBookingDetails = () => {
                       {driver?.firstName} {driver?.lastName}
                     </div>
                     <div className="text-sm text-gray-500">
-                      {driver?.rating?.toFixed(1) || "0.0"} / 5 · {driver?.reviewsCount || 0} отзывов
+                      {driver?.rating?.toFixed(1) || "0.0"} / 5 · {driver?.reviewsCount || 0} {t("bookingDetails.reviews")}
                     </div>
                   </div>
                 </div>
@@ -648,13 +640,16 @@ const MyBookingDetails = () => {
                 {isVerified && (
                   <div className="mt-3 flex items-center gap-2 text-sm">
                     <img src={userVerified} className="w-4 h-4" />
-                    Профиль подтвержден
+                    {t("bookingDetails.profileVerified")}
                   </div>
                 )}
               </div>
 
+              {/* Car */}
               <div className="border border-gray-300 rounded-2xl p-4 mb-4">
-                <div className="font-semibold mb-3 text-[20px]">Автомобиль</div>
+                <div className="font-semibold mb-3 text-[20px]">
+                  {t("bookingDetails.car")}
+                </div>
 
                 <div className="flex items-center gap-3">
                   <img
@@ -663,7 +658,7 @@ const MyBookingDetails = () => {
                   />
                   <div>
                     <div className="font-semibold">
-                      {carName || "Автомобиль"}
+                      {carName || t("bookingDetails.car")}
                     </div>
                     <div className="text-sm text-gray-500">
                       {carColor || ""}
@@ -680,51 +675,54 @@ const MyBookingDetails = () => {
                 )}
               </div>
 
+              {/* My data */}
               <div className="border border-gray-300 rounded-2xl p-4 mb-4">
-                <div className="font-semibold mb-3 text-[20px]">Мои данные</div>
+                <div className="font-semibold mb-3 text-[20px]">
+                  {t("bookingDetails.myData")}
+                </div>
 
                 <div className="text-sm space-y-2">
                   <div className="flex justify-between">
-                    <span>Бронировал(а)</span>
+                    <span>{t("bookingDetails.bookedBy")}</span>
                     <span>{bookedBy}</span>
                   </div>
 
                   <div className="flex justify-between">
-                    <span>Кол-во моих мест</span>
+                    <span>{t("bookingDetails.mySeats")}</span>
                     <span>{mySeats}</span>
                   </div>
 
                   <div className="flex justify-between">
-                    <span>Всего пассажиров</span>
+                    <span>{t("bookingDetails.totalPassengers")}</span>
                     <span>{totalPassengers}</span>
                   </div>
                 </div>
               </div>
 
+              {/* Price */}
               <div className="border border-gray-300 rounded-2xl p-4 mb-4">
-                <div className="font-semibold text-[20px] mb-4">Стоимость моей поездки</div>
+                <div className="font-semibold text-[20px] mb-4">
+                  {t("bookingDetails.tripCost")}
+                </div>
 
                 <div className="text-sm space-y-3">
-
                   <div className="flex justify-between">
-                    <span>Тип оплаты</span>
-                    <span>Наличные</span>
+                    <span>{t("bookingDetails.paymentType")}</span>
+                    <span>{t("bookingDetails.cash")}</span>
                   </div>
 
                   <div className="flex justify-between border-t border-gray-300 pt-3">
-                    <span>К оплате</span>
-
+                    <span>{t("bookingDetails.toPay")}</span>
                     <span className="font-bold">
-                      {totalPrice.toLocaleString("ru-RU")} сум
+                      {totalPrice.toLocaleString(locale)} {t("bookingDetails.currency")}
                     </span>
                   </div>
-
                 </div>
               </div>
 
               <button className="w-full h-[56px] bg-[#32BB78] text-white rounded-xl font-semibold hover:bg-[#2aa86e] transition flex items-center justify-center gap-2">
                 <FileText size={18} />
-                Скачать инвойс
+                {t("bookingDetails.downloadInvoice")}
               </button>
 
               {booking?.route?.status === "active" && (
@@ -732,7 +730,7 @@ const MyBookingDetails = () => {
                   onClick={handleCancelBooking}
                   className="w-full mt-3 text-red-600 text-[15px] font-medium hover:underline"
                 >
-                  Отменить бронь
+                  {t("bookingDetails.cancelBooking")}
                 </button>
               )}
             </div>
@@ -740,19 +738,17 @@ const MyBookingDetails = () => {
         </div>
       </div>
 
+      {/* ===== Map modal ===== */}
       {mapOpen && (
         <div className="fixed inset-0 z-[60] bg-black/40 flex items-center justify-center px-4">
           <div className="w-full max-w-[1100px] bg-white rounded-2xl overflow-hidden">
             <div className="flex justify-between items-center px-4 py-3 border-b">
-              <span className="font-semibold">Карта маршрута</span>
+              <span className="font-semibold">{t("bookingDetails.mapTitle")}</span>
               <button onClick={() => setMapOpen(false)} className="p-2 rounded-full hover:bg-gray-100">
                 <X size={20} />
               </button>
             </div>
-            <div
-              ref={modalMapRef}
-              className="h-[420px] sm:h-[520px]"
-            />
+            <div ref={modalMapRef} className="h-[420px] sm:h-[520px]" />
           </div>
         </div>
       )}

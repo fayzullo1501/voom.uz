@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import Header from "../components/layout/Header";
 import Footer from "../components/layout/Footer";
 import Hero from "../components/Home/Hero";
@@ -12,12 +13,14 @@ import RequestForm from "../components/Home/RequestForm";
 import SEO from "../components/SEO";
 
 function Home({ lang }) {
+  const { t } = useTranslation("home");
+
   return (
     <>
 
       <SEO
-        title="Карпулинг сервис в Узбекистане"
-        description="Voom — удобный сервис совместных поездок по Узбекистану. Найдите попутчиков или станьте водителем."
+        title={t("seo.title")}
+        description={t("seo.description")}
         path=""
       />
       

@@ -1,12 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { X, Plus, ArrowDown, RotateCcw } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import axios from "../../services/axios";
 
 import logoIcon from "../../assets/logo-icon.svg";
 
 const Balance = () => {
   const navigate = useNavigate();
+  const { lang } = useParams();
+  const { t, i18n } = useTranslation("profile");
+
+  const currentLang = lang ?? i18n.language ?? "ru";
 
   const [balance, setBalance] = useState(null);
   const [holderName, setHolderName] = useState(null);
@@ -28,10 +33,14 @@ const Balance = () => {
     loadBalance();
   }, []);
 
+  const locale =
+    i18n.language === "uz" ? "uz-UZ" :
+    i18n.language === "en" ? "en-US" : "ru-RU";
+
   return (
     <div className="min-h-screen bg-white px-6 pb-10 flex flex-col">
 
-      {/* ===== Header (X как на Login) ===== */}
+      {/* ===== Header ===== */}
       <header>
         <div className="container-wide flex items-center justify-end py-8">
           <button
@@ -45,7 +54,7 @@ const Balance = () => {
 
       {/* ===== Title ===== */}
       <h1 className="text-[28px] sm:text-[32px] font-semibold text-center mb-10">
-        Мой баланс
+        {t("balance.title")}
       </h1>
 
       {/* ===== Content ===== */}
@@ -65,26 +74,27 @@ const Balance = () => {
           {/* Card header */}
           <div className="flex items-center gap-3 mb-6">
             <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center">
-            <img src={logoIcon} alt="VOOM" className="w-15 h-15" />
+              <img src={logoIcon} alt="VOOM" className="w-15 h-15" />
             </div>
 
-            <span className=" text-[20px] opacity-90">
-              Виртуальная карта
+            <span className="text-[20px] opacity-90">
+              {t("balance.virtualCard")}
             </span>
           </div>
 
           {/* Balance */}
           <div className="text-[32px] font-semibold mb-6">
-            {loading ? "Загрузка..." : `${balance.toLocaleString("ru-RU")} UZS`}
+            {loading
+              ? t("balance.loading")
+              : `${balance.toLocaleString(locale)} UZS`}
           </div>
-
 
           {/* Holder */}
           <div className="text-xs opacity-80 uppercase tracking-wide">
-            Держатель
+            {t("balance.holder")}
           </div>
           <div className="text-sm font-medium">
-            {loading ? "Загрузка..." : holderName}
+            {loading ? t("balance.loading") : holderName}
           </div>
         </div>
 
@@ -92,11 +102,14 @@ const Balance = () => {
         <div className="flex gap-15">
 
           {/* Пополнить */}
-          <div onClick={() => navigate("/ru/profile/balance/top-up")} className="flex flex-col items-center gap-2 cursor-pointer">
+          <div
+            onClick={() => navigate(`/${currentLang}/profile/balance/top-up`)}
+            className="flex flex-col items-center gap-2 cursor-pointer"
+          >
             <div className="w-14 h-14 rounded-full bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition">
               <Plus size={22} />
             </div>
-            <span className="text-sm">Пополнить</span>
+            <span className="text-sm">{t("balance.topUp")}</span>
           </div>
 
           {/* Вывести */}
@@ -104,15 +117,18 @@ const Balance = () => {
             <div className="w-14 h-14 rounded-full bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition">
               <ArrowDown size={22} />
             </div>
-            <span className="text-sm">Вывести</span>
+            <span className="text-sm">{t("balance.withdraw")}</span>
           </div>
 
           {/* История */}
-          <div onClick={() => navigate("/ru/profile/balance/history")} className="flex flex-col items-center gap-2 cursor-pointer">
+          <div
+            onClick={() => navigate(`/${currentLang}/profile/balance/history`)}
+            className="flex flex-col items-center gap-2 cursor-pointer"
+          >
             <div className="w-14 h-14 rounded-full bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition">
               <RotateCcw size={22} />
             </div>
-            <span className="text-sm">История</span>
+            <span className="text-sm">{t("balance.history")}</span>
           </div>
 
         </div>

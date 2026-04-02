@@ -1,4 +1,8 @@
-const HiddenContact = () => {
+import { useTranslation } from "react-i18next";
+
+const HiddenContact = ({ fee = 3000 }) => {
+  const { t } = useTranslation("profile");
+
   return (
     <div className="relative inline-block">
 
@@ -24,16 +28,15 @@ const HiddenContact = () => {
         bottom-[26px]
         hidden
         peer-hover:block
+        z-10
         "
       >
-
         <div className="bg-[#32BB78] text-white text-[12px] leading-[16px] text-center w-[220px] px-4 py-3 rounded-xl shadow-lg">
-          Контакт пассажира станет доступен после принятия брони. С вашего баланса будет списано 5000 сум.
+          {t("passengerModal.hiddenContactTooltip", { amount: fee.toLocaleString() })}
         </div>
 
         {/* ARROW */}
-        <div className="w-3 h-3 bg-[#32BB78] rotate-45 mx-auto -mt-1"></div>
-
+        <div className="w-3 h-3 bg-[#32BB78] rotate-45 mx-auto -mt-1" />
       </div>
 
     </div>

@@ -107,5 +107,16 @@
     "privacyPolicy": "privacy policy",
     "alertAgree": "Please confirm your consent to data processing.",
     "alertSuccess": "Your request has been submitted! A driver will contact you soon."
+  },
+
+  "common": {
+    "back": "Back",
+    "newsSeoDescription": "VOOM news and updates",
+    "adsSeoDescription": "Ads and offers from VOOM partners"
+  },
+
+  "seo": {
+    "title": "Carpooling service in Uzbekistan",
+    "description": "Voom — a convenient shared rides service across Uzbekistan. Find fellow travellers or become a driver."
   }
 }

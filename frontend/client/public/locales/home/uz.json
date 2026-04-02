@@ -106,6 +106,17 @@
     "agreeText": "Ariza yuborish orqali siz shaxsiy ma’lumotlaringizni qayta ishlashga rozilik bildirasiz",
     "privacyPolicy": "maxfiylik siyosati",
     "alertAgree": "Maʼlumotlarni qayta ishlashga rozilikni tasdiqlang.",
-    "alertSuccess": "Ariza yuborildi! Haydovchi tez orada siz bilan bog‘lanadi."
+    "alertSuccess": "Ariza yuborildi! Haydovchi tez orada siz bilan bog’lanadi."
+  },
+
+  "common": {
+    "back": "Orqaga",
+    "newsSeoDescription": "VOOM yangiliklari va yangilanishlari",
+    "adsSeoDescription": "VOOM hamkorlari reklamalari va takliflari"
+  },
+
+  "seo": {
+    "title": "O'zbekistonda karpuling xizmati",
+    "description": "Voom — O'zbekiston bo'ylab qulay birgalikda sayohat xizmati. Yo'ldosh toping yoki haydovchi bo'ling."
   }
 }

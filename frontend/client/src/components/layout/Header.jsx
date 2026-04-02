@@ -60,7 +60,23 @@ const Header = () => {
 
 
   const profileRef = useRef(null);
-  const notifRef = useRef(null);
+  const notifDesktopRef = useRef(null);
+  const notifMobileRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      const insideNotif =
+        notifDesktopRef.current?.contains(e.target) ||
+        notifMobileRef.current?.contains(e.target);
+      const insideProfile = profileRef.current?.contains(e.target);
+
+      if (!insideNotif) setNotifOpen(false);
+      if (!insideProfile) setProfileOpen(false);
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   useEffect(() => {
   
@@ -204,7 +220,7 @@ const Header = () => {
             </span>
           </button>
 
-          <div ref={notifRef} className="relative">
+          <div ref={notifDesktopRef} className="relative">
             <button
               onClick={() => setNotifOpen(!notifOpen)}
               className="p-2 rounded-lg hover:bg-gray-100 transition"
@@ -272,7 +288,7 @@ const Header = () => {
         <div className="lg:hidden flex items-center gap-3">
 
           {/* notifications */}
-          <div ref={notifRef} className="relative">
+          <div ref={notifMobileRef} className="relative">
             <button
               onClick={() => setNotifOpen(!notifOpen)}
               className="p-2 rounded-lg hover:bg-gray-100 transition"

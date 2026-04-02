@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Header from "../../components/layout/Header";
 import RoutesSearch from "../../components/routes/RoutesSearch";
 import RoutesFilters from "../../components/routes/RoutesFilters";
 import { ChevronLeft, ChevronRight, X, Loader2 } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useQuery } from "@tanstack/react-query";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -12,10 +13,6 @@ const RoutesResults = () => {
   const navigate = useNavigate();
   const location = useLocation();
  const { t, i18n } = useTranslation("routes");
-
-  const [routes, setRoutes] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
 
   const [sort, setSort] = useState("early");
   const [timeFilters, setTimeFilters] = useState({
@@ -30,7 +27,22 @@ const RoutesResults = () => {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
   const [activeImage, setActiveImage] = useState({});
-  const [loadedImages, setLoadedImages] = useState({}); 
+  const [loadedImages, setLoadedImages] = useState({});
+
+  // Кеш 2 мин: одинаковый поиск → мгновенно из кеша, тихий фоновый рефетч
+  const { data: routes = [], isLoading: loading, error: queryError } = useQuery({
+    queryKey: ["routeSearch", location.search, i18n.language],
+    queryFn: async () => {
+      const res = await fetch(`${API_URL}/api/routes/search${location.search}`);
+      if (!res.ok) throw new Error("Failed to load routes");
+      return res.json();
+    },
+    enabled: !!location.search,
+    staleTime: 2 * 60 * 1000,
+    placeholderData: (prev) => prev,
+  });
+
+  const error = queryError ? t("errors.loadRoutes") : null;
 
   const toggleTime = (key) =>
     setTimeFilters((p) => ({ ...p, [key]: !p[key] }));
@@ -46,35 +58,6 @@ const RoutesResults = () => {
       return { ...prev, [routeId]: next };
     });
   };
-
-  useEffect(() => {
-    const fetchRoutes = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-
-        const res = await fetch(
-          `${API_URL}/api/routes/search${location.search}`
-        );
-
-        if (!res.ok) {
-          throw new Error("Failed to load routes");
-        }
-
-        const data = await res.json();
-        setRoutes(data);
-      } catch (err) {
-        console.error("Routes load error:", err);
-        setError(t("errors.loadRoutes"));
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (location.search) {
-      fetchRoutes();
-    }
-  }, [location.search, i18n.language]);
 
   const formatDate = (date) =>
     new Date(date).toLocaleString("ru-RU", {

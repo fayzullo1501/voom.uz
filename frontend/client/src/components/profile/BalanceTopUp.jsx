@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { X, ChevronLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import axios from "../../services/axios";
 
 import clickIcon from "../../assets/click.svg";
@@ -14,6 +15,7 @@ const formatUZS = (value) => {
 
 const BalanceTopUp = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation("profile");
 
   const [method, setMethod] = useState("click");
   const [amount, setAmount] = useState("");
@@ -23,7 +25,7 @@ const BalanceTopUp = () => {
     if (!amount || Number(amount) < 1000) return;
 
     if (method !== "click") {
-      alert("Данный способ оплаты пока недоступен");
+      alert(t("topUp.methodUnavailable"));
       return;
     }
 
@@ -38,7 +40,7 @@ const BalanceTopUp = () => {
         window.location.href = data.payUrl;
       }
     } catch (e) {
-      alert("Ошибка при инициализации платежа");
+      alert(t("topUp.paymentError"));
     } finally {
       setLoading(false);
     }
@@ -60,14 +62,14 @@ const BalanceTopUp = () => {
             <ChevronLeft size={24} className="text-gray-800" />
           </button>
 
-          <h1 className="text-[28px] sm:text-[32px] font-semibold text-center">Пополнение</h1>
+          <h1 className="text-[28px] sm:text-[32px] font-semibold text-center">{t("topUp.title")}</h1>
         </div>
       </div>
 
       <div className="flex flex-col items-center">
         <div className="w-full max-w-[440px] flex flex-col gap-8">
           <div>
-            <p className="text-sm text-gray-700 mb-3">Детали платежа</p>
+            <p className="text-sm text-gray-700 mb-3">{t("topUp.paymentDetails")}</p>
 
             <div className="flex gap-4">
               {[
@@ -105,7 +107,7 @@ const BalanceTopUp = () => {
             />
 
             <label className="absolute left-4 text-gray-500 pointer-events-none transition-all duration-200 top-4 text-[15px] peer-focus:top-1 peer-focus:text-[11px] peer-[&:not(:placeholder-shown)]:top-1 peer-[&:not(:placeholder-shown)]:text-[11px]">
-              Сумма платежа
+              {t("topUp.amount")}
             </label>
 
             {amount && (
@@ -121,7 +123,7 @@ const BalanceTopUp = () => {
               disabled={loading || !amount}
               className="min-w-[180px] px-10 py-3 rounded-xl text-white text-[16px] font-medium bg-[#32BB78] hover:bg-[#29a86b] transition disabled:opacity-50"
             >
-              {loading ? "Переход к оплате..." : "Продолжить"}
+              {loading ? t("topUp.redirecting") : t("topUp.continue")}
             </button>
           </div>
         </div>

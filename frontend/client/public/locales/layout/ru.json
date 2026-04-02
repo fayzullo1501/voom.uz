@@ -30,6 +30,19 @@
   },
 
 
+  "notifications": {
+    "title": "Уведомления",
+    "markAllRead": "Отметить все прочитанными",
+    "tabs": {
+      "active": "Активные",
+      "archive": "Архив"
+    },
+    "empty": "У вас пока нет уведомлений",
+    "justNow": "только что",
+    "minAgo": "мин назад",
+    "hourAgo": "ч назад"
+  },
+
   "footer": {
     "contacts": {
       "number": "+998 99 996-16-96",

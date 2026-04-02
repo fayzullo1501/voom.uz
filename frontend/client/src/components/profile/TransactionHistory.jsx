@@ -1,39 +1,45 @@
 import React, { useEffect, useState } from "react";
 import { ChevronLeft, X } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import axios from "../../services/axios";
 
-const STATUS_MAP = {
-  success: { label: "Успешно", className: "text-green-600" },
-  pending: { label: "В обработке", className: "text-orange-500" },
-  failed: { label: "Отменено", className: "text-red-500" },
-};
-
-const TYPE_MAP = {
-  topup: "Пополнение",
-  debit: "Списание",
+const STATUS_CLASS = {
+  success: "text-green-600",
+  pending: "text-orange-500",
+  failed: "text-red-500",
 };
 
 const ITEMS_PER_PAGE = 20;
 
-const formatDateTime = (iso) => {
-  const d = new Date(iso);
-  return d.toLocaleString("ru-RU", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-};
-
-const formatAmount = (amount, type) => {
-  const sign = type === "topup" ? "+" : "-";
-  return `${sign}${amount.toLocaleString("ru-RU")} сум`;
-};
-
 const TransactionHistory = () => {
   const navigate = useNavigate();
+  const { lang } = useParams();
+  const { t, i18n } = useTranslation("profile");
+
+  const locale =
+    (lang ?? i18n.language) === "uz"
+      ? "uz-UZ"
+      : (lang ?? i18n.language) === "en"
+      ? "en-US"
+      : "ru-RU";
+
+  const formatDateTime = (iso) => {
+    const d = new Date(iso);
+    return d.toLocaleString(locale, {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
+
+  const formatAmount = (amount, type) => {
+    const sign = type === "topup" ? "+" : "-";
+    return `${sign}${amount.toLocaleString(locale)} ${t("transactionHistory.currency")}`;
+  };
+
   const [items, setItems] = useState([]);
   const [page, setPage] = useState(1);
 
@@ -69,7 +75,7 @@ const TransactionHistory = () => {
           <button onClick={() => navigate(-1)} className="absolute left-0 p-2 rounded-lg hover:bg-gray-100 transition">
             <ChevronLeft size={24} className="text-gray-800" />
           </button>
-          <h1 className="text-[28px] sm:text-[32px] font-semibold text-center">История операций</h1>
+          <h1 className="text-[28px] sm:text-[32px] font-semibold text-center">{t("transactionHistory.title")}</h1>
         </div>
       </div>
 
@@ -78,17 +84,17 @@ const TransactionHistory = () => {
           {/* Header */}
           <div className="flex px-4 py-2 text-sm text-gray-500">
             <div className="w-[60px] text-center">№</div>
-            <div className="w-[140px]">Тип</div>
-            <div className="w-[220px]">ID транзакции</div>
-            <div className="w-[180px]">Дата</div>
-            <div className="w-[140px] text-right">Сумма</div>
-            <div className="w-[120px] text-right">Статус</div>
+            <div className="w-[140px]">{t("transactionHistory.col.type")}</div>
+            <div className="w-[220px]">{t("transactionHistory.col.id")}</div>
+            <div className="w-[180px]">{t("transactionHistory.col.date")}</div>
+            <div className="w-[140px] text-right">{t("transactionHistory.col.amount")}</div>
+            <div className="w-[120px] text-right">{t("transactionHistory.col.status")}</div>
           </div>
 
           {/* Rows */}
           <div className="flex flex-col gap-2 mt-2">
             {paginatedItems.map((tx, index) => {
-              const status = STATUS_MAP[tx.status] || STATUS_MAP.pending;
+              const statusClass = STATUS_CLASS[tx.status] || STATUS_CLASS.pending;
               const rowNumber = (page - 1) * ITEMS_PER_PAGE + index + 1;
 
               return (
@@ -98,7 +104,7 @@ const TransactionHistory = () => {
                   </div>
 
                   <div className="w-[140px] text-sm font-medium">
-                    {TYPE_MAP[tx.type] || tx.type}
+                    {t(`transactionHistory.type.${tx.type}`, tx.type)}
                   </div>
 
                   <div className="w-[220px] text-sm text-gray-600 truncate" title={tx._id}>
@@ -113,8 +119,8 @@ const TransactionHistory = () => {
                     {formatAmount(tx.amount, tx.type)}
                   </div>
 
-                  <div className={`w-[120px] text-sm font-medium text-right ${status.className}`}>
-                    {status.label}
+                  <div className={`w-[120px] text-sm font-medium text-right ${statusClass}`}>
+                    {t(`transactionHistory.status.${tx.status}`, tx.status)}
                   </div>
                 </div>
               );
@@ -172,7 +178,7 @@ const TransactionHistory = () => {
 
           {items.length === 0 && (
             <div className="text-center text-gray-500 text-sm py-10">
-              История операций пуста
+              {t("transactionHistory.empty")}
             </div>
           )}
         </div>

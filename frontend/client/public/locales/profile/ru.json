@@ -82,7 +82,9 @@
     "uploadSuccess": "Фото успешно отправлено на проверку",
     "uploadError": "Не удалось загрузить фото",
     "loading": "Загрузка...",
-    "save": "Сохранить"
+    "save": "Сохранить",
+    "takePhoto": "Сделать фото",
+    "chooseFromGallery": "Выбрать из галереи"
   },
   "passport": {
     "title": "Проверить паспорт",
@@ -167,5 +169,149 @@
     "descriptionLine2": "на указанный адрес для подтверждения.",
     "send": "Отправить код",
     "sending": "Отправка..."
+  },
+  "balance": {
+    "title": "Мой баланс",
+    "virtualCard": "Виртуальная карта",
+    "holder": "Держатель",
+    "loading": "Загрузка...",
+    "topUp": "Пополнить",
+    "withdraw": "Вывести",
+    "history": "История"
+  },
+  "bookingDetails": {
+    "dateIn": "в ",
+    "status": {
+      "active": "Активный",
+      "completed": "Завершён",
+      "cancelled": "Отменён",
+      "in_progress": "В пути"
+    },
+    "routeInfo": "Информация забронированного маршрута",
+    "leaveReview": "Оставить отзыв",
+    "reviewPlaceholder": "Текст",
+    "save": "Сохранить",
+    "yourReview": "Ваш отзыв",
+    "passengers": "Пассажиры",
+    "noPassengers": "Пассажиров пока нет",
+    "passenger": "Пассажир",
+    "bookingStatus": {
+      "pending": "В ожидании",
+      "accepted": "Принят",
+      "cancelled": "Отменён",
+      "rejected": "Отклонён водителем"
+    },
+    "seatType": {
+      "front": "переднее место",
+      "back": "заднее место"
+    },
+    "yourOrder": "Ваш заказ",
+    "driver": "Водитель",
+    "reviews": "отзывов",
+    "profileVerified": "Профиль подтвержден",
+    "car": "Автомобиль",
+    "myData": "Мои данные",
+    "bookedBy": "Бронировал(а)",
+    "mySeats": "Кол-во моих мест",
+    "totalPassengers": "Всего пассажиров",
+    "tripCost": "Стоимость моей поездки",
+    "paymentType": "Тип оплаты",
+    "cash": "Наличные",
+    "toPay": "К оплате",
+    "currency": "сум",
+    "downloadInvoice": "Скачать инвойс",
+    "cancelBooking": "Отменить бронь",
+    "cancelConfirm": "Отменить бронь?",
+    "mapTitle": "Карта маршрута",
+    "me": "Я"
+  },
+  "passengerModal": {
+    "title": "Информация о пассажире",
+    "pickup": "Откуда забрать",
+    "dropoff": "Куда доставить",
+    "seats": "Места",
+    "comment": "Комментарий",
+    "accept": "Принять",
+    "reject": "Отклонить",
+    "accepting": "Принятие...",
+    "rejecting": "Отклонение...",
+    "seatWhole": "Вся машина",
+    "seatFront": "Переднее",
+    "seatBack": "Заднее",
+    "hiddenContactTooltip": "Контакт пассажира станет доступен после принятия брони. С баланса будет списано {{amount}} сум.",
+    "insufficientBalance": "Недостаточно средств на балансе.",
+    "insufficientBalanceHint": "Пополните баланс, чтобы принять бронь.",
+    "topUpBalance": "Пополнить баланс"
+  },
+  "topUp": {
+    "title": "Пополнение",
+    "paymentDetails": "Детали платежа",
+    "amount": "Сумма платежа",
+    "methodUnavailable": "Данный способ оплаты пока недоступен",
+    "paymentError": "Ошибка при инициализации платежа",
+    "redirecting": "Переход к оплате...",
+    "continue": "Продолжить"
+  },
+  "transactionHistory": {
+    "title": "История операций",
+    "empty": "История операций пуста",
+    "col": {
+      "type": "Тип",
+      "id": "ID транзакции",
+      "date": "Дата",
+      "amount": "Сумма",
+      "status": "Статус"
+    },
+    "status": {
+      "success": "Успешно",
+      "pending": "В обработке",
+      "failed": "Отменено"
+    },
+    "type": {
+      "topup": "Пополнение",
+      "debit": "Списание"
+    },
+    "currency": "сум"
+  },
+  "routeDetails": {
+    "notFound": "Маршрут не найден",
+    "dateIn": "в ",
+    "status": {
+      "active": "Активный",
+      "completed": "Завершён",
+      "cancelled": "Отменён",
+      "in_progress": "В пути"
+    },
+    "routeInfo": "Информация зарегистрированного маршрута",
+    "passengers": "Пассажиры",
+    "noBookings": "Бронирований пока нет",
+    "seatType": {
+      "whole": "Вся машина",
+      "front": "Переднее",
+      "back": "Заднее"
+    },
+    "bookingStatus": {
+      "pending": "Ожидает подтверждения",
+      "accepted": "Принят",
+      "cancelled": "Отменён",
+      "rejected": "Отклонён"
+    },
+    "yourRoute": "Ваш маршрут",
+    "car": "Автомобиль",
+    "tripAmount": "Сумма за поездку",
+    "total": "Всего",
+    "currency": "сум",
+    "start": "Поехали",
+    "cancelRoute": "Отменить маршрут",
+    "completeRoute": "Завершить маршрут",
+    "mapTitle": "Карта маршрута",
+    "errors": {
+      "frontTaken": "Переднее место уже занято другим пассажиром.",
+      "backTaken": "Задние места уже заняты.",
+      "noSeats": "Свободных мест больше нет.",
+      "cannotAccept": "Невозможно принять бронь. Это место уже занято.",
+      "serverError": "Ошибка сервера. Попробуйте позже.",
+      "insufficientBalance": "Недостаточно средств на балансе для принятия брони."
+    }
   }
 }

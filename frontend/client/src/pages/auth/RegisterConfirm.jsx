@@ -41,7 +41,7 @@ const RegisterConfirm = () => {
     if (loading) return;
 
     if (code.length < 4) {
-      alert(t("confirm.errors.enterCode"));
+      alert(payload?.phone ? t("confirm.errors.enterCodeSms") : t("confirm.errors.enterCodeEmail"));
       return;
     }
 

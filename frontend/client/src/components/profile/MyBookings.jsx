@@ -1,10 +1,23 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { X, Loader2 } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 import walletIcon from "../../assets/icons/wallet.svg";
 import userIcon from "../../assets/icons/user.svg";
 import { API_URL } from "../../config/api";
 import { useTranslation } from "react-i18next";
+
+const fetchBookings = async (type) => {
+  const token = localStorage.getItem("token");
+  const res = await fetch(`${API_URL}/api/bookings/my?type=${type}`, {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  if (!res.ok) return [];
+  return res.json();
+};
 
 const MyBookings = () => {
   const navigate = useNavigate();
@@ -12,44 +25,13 @@ const MyBookings = () => {
   const { t, i18n } = useTranslation("profile");
 
   const [tab, setTab] = useState("active");
-  const [bookings, setBookings] = useState([]);
-  const [loading, setLoading] = useState(false);
 
-  const token = localStorage.getItem("token");
-
-  const fetchBookings = async (type) => {
-    try {
-      setLoading(true);
-
-      const res = await fetch(
-        `${API_URL}/api/bookings/my?type=${type}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        setBookings([]);
-        return;
-      }
-
-      setBookings(data);
-    } catch (error) {
-      console.error("Failed to load bookings", error);
-      setBookings([]);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchBookings(tab);
-  }, [tab]);
+  const { data: bookings = [], isLoading } = useQuery({
+    queryKey: ["myBookings", tab],
+    queryFn: () => fetchBookings(tab),
+    staleTime: 60 * 1000,       // 1 мин — при смене вкладок данные мгновенны
+    placeholderData: (prev) => prev, // показывает старые данные пока грузит новые
+  });
 
   const formatDate = (date) => {
     const d = new Date(date);
@@ -71,11 +53,9 @@ const MyBookings = () => {
   const uniqueBookings = Object.values(
     bookings.reduce((acc, booking) => {
       const routeId = booking.route?._id;
-
       if (!acc[routeId]) {
         acc[routeId] = booking;
       }
-
       return acc;
     }, {})
   );
@@ -139,19 +119,19 @@ const MyBookings = () => {
       <div className="flex justify-center">
         <div className="w-full max-w-[760px]">
 
-          {loading && (
+          {isLoading && (
             <div className="flex justify-center py-20">
               <Loader2 className="w-6 h-6 animate-spin text-gray-500" />
             </div>
           )}
 
-          {!loading && bookings.length === 0 && (
+          {!isLoading && bookings.length === 0 && (
             <div className="text-center text-gray-500 py-20">
               {t("bookings.empty")}
             </div>
           )}
 
-          {!loading && bookings.length > 0 && (
+          {!isLoading && bookings.length > 0 && (
             <div className="flex flex-col gap-4">
               {uniqueBookings.map((booking) => (
                 <div

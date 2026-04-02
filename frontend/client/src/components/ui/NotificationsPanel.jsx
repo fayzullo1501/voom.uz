@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import { CheckCheck } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { API_URL } from "../../config/api";
 
 const NotificationsPanel = ({ notifications, setNotifications, setUnreadCount }) => {
 
   const navigate = useNavigate();
   const { lang } = useParams();
+  const { t } = useTranslation("layout");
 
   const [tab, setTab] = useState("active");
 
@@ -14,9 +16,9 @@ const NotificationsPanel = ({ notifications, setNotifications, setUnreadCount })
 
     const diff = Math.floor((Date.now() - new Date(date)) / 1000);
 
-    if (diff < 60) return "только что";
-    if (diff < 3600) return `${Math.floor(diff / 60)} мин назад`;
-    if (diff < 86400) return `${Math.floor(diff / 3600)} ч назад`;
+    if (diff < 60) return t("notifications.justNow");
+    if (diff < 3600) return `${Math.floor(diff / 60)} ${t("notifications.minAgo")}`;
+    if (diff < 86400) return `${Math.floor(diff / 3600)} ${t("notifications.hourAgo")}`;
 
     return new Date(date).toLocaleDateString();
 
@@ -74,7 +76,7 @@ const NotificationsPanel = ({ notifications, setNotifications, setUnreadCount })
       <div className="flex items-center justify-between px-5 pt-5 pb-3">
 
         <div className="text-[18px] font-semibold">
-          Уведомления
+          {t("notifications.title")}
         </div>
 
         <button
@@ -92,7 +94,7 @@ const NotificationsPanel = ({ notifications, setNotifications, setUnreadCount })
           <CheckCheck size={16} />
 
           <span>
-            Отметить все прочитанными
+            {t("notifications.markAllRead")}
           </span>
 
         </button>
@@ -110,7 +112,7 @@ const NotificationsPanel = ({ notifications, setNotifications, setUnreadCount })
               : "text-gray-500"
           }`}
         >
-          Активные
+          {t("notifications.tabs.active")}
         </button>
 
         <button
@@ -121,7 +123,7 @@ const NotificationsPanel = ({ notifications, setNotifications, setUnreadCount })
               : "text-gray-500"
           }`}
         >
-          Архив
+          {t("notifications.tabs.archive")}
         </button>
 
       </div>
@@ -132,7 +134,7 @@ const NotificationsPanel = ({ notifications, setNotifications, setUnreadCount })
         {filtered.length === 0 ? (
 
           <div className="h-[220px] flex items-center justify-center text-gray-400 text-[14px]">
-            У вас пока нет уведомлений
+            {t("notifications.empty")}
           </div>
 
         ) : (

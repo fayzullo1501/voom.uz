@@ -34,8 +34,8 @@ const Hero = () => {
               />
 
             </div>
-          <div className="relative z-10 flex flex-col items-center text-center px-6 md:px-10 pt-20 md:pt-24 pb-12 md:pb-14">
-            <div className="max-w-3xl mb-10">
+          <div className="relative z-10 flex flex-col items-center text-center px-6 md:px-10 pt-8 md:pt-24 pb-8 md:pb-14">
+            <div className="hidden md:block max-w-3xl mb-10">
               <h1 className="text-4xl md:text-5xl font-bold text-white leading-tight mb-4">
                 <span className="block">{t("hero.titleLine1")}</span>
                 <span className="block">{t("hero.titleLine2")}</span>

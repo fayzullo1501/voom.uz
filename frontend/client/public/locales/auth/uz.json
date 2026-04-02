@@ -33,8 +33,10 @@
   },
   "confirm": {
     "titlePhone": "SMS orqali kelgan kodni kiriting",
+    "titleSms": "SMS orqali kelgan kodni kiriting",
     "titleEmail": "Email orqali kelgan kodni kiriting",
     "sentTo": "Kod {{value}} ga yuborildi",
+    "sentToreg": "Kod yuborildi:",
     "codePlaceholder": "Kodni kiriting",
     "confirmBtn": "Tasdiqlash",
     "resend": "Kodni qayta yuborish",

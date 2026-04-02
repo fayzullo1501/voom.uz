@@ -82,7 +82,9 @@
     "uploadSuccess": "Rasm muvaffaqiyatli tekshiruvga yuborildi",
     "uploadError": "Rasmni yuklash muvaffaqiyatsiz tugadi",
     "loading": "Yuklanmoqda...",
-    "save": "Saqlash"
+    "save": "Saqlash",
+    "takePhoto": "Rasm olish",
+    "chooseFromGallery": "Galereadan tanlash"
   },
   "passport": {
     "title": "Pasportni tasdiqlash",
@@ -168,5 +170,149 @@
     "descriptionLine2": "6 xonali kod yuboramiz.",
     "send": "Kod yuborish",
     "sending": "Yuborilmoqda..."
+  },
+  "balance": {
+    "title": "Mening balansim",
+    "virtualCard": "Virtual karta",
+    "holder": "Karta egasi",
+    "loading": "Yuklanmoqda...",
+    "topUp": "To'ldirish",
+    "withdraw": "Yechib olish",
+    "history": "Tarix"
+  },
+  "bookingDetails": {
+    "dateIn": "",
+    "status": {
+      "active": "Faol",
+      "completed": "Yakunlandi",
+      "cancelled": "Bekor qilindi",
+      "in_progress": "Yo'lda"
+    },
+    "routeInfo": "Bron qilingan yo'nalish ma'lumotlari",
+    "leaveReview": "Sharh qoldirish",
+    "reviewPlaceholder": "Matn",
+    "save": "Saqlash",
+    "yourReview": "Sizning sharhingiz",
+    "passengers": "Yo'lovchilar",
+    "noPassengers": "Hozircha yo'lovchilar yo'q",
+    "passenger": "Yo'lovchi",
+    "bookingStatus": {
+      "pending": "Kutilmoqda",
+      "accepted": "Qabul qilindi",
+      "cancelled": "Bekor qilindi",
+      "rejected": "Haydovchi tomonidan rad etildi"
+    },
+    "seatType": {
+      "front": "old o'rindiq",
+      "back": "orqa o'rindiq"
+    },
+    "yourOrder": "Sizning buyurtmangiz",
+    "driver": "Haydovchi",
+    "reviews": "sharh",
+    "profileVerified": "Profil tasdiqlangan",
+    "car": "Avtomobil",
+    "myData": "Mening ma'lumotlarim",
+    "bookedBy": "Bron qilgan",
+    "mySeats": "Mening o'rinlarim soni",
+    "totalPassengers": "Jami yo'lovchilar",
+    "tripCost": "Mening sayohatim narxi",
+    "paymentType": "To'lov turi",
+    "cash": "Naqd pul",
+    "toPay": "To'lash kerak",
+    "currency": "so'm",
+    "downloadInvoice": "Hisob-fakturani yuklab olish",
+    "cancelBooking": "Bronni bekor qilish",
+    "cancelConfirm": "Bronni bekor qilasizmi?",
+    "mapTitle": "Yo'nalish xaritasi",
+    "me": "Men"
+  },
+  "passengerModal": {
+    "title": "Yo'lovchi haqida ma'lumot",
+    "pickup": "Qayerdan olish",
+    "dropoff": "Qayerga tushirish",
+    "seats": "O'rinlar",
+    "comment": "Izoh",
+    "accept": "Qabul qilish",
+    "reject": "Rad etish",
+    "accepting": "Qabul qilinmoqda...",
+    "rejecting": "Rad etilmoqda...",
+    "seatWhole": "Butun mashina",
+    "seatFront": "Old o'rindiq",
+    "seatBack": "Orqa o'rindiq",
+    "hiddenContactTooltip": "Yo'lovchi kontakti bronni qabul qilgandan so'ng ko'rinadi. Balansingizdan {{amount}} so'm yechiladi.",
+    "insufficientBalance": "Balansingizda mablag' yetarli emas.",
+    "insufficientBalanceHint": "Bronni qabul qilish uchun balansingizni to'ldiring.",
+    "topUpBalance": "Balansni to'ldirish"
+  },
+  "topUp": {
+    "title": "Balansni to'ldirish",
+    "paymentDetails": "To'lov tafsilotlari",
+    "amount": "To'lov summasi",
+    "methodUnavailable": "Bu to'lov usuli hozircha mavjud emas",
+    "paymentError": "To'lovni boshlashda xatolik",
+    "redirecting": "To'lovga o'tish...",
+    "continue": "Davom etish"
+  },
+  "transactionHistory": {
+    "title": "Operatsiyalar tarixi",
+    "empty": "Operatsiyalar tarixi bo'sh",
+    "col": {
+      "type": "Turi",
+      "id": "Tranzaksiya ID",
+      "date": "Sana",
+      "amount": "Summa",
+      "status": "Holat"
+    },
+    "status": {
+      "success": "Muvaffaqiyatli",
+      "pending": "Jarayonda",
+      "failed": "Bekor qilindi"
+    },
+    "type": {
+      "topup": "To'ldirish",
+      "debit": "Yechib olish"
+    },
+    "currency": "so'm"
+  },
+  "routeDetails": {
+    "notFound": "Yo'nalish topilmadi",
+    "dateIn": "",
+    "status": {
+      "active": "Faol",
+      "completed": "Yakunlandi",
+      "cancelled": "Bekor qilindi",
+      "in_progress": "Yo'lda"
+    },
+    "routeInfo": "Ro'yxatdan o'tgan yo'nalish ma'lumotlari",
+    "passengers": "Yo'lovchilar",
+    "noBookings": "Hozircha bronlar yo'q",
+    "seatType": {
+      "whole": "Butun mashina",
+      "front": "Old",
+      "back": "Orqa"
+    },
+    "bookingStatus": {
+      "pending": "Tasdiq kutilmoqda",
+      "accepted": "Qabul qilindi",
+      "cancelled": "Bekor qilindi",
+      "rejected": "Rad etildi"
+    },
+    "yourRoute": "Sizning yo'nalishingiz",
+    "car": "Avtomobil",
+    "tripAmount": "Sayohat summasi",
+    "total": "Jami",
+    "currency": "so'm",
+    "start": "Yo'lga chiqish",
+    "cancelRoute": "Yo'nalishni bekor qilish",
+    "completeRoute": "Yo'nalishni yakunlash",
+    "mapTitle": "Yo'nalish xaritasi",
+    "errors": {
+      "frontTaken": "Old o'rindiq boshqa yo'lovchi tomonidan band qilingan.",
+      "backTaken": "Orqa o'rindiqlar band qilingan.",
+      "noSeats": "Bo'sh o'rinlar yo'q.",
+      "cannotAccept": "Bronni qabul qilish imkonsiz. Bu o'rindiq band.",
+      "serverError": "Server xatosi. Keyinroq urinib ko'ring.",
+      "insufficientBalance": "Bronni qabul qilish uchun balansingizda mablag' yetarli emas."
+    }
   }
 }
