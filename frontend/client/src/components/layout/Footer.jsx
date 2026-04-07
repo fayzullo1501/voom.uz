@@ -33,13 +33,13 @@ function Footer() {
             </a>
 
             <div className="flex items-center gap-4 mt-4">
-              <a href="#" className="hover:text-white transition-colors" aria-label={t("footer.contacts.instagram")}>
+              <a href="https://instagram.com/voom.uz" className="hover:text-white transition-colors" aria-label={t("footer.contacts.instagram")}>
                 <Instagram size={18} />
               </a>
-              <a href="#" className="hover:text-white transition-colors" aria-label={t("footer.contacts.youtube")}>
+              <a href="https://instagram.com/voom.uz" className="hover:text-white transition-colors" aria-label={t("footer.contacts.youtube")}>
                 <Youtube size={18} />
               </a>
-              <a href="#" className="hover:text-white transition-colors" aria-label={t("footer.contacts.telegram")}>
+              <a href="https://t.me/voom_uz" className="hover:text-white transition-colors" aria-label={t("footer.contacts.telegram")}>
                 <Send size={18} />
               </a>
             </div>

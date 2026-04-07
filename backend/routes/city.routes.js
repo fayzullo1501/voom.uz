@@ -1,19 +1,23 @@
 import { Router } from "express";
-import cityController from "../controllers/city.controller.js";
+import {
+  getCities,
+  getCityById,
+  createCity,
+  updateCity,
+  deleteCities,
+  importCitiesFromSource,
+} from "../controllers/city.controller.js";
 import auth from "../middlewares/auth.middleware.js";
 import adminOnly from "../middlewares/admin.middleware.js";
 
-
 const router = Router();
 
-// 🔹 Публичный список городов + поиск + пагинация
-router.get("/", cityController.getCities);
-router.get("/:id", cityController.getCityById);
+router.get("/", getCities);
+router.get("/:id", getCityById);
 
-// 🔹 Только admin
-router.post("/", auth, adminOnly, cityController.createCity);
-router.put("/:id", auth, adminOnly, cityController.updateCity);
-router.delete("/", auth, adminOnly, cityController.deleteCities);
-router.post("/import", auth, adminOnly, cityController.importCitiesFromSource);
+router.post("/", auth, adminOnly, createCity);
+router.put("/:id", auth, adminOnly, updateCity);
+router.delete("/", auth, adminOnly, deleteCities);
+router.post("/import", auth, adminOnly, importCitiesFromSource);
 
 export default router;
